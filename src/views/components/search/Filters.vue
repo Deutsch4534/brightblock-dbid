@@ -69,7 +69,6 @@ import _ from "lodash";
 export default {
   name: 'Filters',
   components: { mdbIcon, mdbSelect, mdbBtn },
-  props: ["searchType"],
   data () {
     return {
       filters: {
@@ -89,13 +88,13 @@ export default {
     }
   },
   mounted() {
-    this.objectType = this.searchType;
+    this.objectType = this.$route.name;
     let myProfile = this.$store.getters["myAccountStore/getMyProfile"];
     this.username = myProfile.username;
   },
   watch: {
     '$route' (to, from) {
-      this.objectType = this.searchType;
+      this.objectType = to.name;
     }
   },
   methods: {

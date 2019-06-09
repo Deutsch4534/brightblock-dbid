@@ -5,7 +5,7 @@
       <div class="col-md-3 col-sm-12">
         <h2 class="h2-responsive mb-3 mx-3 text-white">Search {{searchType}}</h2>
         <h4 class="h4-responsive mb-2 mx-3 text-white">{{numberResults}} Results</h4>
-        <filters @doSearch="doSearch($event)" class="text-white mx-3" :searchType="objectType"/>
+        <filters @doSearch="doSearch($event)" class="text-white mx-3"/>
       </div>
       <div class="col-md-9 col-sm-12">
         <div class="row article" v-if="objectType === 'gallery'">
