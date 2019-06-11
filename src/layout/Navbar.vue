@@ -2,11 +2,12 @@
 <!-- Main navigation 424f95 -->
 <header>
 <login-tab-modal v-if="showModal" :modal="showModal" @closeModal="closeModal"/>
-<nav class="navbar navbar-expand-lg py-0">
+<nav class="d-flex flex-row">
 
-  <!-- mdbNavbar brand -->
-  <span class="d-inline-block mr-3">
-    <router-link to="/" class="navbar-brand d-inline-block" ><img :src="logo" height="40px" alt="radicle logo"></router-link>
+  <div class="p-2"><router-link to="/" class="navbar-brand d-inline-block" >DBIDIO</router-link></div>
+  <!-- mdbNavbar brand
+  <span class="mr-3">
+    <router-link to="/" class="navbar-brand d-inline-block" >DBIDIO</router-link>
   </span>
   <button id="btn-toggle" @click.prevent="toggleNav" class="navbar-toggler toggler-example black darken-3" type="button"
       data-toggle="collapse"
@@ -16,24 +17,38 @@
       aria-label="Toggle navigation">
       <span class="white-text"><i class="fas fa-bars fa-1x"></i></span>
   </button>
+  -->
 
-  <div :class="toggleClass" class="navbar-collapse collapse" id="navbarSupportedContent">
-    <!--  <span class="dark-blue-text"><i class="fas fa-bars fa-1x"></i></span>
-    <form class="md-form search-form ml-2" @submit.prevent="">
-      <a type="button" @click.prevent="doSearch"><mdb-icon class="" icon="search" /></a>
-      <input label="Search" type="text" class="mt-0 mb-0 ml-1" v-model="query" placeholder="Search" aria-label="Search" v-on:keyup.13="doSearch"/>
-    </form>
-    -->
+  <div :class="toggleClass" class="navbar" id="">
     <ul class="navbar-nav ml-auto">
-      <li class="nav-item" @click="closeMenu"><router-link class="nav-link navbar-link" to="/gallery">Marketplace</router-link></li>
-      <li v-if="featureAuctions" class="nav-item" @click="closeMenu"><router-link class="nav-link navbar-link" to="/online-auctions">Auctions</router-link></li>
-      <li class="nav-item" @click="closeMenu"><router-link class="teal-text nav-link navbar-link" to="/my-artwork/upload">Upload</router-link></li>
-      <li v-if="loggedIn && hasInvoices" class="nav-item" @click="closeMenu"><router-link class="nav-link navbar-link" to="/orders">Cart</i><sup><mdb-badge color="danger-color" class="ml-2">{{hasInvoices}}</mdb-badge></sup></router-link></li>
-      <li class="nav-item" @click="closeMenu"><router-link to="/search"><mdb-icon icon="search" class="teal-text mt-3 mx-2" style="line-height: 10px;" aria-hidden="true" size="2x"/></router-link></li>
-      <!-- <li class="nav-item" @click="closeMenu"><router-link v-if="!loggedIn" class="nav-link navbar-link" to="/login">Login</router-link></li> -->
-      <portfolio-links v-if="loggedIn" @closeMenu="closeMenu"/>
+      <li class="nav-item" @click="closeMenu"><router-link class="nav-link navbar-link" to="/about">about</router-link></li>
       <account-links v-if="loggedIn" @closeMenu="closeMenu"/>
       <li class="nav-item" @click="closeMenu"><a v-on:click.prevent="loginMultiPlayer" v-if="!loggedIn" class="nav-link navbar-link">Login with Blockstack</a></li>
+    </ul>
+  </div>
+
+</nav>
+<nav class="navbar navbar-expand-lg bg-dark text-white p-0 m-0">
+
+  <!-- mdbNavbar brand -->
+  <button id="btn-toggle" @click.prevent="toggleNav" class="navbar-toggler toggler-example black darken-3" type="button"
+      data-toggle="collapse"
+      data-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent"
+      aria-expanded="false"
+      aria-label="Toggle navigation">
+      <span class="white-text"><i class="fas fa-bars fa-1x"></i></span>
+  </button>
+
+  <div :class="toggleClass" class="navbar-collapse collapse dark" id="navbarSupportedContent">
+    <ul class="navbar-nav m-auto">
+      <li class="nav-item" @click="closeMenu"><router-link class="nav-link navbar-link" to="/">buy</router-link></li>
+    </ul>
+    <ul class="navbar-nav m-auto">
+      <li class="nav-item" @click="closeMenu"><router-link class="nav-link navbar-link" to="/">sell</router-link></li>
+    </ul>
+    <ul class="navbar-nav m-auto">
+      <li class="nav-item" @click="closeMenu"><router-link class="nav-link navbar-link" to="/">stuff</router-link></li>
     </ul>
   </div>
 
@@ -210,7 +225,7 @@ export default {
   min-height: 60px;
 }
 .navbar-link {
-  text-transform: capitalize;
+  text-transform: lowercase;
   font-size: 1.3em;
   font-weight: 900;
 }

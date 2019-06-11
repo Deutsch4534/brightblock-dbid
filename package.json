@@ -25,6 +25,7 @@
     "bitcoinjs-message": "^2.0.0",
     "blockstack": "^18.3.0",
     "bootstrap-css-only": "^4.2.1",
+    "brightblock-lib": "^1.0.7",
     "crypto-js": "^3.1.9-1",
     "dotenv": "^6.2.0",
     "fs": "0.0.1-security",

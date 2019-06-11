@@ -73,7 +73,7 @@ import DescriptionOverflow from "@/views/components/utils/DescriptionOverflow";
 import BeSocial from "@/views/components/utils/BeSocial";
 import SendMessage from "@/views/components/utils/SendMessage";
 import MediaContainer from "@/views/components/utils/MediaContainer";
-import bitcoinService from "@/services/bitcoinService";
+import bitcoinService from "brightblock-lib/src/services/bitcoinService";
 
 // noinspection JSUnusedGlobalSymbols
 export default {

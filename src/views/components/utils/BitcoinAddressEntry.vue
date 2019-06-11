@@ -48,7 +48,7 @@
 
 <script>
 import { mdbIcon, mdbPopover, mdbCardBody, mdbCardTitle, mdbCardText, mdbBtn } from "mdbvue";
-import bitcoinService from "@/services/bitcoinService";
+import bitcoinService from "brightblock-lib/src/services/bitcoinService";
 import QRCode from "qrcode";
 
 // noinspection JSUnusedGlobalSymbols

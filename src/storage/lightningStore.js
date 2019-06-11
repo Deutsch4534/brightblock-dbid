@@ -1,4 +1,4 @@
-import lightningService from "@/services/lightningService";
+import lightningService from "brightblock-lib/src/services/lightningService";
 
 const lightningStore = {
   namespaced: true,

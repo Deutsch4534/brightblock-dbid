@@ -1,6 +1,6 @@
 import _ from "lodash";
 import store from "@/storage/store";
-import bitcoinService from "@/services/bitcoinService";
+import bitcoinService from "brightblock-lib/src/services/bitcoinService";
 import utils from "@/services/utils";
 import moment from "moment";
 

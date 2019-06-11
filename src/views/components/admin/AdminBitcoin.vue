@@ -42,7 +42,7 @@
 </template>
 
 <script>
-import bitcoinService from "@/services/bitcoinService";
+import bitcoinService from "brightblock-lib/src/services/bitcoinService";
 import { mdbContainer, mdbRow, mdbCol, mdbInput, mdbTextarea, mdbBtn, mdbIcon, mdbModal, mdbModalHeader, mdbModalBody, mdbModalFooter } from 'mdbvue';
 
 export default {

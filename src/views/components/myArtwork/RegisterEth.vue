@@ -51,7 +51,7 @@ import RegisterBitcoin from "./RegisterBitcoin";
 import utils from "@/services/utils";
 import notify from "@/notify";
 import ethereumService from "@/services/ethereumService";
-import bitcoinService from "@/services/bitcoinService";
+import bitcoinService from "brightblock-lib/src/services/bitcoinService";
 // import OpenTimestamps from "javascript-opentimestamps";
 import { mdbPopover, mdbCol, mdbView, mdbMask, mdbRow, mdbContainer, mdbCard, mdbCardImage, mdbCardBody, mdbCardTitle, mdbCardText, mdbBtn } from "mdbvue";
 

@@ -47,7 +47,7 @@
 <script>
 import { mdbPopover, mdbIcon, mdbCardBody, mdbCardTitle, mdbCardText, mdbBtn } from "mdbvue";
 import { mdbTbl, mdbTblHead, mdbTblBody } from 'mdbvue';
-import bitcoinService from "@/services/bitcoinService";
+import bitcoinService from "brightblock-lib/src/services/bitcoinService";
 import moment from "moment";
 import myArtworksService from "@/services/myArtworksService";
 
