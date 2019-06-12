@@ -1,78 +1,21 @@
 <template>
-<!-- Main navigation 424f95 -->
 <header>
 <login-tab-modal v-if="showModal" :modal="showModal" @closeModal="closeModal"/>
-<nav class="d-flex flex-row">
-
-  <div class="p-2"><router-link to="/" class="navbar-brand d-inline-block" >DBIDIO</router-link></div>
-  <!-- mdbNavbar brand
-  <span class="mr-3">
-    <router-link to="/" class="navbar-brand d-inline-block" >DBIDIO</router-link>
-  </span>
-  <button id="btn-toggle" @click.prevent="toggleNav" class="navbar-toggler toggler-example black darken-3" type="button"
-      data-toggle="collapse"
-      data-target="#navbarSupportedContent"
-      aria-controls="navbarSupportedContent"
-      aria-expanded="false"
-      aria-label="Toggle navigation">
-      <span class="white-text"><i class="fas fa-bars fa-1x"></i></span>
-  </button>
-  -->
-
-  <div :class="toggleClass" class="navbar" id="">
-    <ul class="navbar-nav ml-auto">
-      <li class="nav-item" @click="closeMenu"><router-link class="nav-link navbar-link" to="/about">about</router-link></li>
-      <account-links v-if="loggedIn" @closeMenu="closeMenu"/>
-      <li class="nav-item" @click="closeMenu"><a v-on:click.prevent="loginMultiPlayer" v-if="!loggedIn" class="nav-link navbar-link">Login with Blockstack</a></li>
-    </ul>
-  </div>
-
-</nav>
-<nav class="navbar navbar-expand-lg bg-dark text-white p-0 m-0">
-
-  <!-- mdbNavbar brand -->
-  <button id="btn-toggle" @click.prevent="toggleNav" class="navbar-toggler toggler-example black darken-3" type="button"
-      data-toggle="collapse"
-      data-target="#navbarSupportedContent"
-      aria-controls="navbarSupportedContent"
-      aria-expanded="false"
-      aria-label="Toggle navigation">
-      <span class="white-text"><i class="fas fa-bars fa-1x"></i></span>
-  </button>
-
-  <div :class="toggleClass" class="navbar-collapse collapse dark" id="navbarSupportedContent">
-    <ul class="navbar-nav m-auto">
-      <li class="nav-item" @click="closeMenu"><router-link class="nav-link navbar-link" to="/">buy</router-link></li>
-    </ul>
-    <ul class="navbar-nav m-auto">
-      <li class="nav-item" @click="closeMenu"><router-link class="nav-link navbar-link" to="/">sell</router-link></li>
-    </ul>
-    <ul class="navbar-nav m-auto">
-      <li class="nav-item" @click="closeMenu"><router-link class="nav-link navbar-link" to="/">stuff</router-link></li>
-    </ul>
-  </div>
-
-</nav>
-<!-- Main navigation -->
+<div class="d-flex bg-dark text-white">
+  <div class="mr-auto p-2"><router-link to="/" class="nav-link navbar-link">DBIDIO</router-link></div>
+  <div class="py-2"><router-link class="nav-link navbar-link" to="/about">about</router-link></div>
+  <div class="py-2" v-if="loggedIn"><account-links @closeMenu="closeMenu"/></div>
+  <div class="py-2" v-else><a v-on:click.prevent="loginMultiPlayer" class="nav-link navbar-link">Login</a></div>
+</div>
+<div class="d-flex justify-content-between">
+  <div class="py-2"><router-link class="nav-link navbar-link" to="/buy">buy</router-link></div>
+  <div class="py-2"><router-link class="nav-link navbar-link" to="/sell">sell</router-link></div>
+  <div class="py-2"><router-link class="nav-link navbar-link" to="/things">things</router-link></div>
+</div>
 </header>
 </template>
 
 <script>
-let resizeTimeout;
-function resizeThrottler(actualResizeHandler) {
-  // ignore resize events as long as an actualResizeHandler execution is in the queue
-  if (!resizeTimeout) {
-    resizeTimeout = setTimeout(() => {
-      resizeTimeout = null;
-      actualResizeHandler();
-
-      // The actualResizeHandler will execute at a rate of 15fps
-    }, 66);
-  }
-}
-
-import { mdbBadge, mdbContainer, mdbIcon, mdbRow, mdbCol, mdbNavbar, mdbNavbarToggler, mdbNavbarNav, mdbNavItem, mdbInput, mdbBtn, mdbNavbarBrand } from 'mdbvue';
-import { mdbDropdown, mdbDropdownItem, mdbDropdownMenu, mdbDropdownToggle } from 'mdbvue';
 import AccountLinks from "@/layout/AccountLinks";
 import PortfolioLinks from "@/layout/PortfolioLinks";
 import UploadLinks from "@/layout/UploadLinks";
@@ -101,31 +44,13 @@ export default {
     UploadLinks,
     PortfolioLinks,
     AccountLinks,
-    mdbContainer,
-    mdbRow,
-    mdbCol,
-    mdbNavbar,
-    mdbNavbarToggler,
-    mdbNavbarNav,
-    mdbNavItem,
-    mdbInput,
-    mdbBtn,
-    mdbBadge,
-    mdbIcon,
-    mdbNavbarBrand,
-    mdbDropdown,
-    mdbDropdownItem,
-    mdbDropdownMenu,
-    mdbDropdownToggle
   },
   created() {
     this.getContent();
-    window.addEventListener('resize', this.handleResize);
     this.$store.dispatch("assetStore/lookupAssetsByBuyer").then((assets) => {
     });
   },
   beforeDestroy: function () {
-    window.removeEventListener('resize', this.handleResize)
   },
   computed: {
     featureAuctions() {
@@ -156,16 +81,6 @@ export default {
         this.taglink2 = document.data.taglink2[0].text;
       });
       **/
-    },
-    handleResize (event) {
-      this.fullWidth = document.documentElement.clientWidth;
-      if (this.fullWidth > 1200) {
-        this.toggleClass = "";
-        document.getElementById("navbarSupportedContent").style.display = "block";
-      } else {
-        document.getElementById("navbarSupportedContent").style.display = "none";
-      }
-      console.log("width: " + this.fullWidth);
     },
     loginMultiPlayer: function () {
       let res = myAccountService.loginMultiPlayer();
@@ -205,9 +120,6 @@ export default {
       artworkSearchService.newQuery(this.$store, {field: "title", query: qString});
       this.$router.push("/search?query=" + qString);
     },
-    scrollListener() {
-      resizeThrottler(this.handleScroll);
-    }
   },
   mounted() {
   },
