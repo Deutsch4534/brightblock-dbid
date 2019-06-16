@@ -48,45 +48,16 @@ const utils = {
     return { connection: connection, username: username, auctionId: auctionId };
   },
 
-  buildArtworkHash(artworkUrl) {
-    if (artworkUrl && artworkUrl.length > 0) {
-      return "0x" + SHA256(artworkUrl).toString();
-    }
-  },
-
-  buildArtworkHashFromArtwork(artwork) {
-    if (artwork.timestamp) {
-      return artwork.timestamp;
-    } else if (artwork.artwork && artwork.artwork.length > 0) {
-      return utils.buildArtworkHash(artwork.artwork[0].dataUrl);
-    }
-  },
-
-  buildBitcoinHash(artwork) {
-    let hashBase = artwork.artist + ":" + artwork.image;
+  buildBitcoinHash(item) {
+    let hashBase = item.owner + ":" + item.supportingDocuments;
     return SHA256(hashBase).toString();
   },
 
-  buildGaiaUrl: function(gaiaUrl, artworkId) {
-    let gaiaFileName = settings.gaiaFileName;
-    // let url = null
-    // building gaiaUrl from userProfile data is possibly more efficient but it seems to give the wrong value..
-    // if (userProfileGaiaUrl) {
-    //  url = userProfile.gaiaUrl + indexData.id + '.json'
-    // }
-    let urlLastSlash = gaiaUrl.lastIndexOf("/");
-    let url = gaiaUrl.substring(0, urlLastSlash);
-    if (!url.endsWith("/")) {
-      url = url + "/";
-    }
-    return url + gaiaFileName + artworkId + ".json";
-  },
-
-  initialisePurchaseCycle: function(artwork, otherData) {
+  initialisePurchaseCycle: function(item, otherData) {
     let invoiceRates = settings.invoiceRates;
-    let amounts = utils.getAmounts(otherData.fiatRate, invoiceRates, artwork.saleData, artwork.gallerist, artwork.artist !== artwork.owner);
+    let amounts = utils.getAmounts(otherData.fiatRate, invoiceRates, item.saleData, item.gallerist, item.artist !== item.owner);
     let residuals = [];
-    let objectIdent = "artwork_::_" + artwork.id;
+    let objectIdent = "item_::_" + item.id;
     if (otherData.gallerist) {
       residuals.splice(0, 0, {
         label: objectIdent + "_::_gallerist",
@@ -180,17 +151,11 @@ const utils = {
   },
 
   convertFromBlockstack: function(record) {
-    if (!record.indexData.uploader || !record.indexData.id) {
-      throw new Error({
-        ERR_CODE: 200,
-        error: "Uploader and id must be present."
-      });
+    if (!record.indexData.owner || !record.indexData.id) {
+      throw new Error("Owner and id must be present.");
     }
     if (!record.provData) {
       record.provData = {};
-    }
-    if (!record.provData.artwork) {
-      record.provData.artwork = [];
     }
     if (!record.provData.images) {
       record.provData.images = [];
@@ -198,7 +163,7 @@ const utils = {
     if (!record.provData.supportingDocuments) {
       record.provData.supportingDocuments = [];
     }
-    let artworkData = this.getArtworkData(record.provData);
+    let itemData = this.getItemData(record.provData);
     let bitcoinTx = record.indexData.bitcoinTx;
     if (record.indexData.saleData && record.indexData.saleData.bitcoinTx) {
       bitcoinTx = record.indexData.saleData.bitcoinTx;
@@ -206,79 +171,54 @@ const utils = {
         bitcoinTx = record.indexData.bitcoinTx;
       }
     }
-    return _.merge(artworkData, {
+    return _.merge(itemData, {
       id: record.indexData.id,
       title: record.indexData.title,
       description: record.indexData.description,
-      lastUpdate: record.indexData.lastUpdate,
+      updated: record.indexData.updated,
       keywords: record.indexData.keywords,
       buyer: record.indexData.buyer,
       bitcoinTx: bitcoinTx,
       status: record.indexData.status,
       saleHistories: record.indexData.saleHistories,
-      itemType: record.indexData.itemType,
-      uploader: record.indexData.uploader,
-      artist: record.indexData.artist ? record.indexData.artist : record.indexData.uploader,
-      owner: record.indexData.owner ? record.indexData.owner : record.indexData.uploader,
-      gallerist: record.indexData.gallerist ? record.indexData.gallerist : null,
+      owner: record.indexData.owner,
       saleData: record.indexData.saleData,
-      medium: record.indexData.medium,
-      dimensions: record.indexData.dimensions,
-      yearCreated: record.indexData.yearCreated,
-      editions: record.indexData.editions ? record.indexData.editions : 1,
-      edition: record.indexData.edition ? record.indexData.edition : 1,
-      gaiaUrl: record.provData.gaiaUrl,
-      bcitem: record.provData.bcitem
     });
   },
 
-  convertToBlockstack: function(artwork) {
-    if (!artwork.uploader || !artwork.id) {
-      throw new Error({
-        ERR_CODE: 200,
-        error: "Uploader and id must be present."
-      });
+  convertToBlockstack: function(item) {
+    if (!item.owner || !item.id) {
+      throw new Error("Owner and id must be present.");
     }
     let indexData = {
-      id: artwork.id,
-      title: artwork.title,
-      description: artwork.description,
-      itemType: artwork.itemType,
-      lastUpdate: artwork.lastUpdate,
-      keywords: artwork.keywords,
-      buyer: artwork.buyer,
-      status: artwork.status,
-      bitcoinTx: artwork.bitcoinTx,
-      saleHistories: artwork.saleHistories,
-      owner: artwork.owner,
-      uploader: artwork.uploader,
-      gallerist: artwork.gallerist,
-      artist: artwork.artist,
-      medium: artwork.medium,
-      dimensions: artwork.dimensions,
-      yearCreated: artwork.yearCreated,
-      editions: artwork.editions ? artwork.editions : 1,
-      edition: artwork.edition ? artwork.edition : 1
+      id: item.id,
+      title: item.title,
+      description: item.description,
+      updated: item.updated,
+      keywords: item.keywords,
+      buyer: item.buyer,
+      status: item.status,
+      bitcoinTx: item.bitcoinTx,
+      saleHistories: item.saleHistories,
+      owner: item.owner,
     };
 
-    if (artwork.saleData) {
-      indexData.saleData = artwork.saleData;
+    if (item.saleData) {
+      indexData.saleData = item.saleData;
     } else {
       indexData.saleData = moneyUtils.buildInitialSaleData();
     }
 
     let provData = {
-      id: artwork.id,
-      images: artwork.images,
-      artwork: artwork.artwork,
-      coa: artwork.coa,
-      created: artwork.created,
-      supportingDocuments: artwork.supportingDocuments,
-      bcitem: artwork.bcitem
+      id: item.id,
+      images: item.images,
+      coa: item.coa,
+      created: item.created,
+      supportingDocuments: item.supportingDocuments,
     };
-    if (artwork.artwork && artwork.artwork.length > 0) {
-      provData.derivedTimestamp = utils.buildArtworkHash(
-        artwork.artwork[0].dataUrl
+    if (item.supportingDocuments && item.supportingDocuments.length > 0) {
+      provData.derivedTimestamp = utils.buildItemHash(
+        item.supportingDocuments[0].dataUrl
       );
     }
     return {
@@ -287,29 +227,25 @@ const utils = {
     };
   },
 
-  getArtworkData: function(provData) {
-    let artworkData = {
-      artwork: provData.artwork,
+  getItemData: function(provData) {
+    let itemData = {
       coa: provData.coa,
       images: provData.images,
       supportingDocuments: provData.supportingDocuments,
       created: provData.created,
-      bcitem: provData.bcitem
     };
     if (
-      provData.artwork &&
-      provData.artwork[0] &&
-      provData.artwork[0].dataUrl.length > 0
+      provData.supportingDocuments &&
+      provData.supportingDocuments[0] &&
+      provData.supportingDocuments[0].dataUrl.length > 0
     ) {
-      artworkData.image = provData.artwork[0].dataUrl;
-      artworkData.timestamp = utils.buildArtworkHash(
-        provData.artwork[0].dataUrl
+      itemData.timestamp = utils.buildItemHash(
+        provData.supportingDocuments[0].dataUrl
       );
     } else {
-      provData.artwork = [];
-      artworkData.image = "/images/missing-image.jpg";
+      provData.supportingDocuments = [];
     }
-    return artworkData;
+    return itemData;
   },
 
   signBitcoin: function(privkey, message) {

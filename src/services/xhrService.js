@@ -1,5 +1,5 @@
 import axios from "axios";
-import settings from "./settings";
+import { CONSTANTS } from "@/storage/constants";
 
 const xhrService = {
   makeDirectCall: function(url) {
@@ -22,7 +22,7 @@ const xhrService = {
   makeGetCall: function(command, args) {
     let callInfo = {
       method: "get",
-      url: settings.ethGatewayUrl + command,
+      url: CONSTANTS.ethGatewayUrl + command,
       headers: {
         "Content-Type": "application/json"
       }

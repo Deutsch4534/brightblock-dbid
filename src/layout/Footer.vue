@@ -1,13 +1,13 @@
 <template>
-  <footer class="container-fluid text-black page-footer bg-dark text-white">
-      <mdb-row class="d-flex flex-row text-right align-items-center py-2">
-        <mdb-col col="12">
-          <span class="mr-3"><a href="https://medium.com/@radicleart" target="_blank" rel="noreferrer"><mdb-icon fab icon="medium" /></a></span>
-          <span class="mx-5"><a href="https://twitter.com/radicleart" target="_blank" rel="noreferrer"><mdb-icon fab icon="twitter" /></a></span>
-          <span class="mr-3"><a href="https://github.com/radicleart/brightblock-oam" target="_blank" rel="noreferrer"><mdb-icon fab icon="github" /></a></span>
-        </mdb-col>
-      </mdb-row>
-  </footer>
+<footer class="container-fluid text-black page-footer bg-dark text-white">
+    <mdb-row class="d-flex flex-row text-right align-items-center py-2">
+      <mdb-col col="12">
+        <span class="mr-3"><a href="https://medium.com/@radicleart" target="_blank" rel="noreferrer"><mdb-icon fab icon="medium" /></a></span>
+        <span class="mx-3"><a href="https://twitter.com/radicleart" target="_blank" rel="noreferrer"><mdb-icon fab icon="twitter" /></a></span>
+        <span class="mr-3"><a href="https://github.com/radicleart/brightblock-oam" target="_blank" rel="noreferrer"><mdb-icon fab icon="github" /></a></span>
+      </mdb-col>
+    </mdb-row>
+</footer>
 </template>
 
 <script>
@@ -27,7 +27,6 @@ export default {
   data() {
     return {
       year: new Date().getFullYear(),
-      logo: require("@/assets/img/logo/logo_white.png")
     };
   },
   methods: {

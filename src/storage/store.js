@@ -2,10 +2,12 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import { CONSTANTS } from "./constants";
+import myItemStore from "./myItemStore";
 import myArtworksStore from "./myArtworksStore";
 import myAccountStore from "./myAccountStore";
 import userProfilesStore from "./userProfilesStore";
 import artworkSearchStore from "./artworkSearchStore";
+import itemSearchStore from "./itemSearchStore";
 import conversionStore from "./conversionStore";
 import assetStore from "./assetStore";
 import lightningStore from "./lightningStore";
@@ -15,12 +17,16 @@ import myAuctionsStore from "./myAuctionsStore";
 import contentStore from "./contentStore";
 import galleryStore from "./galleryStore";
 import xhrService from "@/services/xhrService";
+import bitcoinStore from "./bitcoinStore";
 
 Vue.use(Vuex);
 
 const store = new Vuex.Store({
   modules: {
+    myItemStore: myItemStore,
     myArtworksStore: myArtworksStore,
+    itemSearchStore: itemSearchStore,
+    bitcoinStore: bitcoinStore,
     myAccountStore: myAccountStore,
     userProfilesStore: userProfilesStore,
     artworkSearchStore: artworkSearchStore,

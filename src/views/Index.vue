@@ -133,7 +133,7 @@ export default {
     });
     **/
     this.$prismic.client.getSingle("index-page").then(document => {
-      this.$store.commit("contentStore/indexPage", document.data);
+      this.$store.commit("contentStore/mainContent", document.data);
       let content = this.$store.state.contentStore.content["index-page"];
       this.imageIdTitle = content["section-images-title"][0].text;
       this.featuredProd = content["section-images-ids"][0].text.split(",");

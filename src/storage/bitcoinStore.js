@@ -29,6 +29,20 @@ const bitcoinStore = {
     }
   },
   actions: {
+    checkAddress({ commit, state }, bitcoinAddress) {
+      return new Promise(resolve => {
+        bitcoinService.checkAddress({address: bitcoinAddress}).then(result => {
+          if (result) {
+            resolve(true);
+          } else {
+            resolve(false);
+          }
+        })
+          .catch(() => {
+            resolve(false);
+          });
+      });
+    },
     fetchBitcoinState({ commit, state }) {
       return new Promise(resolve => {
         let bitcoinState = state.bitcoinState;

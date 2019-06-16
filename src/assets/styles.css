@@ -34,7 +34,8 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 header {
-  min-height: 58px;
+  min-height: 50px;
+  max-height: 70px;
 }
 
 p {
@@ -169,12 +170,12 @@ a {
 
 /* Drag and drop boxes */
 
-.load-artwork {
+.load-item {
   display: flex;
-  height: 150px;
+  height: 60px;
   text-align: center;
-  padding: 20px;
-  font-size: 1em;
+  padding: 5px;
+  font-size: 1.3em;
   background-color: white;
   border-radius: 10px;
   border: 1px solid rgba(0, 0, 0, 0.12);

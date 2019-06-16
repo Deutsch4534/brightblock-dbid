@@ -1,5 +1,8 @@
 import Router from "vue-router";
 
+import Index from "./pages/Index.vue";
+import Sell from "./pages/Sell.vue";
+
 import Admin from "./views/Admin.vue";
 import AdminSettings from "./views/components/admin/AdminSettings";
 import AdminBitcoin from "./views/components/admin/AdminBitcoin";
@@ -8,7 +11,6 @@ import AdminRegistrations from "./views/components/admin/AdminRegistrations";
 import AdminBuildIndex from "./views/components/admin/AdminBuildIndex";
 import AdminQueryIndex from "./views/components/admin/AdminQueryIndex";
 
-import Index from "./views/Index.vue";
 import Contact from "./views/Contact.vue";
 import NewsSignup from "./views/NewsSignup.vue";
 import Landing from "./views/Landing.vue";
@@ -66,6 +68,117 @@ const router = new Router({
       meta: { requiresAuth: false }
     },
     {
+      path: "/",
+      name: "index",
+      components: {
+        default: Index,
+        header: Navbar,
+        footer: Footer
+      },
+      meta: { requiresAuth: false }
+    },
+    {
+      path: "/buy",
+      name: "buy",
+      components: {
+        default: Index,
+        header: Navbar,
+        footer: Footer
+      },
+      meta: { requiresAuth: false }
+    },
+    {
+      path: "/sell",
+      name: "sell",
+      components: {
+        default: Sell,
+        header: Navbar,
+        footer: Footer
+      },
+      meta: { requiresAuth: false }
+    },
+    {
+      path: "/seller-info",
+      name: "seller-info",
+      components: {
+        default: Sell,
+        header: Navbar,
+        footer: Footer
+      },
+      meta: { requiresAuth: false }
+    },
+    {
+      path: "/my-items",
+      name: "my-items",
+      components: {
+        default: Sell,
+        header: Navbar,
+        footer: Footer
+      },
+      meta: { requiresAuth: true },
+    },
+    {
+      path: "/my-items/:itemId",
+      name: "my-item",
+      components: {
+        default: Sell,
+        header: Navbar,
+        footer: Footer
+      },
+      meta: { requiresAuth: true },
+    },
+    {
+      path: "/my-items/update/:itemId",
+      name: "my-item-update",
+      components: {
+        default: Sell,
+        header: Navbar,
+        footer: Footer
+      },
+      meta: { requiresAuth: true }
+    },
+    {
+      path: "/my-item/register/:itemId",
+      name: "my-item-register",
+      components: {
+        default: Sell,
+        header: Navbar,
+        footer: Footer
+      },
+      meta: { requiresAuth: true }
+    },
+    {
+      path: "/my-item/set-price/:itemId",
+      name: "my-item-set-price",
+      components: {
+        default: Sell,
+        header: Navbar,
+        footer: Footer
+      },
+      meta: { requiresAuth: true }
+    },
+    {
+      path: "/my-item/coa/:itemId",
+      name: "my-item-coa",
+      components: {
+        default: Sell,
+        header: Navbar,
+        footer: Footer
+      },
+      meta: { requiresAuth: true }
+    },
+    {
+      path: "/my-item/upload",
+      name: "my-item-upload",
+      components: {
+        default: Sell,
+        header: Navbar,
+        footer: Footer
+      },
+      meta: { requiresAuth: true }
+    },
+
+    {
       path: "/news-signup",
       name: "newsSignup",
       components: {
@@ -88,16 +201,6 @@ const router = new Router({
     {
       path: "/home",
       name: "home",
-      components: {
-        default: Index,
-        header: Navbar,
-        footer: Footer
-      },
-      meta: { requiresAuth: false }
-    },
-    {
-      path: "/",
-      name: "index",
       components: {
         default: Index,
         header: Navbar,

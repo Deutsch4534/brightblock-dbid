@@ -43,6 +43,14 @@ export const CONSTANTS = {
   gIndexDataPrefix: "gallery_",
   gaiaFileName: "record_",
   statuses: {
+    item: {
+      NOT_REGISTERED: "NOT_REGISTERED",
+      NOT_SELLING: "NOT_SELLING",
+      PURCHASE_ENABLED: "PURCHASE_ENABLED",
+      BIDDING_ENABLED: "BIDDING_ENABLED",
+      PURCHASE_BEGUN: "PURCHASE_BEGUN",
+      PURCHASE_COMPLETE: "PURCHASE_COMPLETE",
+    },
     artwork: {
       NOT_REGISTERED: "NOT_REGISTERED",
       NOT_SELLING: "NOT_SELLING",

@@ -37,6 +37,7 @@ export default {
   props: ["myPageUrl", "artist"],
   data() {
     return {
+      logo: require("@/assets/img/logo/logo-black-256x256.png"),
     };
   },
   mounted() {

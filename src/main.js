@@ -16,6 +16,7 @@ import Datetime from "vue-datetime";
 // You need a specific loader for CSS files
 import "vue-datetime/dist/vue-datetime.css";
 import {VueMasonryPlugin} from 'vue-masonry';
+import VueBootstrapTypeahead from 'vue-bootstrap-typeahead';
 
 Vue.config.productionTip = false;
 
@@ -24,12 +25,13 @@ Vue.use(Vuex);
 Vue.use(Notifications);
 Vue.use(Datetime);
 Vue.use(PrismicVue, {
-  endpoint: "https://radicle.prismic.io/api/v2",
+  endpoint: "https://dbid.prismic.io/api/v2",
   linkResolver
 });
 Vue.use(VueMasonryPlugin);
 
 Vue.config.productionTip = false;
+Vue.component('vue-bootstrap-typeahead', VueBootstrapTypeahead);
 
 const app = new Vue({
   router,

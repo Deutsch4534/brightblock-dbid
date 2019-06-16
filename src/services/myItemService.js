@@ -1,33 +1,35 @@
 import { getFile, putFile } from "blockstack";
-import settings from "./settings";
 import _ from "lodash";
 import utils from "./utils";
 import searchIndexService from "./searchIndexService";
-import artworkSearchService from "./artworkSearchService";
+import itemSearchService from "./itemSearchService";
 import moment from "moment";
 
-const myArtworksService = {
-  addSaleHistory: function(artwork, assetHash, buyerChainData) {
-    if (!artwork.saleHistories) {
-      artwork.saleHistories = [];
+const itemRootFileName = "items_v01.json";
+const itemFileName = "item_";
+
+const myItemService = {
+  addSaleHistory: function(item, assetHash, buyerChainData) {
+    if (!item.saleHistories) {
+      item.saleHistories = [];
     }
-    let sh = _.find(artwork.saleHistories, function(o) {
+    let sh = _.find(item.saleHistories, function(o) {
       return o.assetHash === assetHash;
     });
     if (!sh) {
-      artwork.saleHistories.splice(0, 0, {
-        seller: artwork.owner,
-        buyer: artwork.buyer,
+      item.saleHistories.splice(0, 0, {
+        seller: item.owner,
+        buyer: item.buyer,
         assetHash: assetHash,
         buyerChainData: buyerChainData
       });
     }
   },
-  addSaleHistoryPaySellerData: function(artwork, buyersTxid, sellersTxid) {
-    if (!artwork.saleHistories) {
-      artwork.saleHistories = [];
+  addSaleHistoryPaySellerData: function(item, buyersTxid, sellersTxid) {
+    if (!item.saleHistories) {
+      item.saleHistories = [];
     }
-    let sh = _.find(artwork.saleHistories, function(o) {
+    let sh = _.find(item.saleHistories, function(o) {
       return o.buyersTxid === buyersTxid;
     });
     if (!sh) {
@@ -37,22 +39,21 @@ const myArtworksService = {
   },
 
   initBlockstackRootFile: function() {
-    const artworkRootFileName = settings.artworkRootFileName;
     var now = moment({}).valueOf();
     let newRootFile = {
       created: now,
       profile: {},
       records: []
     };
-    return putFile(artworkRootFileName, JSON.stringify(newRootFile), {
+    return putFile(itemRootFileName, JSON.stringify(newRootFile), {
       encrypt: false
     });
   },
 
-  getMyArtworks: function(myProfile, success, failure) {
-    artworkSearchService.queryByOwner(myProfile.username,
+  getMyItems: function(myProfile, success, failure) {
+    itemSearchService.queryByOwner(myProfile.username,
       function(searchResults) {
-        myArtworksService.getMyArtworksCont(myProfile, searchResults, success, failure);
+        myItemService.getMyItemsCont(myProfile, searchResults, success, failure);
       },
       function(err) {
         console.log(err);
@@ -60,20 +61,16 @@ const myArtworksService = {
     );
   },
 
-  getMyArtworksCont: function(myProfile, searchResults, success, failure) {
-    const artworkRootFileName = settings.artworkRootFileName;
-    getFile(artworkRootFileName, { decrypt: false })
+  getMyItemsCont: function(myProfile, searchResults, success, failure) {
+    getFile(itemRootFileName, { decrypt: false })
       .then(function(file) {
         if (!file) {
-          myArtworksService.initBlockstackRootFile();
+          myItemService.initBlockstackRootFile();
         } else {
           let blockstackRootFile = JSON.parse(file);
           let usersToFetch = [];
           _.forEach(blockstackRootFile.records, function(indexData) {
             try {
-              if (!indexData.uploader) {
-                indexData.uploader = myProfile.username;
-              }
               let searchResult = _.find(searchResults, function(o) {
                 return Number(o.id) === indexData.id;
               });
@@ -81,9 +78,8 @@ const myArtworksService = {
                 indexData.buyer = searchResult.buyer;
                 indexData.status = searchResult.status;
               }
-              myArtworksService.addUserOrNot(usersToFetch, indexData.uploader);
-              myArtworksService.addUserOrNot(usersToFetch, indexData.owner);
-              myArtworksService.fetchMyProvenanceFile(
+              myItemService.addUserOrNot(usersToFetch, indexData.owner);
+              myItemService.fetchMyProvenanceFile(
                 indexData,
                 success,
                 failure
@@ -97,7 +93,7 @@ const myArtworksService = {
       .catch(function() {
         failure({
           ERR_CODE: 101,
-          message: "Error getting my artworks: artworkRootFileName=" + artworkRootFileName
+          message: "Error getting my items: itemRootFileName=" + itemRootFileName
         });
       });
   },
@@ -111,26 +107,24 @@ const myArtworksService = {
     }
   },
 
-  getMyArtwork: function(artworkId, success, failure) {
-    const artworkRootFileName = settings.artworkRootFileName;
-    getFile(artworkRootFileName, { decrypt: false })
+  getMyItem: function(itemId, success, failure) {
+    getFile(itemRootFileName, { decrypt: false })
       .then(function(file) {
         if (!file) {
-          myArtworksService.initBlockstackRootFile();
+          myItemService.initBlockstackRootFile();
           success();
         } else {
           let blockstackRootFile = JSON.parse(file);
           let usersToFetch = [];
-          let index = _.findIndex(blockstackRootFile.records, function(artwork) {
-            return artworkId === artwork.id;
+          let index = _.findIndex(blockstackRootFile.records, function(item) {
+            return item.id === itemId;
           });
           if (index < 0) {
             success();
           } else {
             let indexData = blockstackRootFile.records[index];
-            myArtworksService.addUserOrNot(usersToFetch, indexData.uploader);
-            myArtworksService.addUserOrNot(usersToFetch, indexData.owner);
-            myArtworksService.fetchMyProvenanceFile(
+            myItemService.addUserOrNot(usersToFetch, indexData.owner);
+            myItemService.fetchMyProvenanceFile(
               indexData,
               success,
               failure
@@ -141,35 +135,30 @@ const myArtworksService = {
       .catch(function() {
         failure({
           ERR_CODE: 101,
-          message: "Error getting my artwork: artworkRootFileName=" + artworkRootFileName + " artworkId=" + artworkId
+          message: "Error getting my item: itemRootFileName=" + itemRootFileName + " itemId=" + itemId
         });
       });
   },
 
-  transferArtwork: function(artwork, success, failure) {
-    myArtworksService.uploadOrTransferArtwork(artwork, success, failure);
+  transferItem: function(item, success, failure) {
+    myItemService.uploadOrTransferItem(item, success, failure);
   },
 
-  uploadArtwork: function(artwork, success, failure) {
-    artwork.id = moment({}).valueOf();
-    artwork.lastUpdate = artwork.id;
-    artwork.bcitem = {
-      status: "new",
-      itemIndex: -1
-    };
-    myArtworksService.uploadOrTransferArtwork(artwork, success, failure);
+  uploadItem: function(item, success, failure) {
+    item.id = moment({}).valueOf();
+    item.updated = item.id;
+    myItemService.uploadOrTransferItem(item, success, failure);
   },
 
-  uploadOrTransferArtwork: function(artwork, success, failure) {
-    let artworkRootFileName = settings.artworkRootFileName;
-    getFile(artworkRootFileName, { decrypt: false })
+  uploadOrTransferItem: function(item, success, failure) {
+    getFile(itemRootFileName, { decrypt: false })
       .then(function(file) {
         if (!file) {
-          myArtworksService.initBlockstackRootFile().then(function(file) {
-            myArtworksService.uploadProvenanceFile(artworkRootFileName,file,artwork,success,failure);
+          myItemService.initBlockstackRootFile().then(function(file) {
+            myItemService.uploadProvenanceFile(itemRootFileName,file,item,success,failure);
           });
         } else {
-          myArtworksService.uploadProvenanceFile(artworkRootFileName,file,artwork,success,failure);
+          myItemService.uploadProvenanceFile(itemRootFileName,file,item,success,failure);
         }
       })
       .catch(function() {
@@ -177,114 +166,110 @@ const myArtworksService = {
           ERR_CODE: 2,
           message:
             "no root blockstack fole found for file name: " +
-            artworkRootFileName
+            itemRootFileName
         });
       });
   },
 
-  uploadProvenanceFile: function(artworkRootFileName, file, artwork, success, failure) {
+  uploadProvenanceFile: function(itemRootFileName, file, item, success, failure) {
     let blockstackRootFile = file;
     if (typeof file === "string") {
       blockstackRootFile = JSON.parse(file);
     }
-    let gaiaFileName = settings.gaiaFileName;
-    let provFile = gaiaFileName + artwork.id + ".json";
-    let record = utils.convertToBlockstack(artwork);
+    let provFile = itemFileName + item.id + ".json";
+    let record = utils.convertToBlockstack(item);
     let index = _.findIndex(blockstackRootFile.records, function(o) {
-      return o.id === artwork.id;
+      return o.id === item.id;
     });
     if (index < 0) {
       blockstackRootFile.records.splice(0, 0, record.indexData);
     } else {
       blockstackRootFile.records.splice(index, 1, record.indexData);
     }
-    putFile(artworkRootFileName, JSON.stringify(blockstackRootFile), {
+    putFile(itemRootFileName, JSON.stringify(blockstackRootFile), {
       encrypt: false
     })
       .then(function() {
         putFile(provFile, JSON.stringify(record.provData), { encrypt: false })
           .then(function() {
-            searchIndexService.addRecord("artwork", record.indexData);
+            searchIndexService.addRecord("item", record.indexData);
             success(utils.convertFromBlockstack(record));
           })
           .catch(function() {
             failure({
               ERR_CODE: 2,
-              message: "Error saving provenance file: " + artwork.id
+              message: "Error saving provenance file: " + item.id
             });
           });
       })
       .catch(function() {
         failure({
           ERR_CODE: 3,
-          message: "Error uploading artwork: " + artwork.id
+          message: "Error uploading item: " + item.id
         });
       });
   },
 
-  updateArtwork: function(artwork, reindex, updateProvData, success, failure) {
-    let artworkRootFileName = settings.artworkRootFileName;
-    let gaiaFileName = settings.gaiaFileName;
-    let provFile = gaiaFileName + artwork.id + ".json";
+  updateItem: function(item, reindex, updateProvData, success, failure) {
+    let provFile = itemFileName + item.id + ".json";
     var now = moment({}).valueOf();
-    artwork.lastUpdate = now;
-    if (!artwork.bcitem) {
+    item.updated = now;
+    if (!item.bcitem) {
       // for backwards compat with items created before this object was added.
-      artwork.bcitem = {
+      item.bcitem = {
         status: "new",
         itemIndex: -1
       };
     }
-    searchIndexService.removeRecord("id", artwork.id).then(function() {
-      let record = utils.convertToBlockstack(artwork);
-      getFile(artworkRootFileName, { decrypt: false })
+    searchIndexService.removeRecord("id", item.id).then(function() {
+      let record = utils.convertToBlockstack(item);
+      getFile(itemRootFileName, { decrypt: false })
         .then(function(file) {
           if (!file) {
-            failure({ ERR_CODE: 1, message: "no artworks found" });
+            failure({ ERR_CODE: 1, message: "no items found" });
           } else {
             let blockstackRootFile = JSON.parse(file);
             let index = _.findIndex(blockstackRootFile.records, function(o) {
-              return o.id === artwork.id;
+              return o.id === item.id;
             });
             if (index < 0 || index >= blockstackRootFile.records.length) {
               failure({ERR_CODE: 2, message: "Unable to find index data in record."});
             } else {
               blockstackRootFile.records[index] = record.indexData;
-              putFile(artworkRootFileName, JSON.stringify(blockstackRootFile), {encrypt: false}).then(function() {
+              putFile(itemRootFileName, JSON.stringify(blockstackRootFile), {encrypt: false}).then(function() {
                 if (updateProvData) {
                   putFile(provFile, JSON.stringify(record.provData), {encrypt: false}).then(function() {
                     success(utils.convertFromBlockstack(record));
-                    if (reindex) searchIndexService.addRecord("artwork", record.indexData);
+                    if (reindex) searchIndexService.addRecord("item", record.indexData);
                   })
                     .catch(function() {
                       failure({
                         ERR_CODE: 3,
-                        message: "Error saving provenance file: " + artwork.id
+                        message: "Error saving provenance file: " + item.id
                       });
                     });
                 } else {
                   success(utils.convertFromBlockstack(record));
-                  if (reindex) searchIndexService.addRecord("artwork", record.indexData);
+                  if (reindex) searchIndexService.addRecord("item", record.indexData);
                 }
               })
                 .catch(function() {
                   failure({
                     ERR_CODE: 4,
-                    message: "Error uploading artwork: " + artwork.id
+                    message: "Error uploading item: " + item.id
                   });
                 });
             }
           }
         })
         .catch(function() {
-          failure({ ERR_CODE: 5, message: "no artworks found" });
+          failure({ ERR_CODE: 5, message: "no items found" });
         });
     });
   },
 
   fetchMyProvenanceFile: function(indexData, success, failure) {
-    let gaiaFileName = settings.gaiaFileName;
-    let fileToFetch = gaiaFileName + indexData.id + ".json";
+    let fileToFetch = itemFileName + indexData.id + ".json";
     getFile(fileToFetch, { decrypt: false })
       .then(function(file) {
         if (file) {
@@ -308,15 +293,13 @@ const myArtworksService = {
       });
   },
 
-  deleteMyArtwork: function(id, success, failure) {
-    const artworkRootFileName = settings.artworkRootFileName;
-    const gaiaFileName = settings.gaiaFileName;
-    getFile(artworkRootFileName, { decrypt: false })
+  deleteMyItem: function(id, success, failure) {
+    getFile(itemRootFileName, { decrypt: false })
       .then(function(file) {
         if (!file) {
           failure({
             ERR_CODE: 1,
-            message: "No artworks found to delete from: " + id
+            message: "No items found to delete from: " + id
           });
         } else {
           let blockstackRootFile = JSON.parse(file);
@@ -330,17 +313,17 @@ const myArtworksService = {
           if (index < 0) {
             failure({
               ERR_CODE: 2,
-              message: "no artwork in blockstack root file: " + id
+              message: "no item in blockstack root file: " + id
             });
             return;
           }
-          let artwork = blockstackRootFile.records[index];
-          if (artwork.saleData.auctionId) {
+          let item = blockstackRootFile.records[index];
+          if (item.saleData.auctionId) {
             failure({
               ERR_CODE: 3,
               message:
-                "This artwork is listed in auction: " +
-                artwork.saleData.auctionId +
+                "This item is listed in auction: " +
+                item.saleData.auctionId +
                 " please remember to remove it.."
             });
             return;
@@ -348,14 +331,14 @@ const myArtworksService = {
           let deletedRecord = blockstackRootFile.records.splice(index, 1);
           console.log("blockstackRootFile length after: " + blockstackRootFile.records.length +
               " index=" + index);
-          let fileToDelete = gaiaFileName + id + ".json";
+          let fileToDelete = itemFileName + id + ".json";
           putFile(
             fileToDelete,
             JSON.stringify({ deleted: true, reason: "deleted by user" }),
             { encrypt: false }
           )
             .then(function() {
-              putFile(artworkRootFileName, JSON.stringify(blockstackRootFile), {
+              putFile(itemRootFileName, JSON.stringify(blockstackRootFile), {
                 encrypt: false
               })
                 .then(function() {
@@ -386,8 +369,8 @@ const myArtworksService = {
         }
       })
       .catch(function() {
-        failure({ ERR_CODE: 5, message: "no artworks found" });
+        failure({ ERR_CODE: 5, message: "no items found" });
       });
   }
 };
-export default myArtworksService;
+export default myItemService;

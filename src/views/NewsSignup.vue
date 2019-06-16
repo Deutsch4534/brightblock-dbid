@@ -28,7 +28,7 @@ export default {
   },
   mounted() {
     this.$prismic.client.getSingle("index-page").then(document => {
-      this.$store.commit("contentStore/indexPage", document.data);
+      this.$store.commit("contentStore/mainContent", document.data);
       let content = this.$store.state.contentStore.content["index-page"];
       this.loaded = true;
     });
