@@ -337,6 +337,7 @@ const myItemStore = {
 
     uploadItem({ commit }, item) {
       return new Promise(resolve => {
+        item.saleData = moneyUtils.buildInitialSaleData();
         myItemService.uploadItem(
           item,
           function(item) {
@@ -446,6 +447,9 @@ const myItemStore = {
 
     updateItem({ commit }, data) {
       return new Promise(resolve => {
+        if (!data.item.saleData || !data.item.saleData.soid) {
+          data.item.saleData = moneyUtils.buildInitialSaleData();
+        }
         myItemService.updateItem(
           data.item, true, data.updateProvData,
           function(item) {

@@ -4,9 +4,9 @@
 <div class="d-flex bg-white text-dark border-bottom border-dark">
   <div class="mr-auto p-0 ml-4"><router-link to="/" class="nav-link navbar-link"><img :src="logo" width="100px" alt="main logo"></router-link></div>
   <div class="pt-3"><router-link class="nav-link navbar-link mr-1" to="/buy">BUY</router-link></div>
-  <div class="pt-3"><router-link class="nav-link navbar-link mr-5" to="/sell">SELL</router-link></div>
-  <div class="mr-4 pt-2" v-if="loggedIn"><account-links @closeMenu="closeMenu"/></div>
-  <div class="mr-4 py-2" v-else><a v-on:click.prevent="loginMultiPlayer" class="nav-link navbar-link">Login</a></div>
+  <div class="pt-3"><router-link class="nav-link navbar-link mr-1" to="/sell">SELL</router-link></div>
+  <div class="mr-4 pt-3" v-if="!loggedIn"><a v-on:click.prevent="loginMultiPlayer" class="nav-link navbar-link">LOGIN</a></div>
+  <div class="mr-4 pt-2" v-else><account-links @closeMenu="closeMenu"/></div>
 </div>
 </header>
 </template>

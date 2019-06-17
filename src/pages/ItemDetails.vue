@@ -1,7 +1,7 @@
 <template>
 <div class="container" v-if="loading">
-  <div class="col-lg-5 col-xl-4 mb-4">
-    Loading...
+  <div class="spinner-border" role="status">
+    <span class="sr-only">Loading...</span>
   </div>
 </div>
 <div class="container" v-else>
@@ -20,7 +20,7 @@
       </div>
       <p class="grey-text"><description-overflow :text="item.description"/></p>
       <p>Listed <!--by; <a class="font-weight-bold dark-grey-text">{{ownerProfile.name}}</a> --> on <span class="font-weight-bold dark-grey-text">{{created}}</span></p>
-      <order-item :item="item" :myProfile="myProfile"/>
+      <buyers-information :item="item" :asset="asset" action="buy" :myProfile="myProfile"/>
     </div>
   </div>
 </div>
@@ -31,13 +31,13 @@ import moment from "moment";
 import utils from "@/services/utils";
 import DescriptionOverflow from "@/pages/components/utils/DescriptionOverflow";
 import ItemImageListView from "@/pages/components/myItem/ItemImageListView";
-import OrderItem from "@/pages/components/orders/OrderItem";
+import BuyersInformation from "@/pages/components/selling/BuyersInformation";
 
 // noinspection JSUnusedGlobalSymbols
 export default {
   name: "ItemDetails",
   components: {
-    DescriptionOverflow, ItemImageListView, OrderItem
+    DescriptionOverflow, ItemImageListView, BuyersInformation
   },
   props: {
   },
@@ -45,6 +45,7 @@ export default {
     return {
       loading: true,
       myProfile: null,
+      asset: null,
       item: {
         type: Object,
         default() {
@@ -60,7 +61,18 @@ export default {
         this.item = item;
         this.$store.dispatch("myAccountStore/fetchMyAccount").then((myProfile) => {
           this.myProfile = myProfile;
-          this.loading = false;
+          let assetHash = utils.buildBitcoinHash(item);
+          this.$store.dispatch("assetStore/lookupAssetByHash", assetHash).then(asset => {
+            if (asset) {
+              this.asset = asset;
+              this.loading = false;
+            } else {
+              this.$store.dispatch("assetStore/initialiseAsset", item).then(asset => {
+                this.asset = asset;
+                this.loading = false;
+              });
+            }
+          });
         });
       } else {
         this.loading = false;
@@ -77,8 +89,8 @@ export default {
       return;
     },
     ownerProfile() {
-      let profile = this.$store.getters["userProfilesStore/getProfile"](this.item.owner);
-      return profile ? profile : {};
+      let myProfile = this.$store.getters["userProfilesStore/getProfile"](this.item.owner);
+      return myProfile ? myProfile : {};
     }
   }
 };

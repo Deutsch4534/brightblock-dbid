@@ -1,6 +1,6 @@
 <template>
 <!-- droppable area 1 -->
-<div class="col-md-12 mb-5 px-3">
+<div class="col-md-12 mb-3 px-3">
   <mdb-popover trigger="click" :options="{placement: 'top'}">
     <div class="popover">
       <div class="popover-header">
@@ -53,10 +53,7 @@
       </div>
     </div>
   </div>
-  <div class="row mt-2">
-  </div>
-
-  <div class="row border-bottom pb-2 border-dark">
+  <div class="row border-bottom pb-2">
     <div v-for="(file, index) in mediaObjects" :key="index" :file="file" class="col-md-4 p-2 border-bottom border">
       <img :src="missing" alt="Card image cap" class="img-fluid" v-if="ispdf(file)">
       <img :src="file.dataUrl" alt="Card image cap" class="img-fluid mb-2" style="max-height: 350px;" v-else-if="isImage(file)">

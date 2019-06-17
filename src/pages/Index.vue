@@ -1,7 +1,7 @@
 <template>
 <div id="my-app-element" v-if="loaded">
   <div class="container p-2">
-    <latest-offers />
+    <latest-offers :myProfile="myProfile"/>
   </div>
 </div>
 </template>
@@ -22,9 +22,12 @@ export default {
   },
   mounted() {
     document.querySelector('body').classList.add('index');
-    this.$prismic.client.getSingle("main-content").then(document => {
-      this.$store.commit("contentStore/mainContent", document.data);
-      this.loaded = true;
+    this.$store.dispatch("myAccountStore/fetchMyAccount").then((myProfile) => {
+      this.myProfile = myProfile;
+      this.$prismic.client.getSingle("main-content").then(document => {
+        this.$store.commit("contentStore/mainContent", document.data);
+        this.loaded = true;
+      });
     });
 
   },

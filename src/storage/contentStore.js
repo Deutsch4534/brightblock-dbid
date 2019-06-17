@@ -11,6 +11,12 @@ const contentStore = {
     getTaxonomy: state => {
       return state.taxonomy;
     },
+    getCategory: state => categoryName => {
+      let matches = state.taxonomy.filter(category => category.name === categoryName);
+      if (matches && matches.length > 0) {
+        return matches;
+      }
+    },
     getContent: state => pageId => {
       let matches = state.content.filter(content => content.pages.id === pageId);
       return matches;
@@ -62,12 +68,17 @@ const contentStore = {
         }
       });
     },
-    addCategory: function({ state, commit }, category) {
+    addCategory: function({ state, commit, getters }, category) {
       return new Promise(resolve => {
-        taxonomyService.addCategory(category).then(category => {
-          commit("addCategory", category);
-          resolve(category);
-        });
+        let cat = getters.getCategory(category.name);
+        if (cat) {
+          resolve(cat);
+        } else {
+          taxonomyService.addCategory(category).then(category => {
+            commit("addCategory", category);
+            resolve(category);
+          });
+        }
       });
     }
   }

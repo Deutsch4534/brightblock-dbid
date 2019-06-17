@@ -1,9 +1,9 @@
 <template>
 <div class="border-bottom">
   <p class="text-muted text-sm">Type and select from list or press add to create a new category</p>
-  <vue-bootstrap-typeahead inputClass="validate" v-model="newKeyword" :data="keywordNames" @hit="hitOne"/>
-  <div class="d-flex justify-content-end">
-    <a class="btn btn-primary btn-sm" @click.native="hitNew">add</a>
+  <div class="d-flex justify-content-start">
+    <vue-bootstrap-typeahead inputClass="validate" v-model="newKeyword" :data="keywordNames" @hit="hitOne"/>
+    <a class="btn btn-white btn-sm" style="position: relative; top: -7px;" @click="hitNew">add</a>
   </div>
   <span v-for="keyword in chosen" :key="keyword.name">
     <a @click.prevent="unchoose(keyword.name)"><mdb-btn rounded color="white" size="sm" class="mx-0 waves-light">{{keyword.name}}</mdb-btn></a>
@@ -58,7 +58,7 @@ export default {
         return;
       }
       let category = this.hitOne(keywordName);
-      this.$store.dispatch("contentStore/addCategory", category);
+      if (category) this.$store.dispatch("contentStore/addCategory", category);
     },
     hitOne: function(keywordName) {
       let indexInChosen = _.findIndex(this.chosen, function(o) {
@@ -83,6 +83,10 @@ export default {
 };
 </script>
 <style scoped>
+.validate {
+  text-transform: capitalise;
+  width: 550px;
+}
 .typeahead {
   text-transform: capitalise;
   width: 100%;

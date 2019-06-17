@@ -101,22 +101,20 @@ export default {
       try {
         let $self = this;
         this.$emit("registerBitcoin", {error: false, message: "Registering please wait.."});
-        this.$store.dispatch("assetStore/initialiseAsset", item).then(asset => {
-          bitcoinService.registerAsset(asset).then(asset => {
-            if (!asset || !asset.assetRegistrationTx) {
-              $self.$emit("registerBitcoin", {error: true, message: "transaction failed - please try again later."});
-            } else {
-              $self.asset = asset;
-              item.bitcoinTx = asset.assetRegistrationTx;
-              $self.$store.dispatch("myItemStore/updateItem", {item: item, updateProvData: false});
-              $self.$emit("registerBitcoin", {error: false, message: "Registered item on the bitcoin blockchain."});
-            }
-          })
-            .catch(err => {
-              console.log(err);
-              $self.$emit("registerBitcoin", {failed: true, message: err.message});
-            });
-        });
+        bitcoinService.registerAsset(asset).then(asset => {
+          if (!asset || !asset.assetRegistrationTx) {
+            $self.$emit("registerBitcoin", {error: true, message: "transaction failed - please try again later."});
+          } else {
+            $self.asset = asset;
+            item.bitcoinTx = asset.assetRegistrationTx;
+            $self.$store.dispatch("myItemStore/updateItem", {item: item, updateProvData: false});
+            $self.$emit("registerBitcoin", {error: false, message: "Registered item on the bitcoin blockchain."});
+          }
+        })
+          .catch(err => {
+            console.log(err);
+            $self.$emit("registerBitcoin", {failed: true, message: err.message});
+          });
       } catch (err) {
         $self.$emit("registerBitcoin", {error: true, message: 'transaction failed - please try again later'});
         console.log(err);

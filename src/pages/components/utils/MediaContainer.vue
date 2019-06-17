@@ -1,5 +1,5 @@
 <template>
-<mdb-col @click.native="show(0)" v-if="isImage">
+<mdb-col v-if="isImage">
   <mdb-view hover>
     <img class="inplay-image img-fluid mb-4" width="100%" :src="mediaObject[0].dataUrl" :alt="altText">
     <mdb-mask flex-center waves overlay="white-slight"></mdb-mask>

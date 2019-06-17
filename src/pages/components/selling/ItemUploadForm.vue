@@ -1,10 +1,15 @@
 <template>
 <div>
-  <mdb-row>
+  <div class="bg-white mt-5 p-3" v-if="loading">
+    <div class="spinner-border" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+  </div>
+  <mdb-row v-else>
     <div class="col-12 py-5">
       <!-- Supported elements -->
       <confirmation-modal :modal="showModal" :title="modalTitle" :content="modalContent" @closeModal="closeModal"/>
-      <form class="needs-validation form-transparent" novalidate v-on:submit.prevent id="itemForm">
+      <form class="needs-validation form-transparent" novalidate v-on:submit.prevent="checkForm" id="itemForm">
         <!-- item type -->
         <div class="row">
           <div class="col-8 mb-4">
@@ -14,20 +19,20 @@
                 <li v-for="error in errors" :key="error.id">{{ error }}</li>
               </ul>
             </p>
-            <div class="form-row mb-3"><h4>{{formTitle}}</h4></div>
+            <div class="form-row mb-2"><h5>{{formTitle}}</h5></div>
             <div class="form-row mb-3">
               <input type="text" class="form-control" id="validationCustom01" :placeholder="'Item Title (' + limits.title + ' chars max)'" v-model="item.title" required :maxlength="limits.title">
               <div class="invalid-feedback">Please enter a title!</div>
             </div>
-            <div class="form-row mb-5">
+            <div class="form-row mb-3">
                 <!--<label for="validationCustom02">Description of Item</label>-->
                 <textarea type="text" class="form-control" id="validationCustom02" :placeholder="'Description of the Item (' + limits.description + ' chars max)'" v-model="item.description" required :maxlength="limits.description"></textarea>
                 <div class="invalid-feedback">
                   Please enter a description!
                 </div>
             </div>
-            <div class="form-row mb-3"><h4>Categories</h4></div>
-            <div class="form-row mb-3">
+            <div class="form-row mb-2"><h5>categories</h5></div>
+            <div class="form-row mb-2">
               <div id="vc-040-error" class="invalid-feedback">
                 Please enter or select some categories!
               </div>
@@ -35,13 +40,13 @@
             </div>
 
             <!-- Right column - image drop -->
-            <div class="row mb-1"><h4>Images</h4></div>
-            <div class="form-row mb-3" v-if="showMedia">
+            <div class="form-row mb-2" v-if="showMedia">
+              <h5>images</h5>
               <media-files-upload :parentalError="parentalError" :contentModel="contentModel3" :mediaFiles="mediaFiles3" :limit="5" :sizeLimit="2500" :mediaTypes="'image'" @updateMedia="setByEventLogo3($event)"/>
               <media-files-upload :contentModel="contentModel2" :mediaFiles="mediaFiles2" :limit="5" :sizeLimit="2500" :mediaTypes="'image,doc'" @updateMedia="setByEventLogo2($event)"/>
             </div>
 
-            <p v-if="errors.length">
+            <p class="mb-3" v-if="errors.length">
               <b>Please correct the following error(s):</b>
               <ul>
                 <li v-for="error in errors" :key="error">{{ error }}</li>
@@ -50,8 +55,8 @@
 
             <!-- Submit button row -->
             <div class="row">
-              <div class="col-12 mt-3">
-                <a class="btn btn-sm btn-primary" @click.prevent="checkForm">Save</a >
+              <div class="col-12">
+                <button type="submit" class="btn btn-sm btn-primary" @click.prevent="checkForm">Save</button>
               </div>
             </div>
           </div>
@@ -84,10 +89,11 @@ import MediaFilesUpload from "@/pages/components/utils/MediaFilesUpload";
       mdbRow,
       mdbBtn
     },
-    props: ["itemId", "mode", "formTitle", "profile"],
+    props: ["itemId", "mode", "formTitle", "myProfile"],
     data() {
       return {
         errors: [],
+        loading: true,
         showMedia: false,
         showModal: false,
         showKeywords: false,
@@ -113,7 +119,7 @@ import MediaFilesUpload from "@/pages/components/utils/MediaFilesUpload";
         showAttachDocs: false,
         alertMessage: null,
         dateError: false,
-        created: moment({}),
+        created: moment({}).valueOf(),
         item: {},
       };
     },
@@ -123,16 +129,17 @@ import MediaFilesUpload from "@/pages/components/utils/MediaFilesUpload";
           this.item = item;
           if (this.item) {
             this.created = moment(this.item.created).format();
-            this.item.owner = this.profile.username;
+            this.item.owner = this.myProfile.username;
           } else {
             this.modalContent = "File has not been uploaded.";
             this.showModal = true;
           }
           this.showMedia = true;
+          this.loading = false;
         })
       } else {
         this.item = this.$store.getters["myItemStore/myItemOrDefault"](this.itemId);
-        this.item.owner = this.profile.username;
+        this.item.owner = this.myProfile.username;
         this.showMedia = true;
       }
     },
@@ -182,6 +189,7 @@ import MediaFilesUpload from "@/pages/components/utils/MediaFilesUpload";
           "Uploading item to your storage..";
         this.showModal = true;
         if (this.mode === "update") {
+          this.item.updated = moment({}).valueOf();
           this.$store
             .dispatch("myItemStore/updateItem", {item: this.item, updateProvData: true})
             .then(item => {
@@ -194,6 +202,8 @@ import MediaFilesUpload from "@/pages/components/utils/MediaFilesUpload";
               }
           });
         } else {
+          this.item.created = moment({}).valueOf();
+          this.item.updated = this.item.created;
           this.$store
             .dispatch("myItemStore/uploadItem", this.item)
             .then(item => {

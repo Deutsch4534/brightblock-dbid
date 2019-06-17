@@ -8,8 +8,8 @@
       <div class="mr-auto"><h3 class="mb-3 font-weight-bold dark-grey-text"><strong>{{item.title}}</strong></h3></div>
       <div><item-action-links :item="item" :itemAction="'manage'" :asset="asset" :buttonMode="false"/></div>
     </div>
-    <p class="grey-text"><description-overflow :text="item.description"/></p>
-    <p>by <a class="font-weight-bold dark-grey-text">{{ownerProfile.name}}</a>, 11/08/2018</p>
+    <p><description-overflow :text="item.description"/></p>
+    <item-posted :owner="item.owner" :created="item.created" />
   </div>
 </div>
 </template>
@@ -19,15 +19,22 @@ import moment from "moment";
 import DescriptionOverflow from "../utils/DescriptionOverflow";
 import ItemActionLinks from "./ItemActionLinks";
 import ItemImageListView from "./ItemImageListView";
+import ItemPosted from "./ItemPosted";
 
 // noinspection JSUnusedGlobalSymbols
 export default {
   name: "MySingleItem",
   components: {
-    ItemActionLinks, DescriptionOverflow, ItemImageListView
+    ItemActionLinks, DescriptionOverflow, ItemImageListView, ItemPosted
   },
   props: {
     item: {
+      type: Object,
+      default() {
+        return {};
+      }
+    },
+    myProfile: {
       type: Object,
       default() {
         return {};
@@ -48,17 +55,8 @@ export default {
   methods: {
   },
   computed: {
-    ownerProfile() {
-      let profile = this.$store.getters["userProfilesStore/getProfile"](this.item.owner);
-      return profile ? profile : {};
-    },
   }
 };
 </script>
 <style scoped>
-  .subtitle,
-  .card-body p {
-    color: #000!important;
-    font-size: 0.9em;
-  }
 </style>

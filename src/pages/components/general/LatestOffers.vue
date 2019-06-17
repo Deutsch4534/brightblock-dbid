@@ -4,7 +4,7 @@
     <div>{{latestOffers}}</div>
   </div>
   <div class="container">
-    <single-item v-for="(item, index) of items" :key="index" :item="item"/>
+    <single-item v-for="(item, index) of items" :key="index" :item="item" :myProfile="myProfile"/>
   </div>
 </div>
 </template>
@@ -14,6 +14,14 @@ import SingleItem from "@/pages/components/selling/SingleItem";
 
 export default {
   name: 'LatestOffers',
+  props: {
+    myProfile: {
+      type: Object,
+      default() {
+        return {};
+      }
+    },
+  },
   data() {
     return {
       latestOffers: null,

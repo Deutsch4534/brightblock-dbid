@@ -1,7 +1,7 @@
 <template>
   <div id="app" class="container-fluid m-0 p-0">
     <div id="fb-root"></div>
-    <notifications position="bottom left" style="width: 600px;"/>
+    <notifications position="bottom left" style="width: 400px;"/>
     <router-view name="header"/>
     <main class="main pb-5">
       <router-view/>

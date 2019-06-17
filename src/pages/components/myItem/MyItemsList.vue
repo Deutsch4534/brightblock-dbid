@@ -1,6 +1,6 @@
 <template>
 <div class="container-fluid">
-  <my-single-item v-for="(item, index) of items" :key="index" :item="item"/>
+  <my-single-item v-for="(item, index) of items" :key="index" :item="item" :myProfile="myProfile"/>
 </div>
 </template>
 
@@ -13,6 +13,7 @@ export default {
   components: { MySingleItem },
   props: {
     sellingStatus: null,
+    myProfile: null,
     items: {
       type: Array,
       default () {

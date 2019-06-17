@@ -7,9 +7,9 @@
     <div class="d-flex">
       <div class="mr-auto"><h3 class="mb-3 font-weight-bold dark-grey-text"><strong>{{item.title}}</strong></h3></div>
     </div>
-    <p class="grey-text"><description-overflow :text="item.description"/></p>
-    <p>Listed <!--by; <a class="font-weight-bold dark-grey-text">{{ownerProfile.name}}</a> --> on <span class="font-weight-bold dark-grey-text">{{created}}</span></p>
-    <buyers-information :item="item"/>
+    <p><description-overflow :text="item.description"/></p>
+    <item-posted :owner="item.owner" :created="item.created" />
+    <buyers-information :item="item" action="details" :myProfile="myProfile"/>
   </div>
 </div>
 </template>
@@ -19,15 +19,22 @@ import moment from "moment";
 import DescriptionOverflow from "../utils/DescriptionOverflow";
 import ItemImageListView from "../myItem/ItemImageListView";
 import BuyersInformation from "./BuyersInformation";
+import ItemPosted from "../myItem/ItemPosted";
 
 // noinspection JSUnusedGlobalSymbols
 export default {
   name: "SingleItem",
   components: {
-    DescriptionOverflow, ItemImageListView, BuyersInformation
+    DescriptionOverflow, ItemImageListView, BuyersInformation, ItemPosted
   },
   props: {
     item: {
+      type: Object,
+      default() {
+        return {};
+      }
+    },
+    myProfile: {
       type: Object,
       default() {
         return {};
@@ -42,16 +49,6 @@ export default {
   methods: {
   },
   computed: {
-    created() {
-      if (this.item.created) {
-        return moment(this.item.created).format("YYYY-MM-DD HH:mm (Z)");
-      }
-      return;
-    },
-    ownerProfile() {
-      let profile = this.$store.getters["userProfilesStore/getProfile"](this.item.owner);
-      return profile ? profile : {};
-    }
   }
 };
 </script>

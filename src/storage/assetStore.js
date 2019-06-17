@@ -201,36 +201,30 @@ const assetStore = {
       return new Promise(resolve => {
         let item = data.item;
         let asset = data.asset;
-        store.dispatch("userProfilesStore/fetchUserProfile", { username: item.gallerist }, { root: true }).then(profile => {
-          let gallerist = profile;
-          store.dispatch("userProfilesStore/fetchUserProfile", { username: item.owner }, { root: true }).then(profile => {
-            let seller = profile;
-            store.dispatch("userProfilesStore/fetchUserProfile", { username: item.artist }, { root: true }).then(profile => {
-              let artist = profile;
-              let buyer = store.getters["myAccountStore/getMyProfile"];
-              let fiatRate = store.getters["conversionStore/getFiatRate"](item.saleData.fiatCurrency);
-              let otherData = {
-                fiatRate: fiatRate,
-                buyer: buyer,
-                gallerist: gallerist,
-                seller: seller,
-                creator: artist,
-              };
-              let purchaseCycle = utils.initialisePurchaseCycle(item, otherData);
-              if (!asset.purchaseCycles) {
-                asset.purchaseCycles = [];
-              }
-              asset.purchaseCycles.push(purchaseCycle);
-              bitcoinService.getPaymentAddress(asset).then(asset => {
-                commit("addAsset", asset);
-                resolve(asset);
-              })
-                .catch(error => {
-                  console.log(error);
-                  resolve();
-                });
+        store.dispatch("userProfilesStore/fetchUserProfile", { username: item.owner }, { root: true }).then(profile => {
+          let seller = profile;
+          let buyer = store.getters["myAccountStore/getMyProfile"];
+          let fiatRate = store.getters["conversionStore/getFiatRate"](item.saleData.fiatCurrency);
+          let otherData = {
+            fiatRate: fiatRate,
+            buyer: buyer,
+            gallerist: null,
+            seller: seller,
+            creator: null,
+          };
+          let purchaseCycle = utils.initialisePurchaseCycle(item, otherData);
+          if (!asset.purchaseCycles) {
+            asset.purchaseCycles = [];
+          }
+          asset.purchaseCycles.push(purchaseCycle);
+          bitcoinService.getPaymentAddress(asset).then(asset => {
+            commit("addAsset", asset);
+            resolve(asset);
+          })
+            .catch(error => {
+              console.log(error);
+              resolve();
             });
-          });
         });
       });
     },

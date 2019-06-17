@@ -222,7 +222,7 @@ const utils = {
       supportingDocuments: item.supportingDocuments,
     };
     if (item.supportingDocuments && item.supportingDocuments.length > 0) {
-      provData.derivedTimestamp = utils.buildItemHash(
+      provData.derivedTimestamp = utils.buildBitcoinHash(
         item.supportingDocuments[0].dataUrl
       );
     }
@@ -244,7 +244,7 @@ const utils = {
       provData.supportingDocuments[0] &&
       provData.supportingDocuments[0].dataUrl.length > 0
     ) {
-      itemData.timestamp = utils.buildItemHash(
+      itemData.timestamp = utils.buildBitcoinHash(
         provData.supportingDocuments[0].dataUrl
       );
     } else {

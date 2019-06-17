@@ -25,32 +25,32 @@
       -->
 
           <div class="col-12" v-if="showNav === 1">
-            <my-items-list :items="unsold" />
+            <my-items-list :items="unsold" :myProfile="myProfile"/>
           </div>
 
           <div class="col-12" v-if="showNav === 2">
             <h2 class="h2-responsive mb-5">Sold</span></h2>
-            <my-items-list :items="sold"/>
+            <my-items-list :items="sold" :myProfile="myProfile"/>
           </div>
 
           <div class="col-12" v-if="showNav === 3">
             <h2 class="h2-responsive mb-5">Selling</h2>
-            <my-items-list :items="selling"/>
+            <my-items-list :items="selling" :myProfile="myProfile"/>
           </div>
 
           <div class="col-12" v-if="showNav === 4">
             <h2 class="h2-responsive mb-5">Buying</h2>
-            <my-items-list :items="buying"/>
+            <my-items-list :items="buying" :myProfile="myProfile"/>
           </div>
 
           <div class="col-12" v-if="showNav === 5">
             <h2 class="h2-responsive mb-5">Registered</h2>
-            <my-items-list :items="registered"/>
+            <my-items-list :items="registered" :myProfile="myProfile"/>
           </div>
 
           <div class="col-12" v-if="showNav === 6">
             <h2 class="h2-responsive mb-5">Not Registered</h2>
-            <my-items-list :items="unregistered"/>
+            <my-items-list :items="unregistered" :myProfile="myProfile"/>
           </div>
     </div>
 </div>
@@ -87,6 +87,7 @@ export default {
     mdbView,
     mdbBtn, mdbNavbar, mdbNavbarNav, mdbNavItem
   },
+  props: ["myProfile"],
   data() {
     return {
       showNav: 1,

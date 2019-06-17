@@ -62,7 +62,7 @@
             </div>
             <a @click.prevent="" slot="reference">Amount {{currencySymbol}}</a>
           </mdb-popover>
-          <input type="number" class="form-control" id="vc-amount" placeholder="Fixed value of item" v-model="amount" required >
+          <input type="number" step="0.01" class="form-control" id="vc-amount" placeholder="Fixed value of item" v-model="amount" required >
           <div class="invalid-feedback">
             Please enter the amount!
           </div>
@@ -100,7 +100,7 @@
           </div>
           <a @click.prevent="" slot="reference">Reserve {{currencySymbol}}</a>
         </mdb-popover>
-        <input type="number" class="form-control" id="vc-reserve" step="1" placeholder="Reserve price" v-model="reserve" required min="1">
+        <input type="number" step="0.01" class="form-control" id="vc-reserve" placeholder="Reserve price" v-model="reserve" required min="1">
         <div class="invalid-feedback">
           Please enter the reserve!
         </div>
@@ -116,7 +116,7 @@
           </div>
           <a @click.prevent="" slot="reference">Opening Bid {{currencySymbol}}</a>
         </mdb-popover>
-        <input type="number" class="form-control" id="vc-openingBid" step="1" placeholder="Opening bid" v-model="openingBid" required min="0">
+        <input type="number" step="0.01" class="form-control" id="vc-openingBid" placeholder="Opening bid" v-model="openingBid" required min="0">
         <div class="invalid-feedback">
           Please enter the opening bid!
         </div>
@@ -132,7 +132,7 @@
           </div>
           <a @click.prevent="" slot="reference">Increment {{currencySymbol}}</a>
         </mdb-popover>
-        <input type="number" class="form-control" id="vc-increment" step="1" placeholder="increment value" v-model="increment" required min="1">
+        <input type="number" step="0.01" class="form-control" id="vc-increment" placeholder="increment value" v-model="increment" required min="1">
         <div class="invalid-feedback">
           Bidding increment is required.
         </div>

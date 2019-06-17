@@ -1,7 +1,9 @@
 <template>
 <div class="container-fluid flex-1 pt-5">
   <div class="bg-white mt-5 p-3" v-if="loading">
-    <div>Loading item - please wait...</div>
+    <div class="spinner-border" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
   </div>
   <div v-else>
     <div class="bg-white mt-5 p-3" v-if="!item">
@@ -43,12 +45,11 @@ export default {
     mdbView,
     mdbBtn
   },
-  props: ["itemAction"],
+  props: ["itemAction", "myProfile"],
   data() {
     return {
       item: null,
       asset: null,
-      myProfile: {},
       loading: true,
     };
   },

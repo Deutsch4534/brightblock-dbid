@@ -1,7 +1,7 @@
 <template>
 <div class="container">
-  <div class="container mt-5 p-3" v-if="loading">
-    <div>Loading stand by ...</div>
+  <div class="container mt-5 spinner-border" role="status" v-if="loading">
+    <span class="sr-only">Loading...</span>
   </div>
   <div class="container mt-5" v-else>
     <div v-if="loggedIn">
@@ -10,24 +10,24 @@
         <div class="p-2 px-4 border-right" :class="activeTab === 1 ? 'text-secondary' : 'text-primary'" v-else><router-link to="/seller-info">Seller Info</router-link></div>
         <div class="py-2 px-4 border-right" :class="activeTab === 2 ? 'text-secondary' : 'text-primary'"><router-link to="/my-item/upload">{{updateOrUploadLabel}}</router-link></div>
         <div class="py-2 px-4 border-right" :class="activeTab === 3 ? 'text-secondary' : 'text-primary'"><router-link to="/my-items">Listings</router-link></div>
-        <div v-if="activeTab === 4" class="py-2 px-4 border-left border-right border-dark" :class="activeTab === 4 ? 'text-secondary' : 'text-primary'"><router-link :to="myItemUrl">{{listingLabel}}</router-link></div>
+        <div v-if="activeTab === 4" class="py-2 px-4 border-right" :class="activeTab === 4 ? 'text-secondary' : 'text-primary'"><router-link :to="myItemUrl">{{listingLabel}}</router-link></div>
       </div>
       <div v-if="activeTab === 1">
-        <seller-info :formTitle="'Update Seller Info'" :profile="profile" @sellerInfoUpdated="updateSellerState"/>
+        <seller-info :formTitle="'Update Seller Info'" :myProfile="myProfile" @sellerInfoUpdated="updateSellerState"/>
       </div>
       <div v-if="activeTab === 2">
         <div class="d-flex justify-content-start">
-          <item-upload-form :formTitle="updateOrUploadLabel" :itemId="itemId" :mode="updateOrUploadMode" :profile="profile"/>
+          <item-upload-form :formTitle="updateOrUploadLabel" :itemId="itemId" :mode="updateOrUploadMode" :myProfile="myProfile"/>
         </div>
       </div>
       <div v-if="activeTab === 3">
         <div class="d-flex justify-content-start">
-          <my-items :formTitle="'Listings'" :profile="profile"/>
+          <my-items :formTitle="'Listings'" :myProfile="myProfile"/>
         </div>
       </div>
       <div v-if="activeTab === 4">
         <div class="d-flex justify-content-start">
-          <my-item :itemId="itemId" :profile="profile" :itemAction="itemAction"/>
+          <my-item :itemId="itemId" :myProfile="myProfile" :itemAction="itemAction"/>
         </div>
       </div>
     </div>
@@ -61,7 +61,7 @@ export default {
       itemId: null,
       activeTab: 1,
       sellerInfoNeeded: false,
-      profile: null,
+      myProfile: null,
     };
   },
   watch: {
@@ -70,14 +70,14 @@ export default {
     }
   },
   mounted() {
-    this.$store.dispatch("myAccountStore/fetchMyAccount").then((profile) => {
-      this.profile = profile;
+    this.$store.dispatch("myAccountStore/fetchMyAccount").then((myProfile) => {
+      this.myProfile = myProfile;
       let routeName = this.$route.name;
       if (routeName === "seller-info") {
         this.setView();
       } else {
-        if (profile.publicKeyData.bitcoinAddress) {
-          this.$store.dispatch("bitcoinStore/checkAddress", profile.publicKeyData.bitcoinAddress).then((result) => {
+        if (myProfile.publicKeyData.bitcoinAddress) {
+          this.$store.dispatch("bitcoinStore/checkAddress", myProfile.publicKeyData.bitcoinAddress).then((result) => {
             if (!result) {
               this.$router.push({ path: "/seller-info" });
             } else {
@@ -134,7 +134,7 @@ export default {
   },
   computed: {
     loggedIn() {
-      return (this.profile) ? this.profile.loggedIn : false;
+      return (this.myProfile) ? this.myProfile.loggedIn : false;
     },
     myItemUrl() {
       return `/my-items/${this.itemId}`;

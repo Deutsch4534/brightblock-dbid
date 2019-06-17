@@ -1,17 +1,7 @@
 <template>
-<div class="row mb-5" v-if="!loading">
+<div class="row mb-5">
   <div class="col-12">
-    <div class="row order-header">
-      <div class="col-md-9 col-sm-12">
-        <h2 style="text-transform: capitalize;">{{item.title}}</h2>
-      </div>
-      <div class="col-md-3">
-      </div>
-    </div>
     <div class="row">
-      <div class="col-md-3 col-sm-4">
-        <img class="img-fluid" :src="item.image" :alt="item.title">
-      </div>
       <div class="col-md-6 col-sm-8">
         <order-details :purchaseCycle="purchaseCycle"/>
       </div>
@@ -68,17 +58,16 @@ export default {
   props: {
     debugMode: false,
     myProfile: null,
-    item: null
+    assetHash: null
   },
   data() {
     return {
       loading: true,
-      assetHash: null,
       network: "bitcoin",
       showConfirmationDetails: false,
       bitcoinUri: null,
       lightningUri: null,
-      artwork: null,
+      item: null,
       validFor: 100,
       myPaymentInterval: null,
       purchaseExpired: false
@@ -90,44 +79,45 @@ export default {
     }
   },
   mounted() {
-    this.assetHash = utils.buildBitcoinHash(this.item);
     this.$store.dispatch("assetStore/lookupAssetByHash", this.assetHash).then(asset => {
       if (asset) {
-        let assetItemId = Number(asset.assetId.split("_::_")[1]);
-        let itemId = this.item.id;
-        if (assetItemId !== itemId) {
-          return;
-        }
-        if (asset.status === -1) {
-          //this.$router.push("/artworks/" + artwork.id);
-          //return;
-        }
-        if (asset.status === 3) {
-          let purchaseCycle = this.$store.getters["assetStore/getCurrentPurchaseCycleByHash"](this.assetHash);
-          if (this.paymentExpired(purchaseCycle) < 0) {
-            this.$store.dispatch("assetStore/cancelPurchase", asset.assetHash);
-          } else {
-            this.startCountdown();
-            this.bitcoinUri = bitcoinService.getBitcoinUri(asset);
-            this.lightningUri = bitcoinService.getLightningUri(asset);
+        let itemId = Number(asset.assetId.split("_::_")[1]);
+        this.$store.dispatch("itemSearchStore/fetchItem", itemId).then((item) => {
+          this.item = item;
+          if (asset.status === -1) {
+            //this.$router.push("/items/" + this.item.id);
+            //return;
           }
-        } else if (asset && asset.status === 7) {
-          this.$store.dispatch("myItemStore/transferItemToBuyer", asset).then((asset) => {
-            this.$notify({type: 'success', title: 'Item Transferred', text: 'Item transferred to your storage.'});
-          });
-        }
-        this.loading = false;
+          if (asset.status === 3) {
+            let purchaseCycle = this.$store.getters["assetStore/getCurrentPurchaseCycleByHash"](this.assetHash);
+            if (this.paymentExpired(purchaseCycle) < 0) {
+              this.$store.dispatch("assetStore/cancelPurchase", asset.assetHash);
+            } else {
+              this.startCountdown();
+              this.bitcoinUri = bitcoinService.getBitcoinUri(asset);
+              this.lightningUri = bitcoinService.getLightningUri(asset);
+            }
+          } else if (asset && asset.status === 7) {
+            this.$store.dispatch("myItemStore/transferItemToBuyer", asset).then((asset) => {
+              this.$notify({type: 'success', title: 'Item Transferred', text: 'Item transferred to your storage.'});
+            });
+          }
+          this.loading = false;
+        });
       } else {
         console.log("Order id but no order?");
       }
-    })
+    });
   },
   methods: {
     startCountdown() {
       let $self = this;
+      let asset = $self.$store.getters["assetStore/getAssetByHash"]($self.assetHash);
+      let purchaseCycle = $self.$store.getters["assetStore/getCurrentPurchaseCycleByHash"]($self.assetHash);
+      if (!purchaseCycle) {
+        return;
+      }
       let countdown = setInterval(function() {
-        let purchaseCycle = $self.$store.getters["assetStore/getCurrentPurchaseCycleByHash"]($self.assetHash);
-        let asset = $self.$store.getters["assetStore/getAssetByHash"]($self.assetHash);
         if (!purchaseCycle) {
           clearInterval(countdown);
           return;
@@ -184,13 +174,16 @@ export default {
     },
     asset() {
       let asset = this.$store.getters["assetStore/getAssetByHash"](this.assetHash);
-      return asset;
+      if (asset) {
+        return asset;
+      }
+      return {};
     },
     myItemUrl() {
-      if (this.artwork) return `/my-artworks/${this.artwork.id}`;
+      return `/my-items/${this.item.id}`;
     },
     purchased() {
-      return this.myProfile.username === this.item.owner;
+      return this.item && this.myProfile.username === this.item.owner;
     },
     itemId() {
         if (this.item) return this.item.id;
