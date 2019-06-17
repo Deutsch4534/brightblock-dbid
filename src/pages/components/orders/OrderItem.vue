@@ -3,14 +3,14 @@
   <div class="col-12">
     <div class="row order-header">
       <div class="col-md-9 col-sm-12">
-        <h2 style="text-transform: capitalize;">{{artwork.title}}</h2>
+        <h2 style="text-transform: capitalize;">{{item.title}}</h2>
       </div>
       <div class="col-md-3">
       </div>
     </div>
     <div class="row">
       <div class="col-md-3 col-sm-4">
-        <img class="img-fluid" :src="artwork.image" :alt="artwork.title">
+        <img class="img-fluid" :src="item.image" :alt="item.title">
       </div>
       <div class="col-md-6 col-sm-8">
         <order-details :purchaseCycle="purchaseCycle"/>
@@ -24,21 +24,21 @@
           <payment-details-lnd v-else :paymentUri="lightningUri" :validFor="validFor"/>
         </div>
         <div v-else>
-          <payment-expired :assetHash="assetHash" :artworkId="artworkId"/>
+          <payment-expired :assetHash="assetHash" :itemId="itemId"/>
         </div>
       </div>
       <div class="col-md-3 col-sm-6" v-else-if="asset.status > 3">
         <confirmation-details :debugMode="debugMode" :assetHash="assetHash" :purchaseCycle="purchaseCycle" @paySeller="paySeller"/>
       </div>
       <div class="col-md-3 col-sm-6" v-else-if="purchased">
-        Purchase successful - the artwork has been transferred to your storage.
+        Purchase successful - the item has been transferred to your storage.
         <br/>
-        <router-link :to="myArtworkUrl" class="inline-block">
-          <mdb-btn class="btn teal lighten-1" size="sm" waves-light>manage artwork</mdb-btn>
+        <router-link :to="myItemUrl" class="inline-block">
+          <mdb-btn class="btn teal lighten-1" size="sm" waves-light>manage item</mdb-btn>
         </router-link>
       </div>
       <div class="col-md-3 col-sm-6" v-else>
-        <payment-expired :assetHash="assetHash" :artworkId="artworkId"/>
+        <payment-expired :assetHash="assetHash" :itemId="itemId"/>
       </div>
     </div>
   </div>
@@ -46,34 +46,34 @@
 </template>
 
 <script>
-import { mdbBtn, mdbContainer } from "mdbvue";
+import { mdbBtn } from "mdbvue";
 import bitcoinService from "brightblock-lib/src/services/bitcoinService";
-import artworkSearchService from "@/services/artworkSearchService";
-import myArtworksService from "@/services/myArtworksService";
 import PaymentDetailsBtc from "./PaymentDetailsBtc";
 import PaymentDetailsLnd from "./PaymentDetailsLnd";
 import PaymentExpired from "./PaymentExpired";
 import ConfirmationDetails from "./ConfirmationDetails";
 import OrderDetails from "./OrderDetails";
 import moment from "moment";
+import utils from "@/services/utils";
 
 // noinspection JSUnusedGlobalSymbols
 export default {
   name: "OrderItem",
   components: {
-    mdbBtn, mdbContainer,
+    mdbBtn,
     OrderDetails,
     ConfirmationDetails,
     PaymentDetailsBtc, PaymentDetailsLnd, PaymentExpired
   },
   props: {
-    assetHash: null,
     debugMode: false,
-    myProfile: null
+    myProfile: null,
+    item: null
   },
   data() {
     return {
       loading: true,
+      assetHash: null,
       network: "bitcoin",
       showConfirmationDetails: false,
       bitcoinUri: null,
@@ -90,33 +90,33 @@ export default {
     }
   },
   mounted() {
+    this.assetHash = utils.buildBitcoinHash(this.item);
     this.$store.dispatch("assetStore/lookupAssetByHash", this.assetHash).then(asset => {
       if (asset) {
-        let artworkId = Number(asset.assetId.split("_::_")[1]);
-        let $self = this;
-        artworkSearchService.newQuery(this.$store, {field: "id", query: artworkId}, function(artwork) {
-          $self.artwork = artwork;
-          if (asset.status === -1) {
-            //$self.$router.push("/artworks/" + artwork.id);
-            //return;
+        let assetItemId = Number(asset.assetId.split("_::_")[1]);
+        let itemId = this.item.id;
+        if (assetItemId !== itemId) {
+          return;
+        }
+        if (asset.status === -1) {
+          //this.$router.push("/artworks/" + artwork.id);
+          //return;
+        }
+        if (asset.status === 3) {
+          let purchaseCycle = this.$store.getters["assetStore/getCurrentPurchaseCycleByHash"](this.assetHash);
+          if (this.paymentExpired(purchaseCycle) < 0) {
+            this.$store.dispatch("assetStore/cancelPurchase", asset.assetHash);
+          } else {
+            this.startCountdown();
+            this.bitcoinUri = bitcoinService.getBitcoinUri(asset);
+            this.lightningUri = bitcoinService.getLightningUri(asset);
           }
-          if (asset.status === 3) {
-            let purchaseCycle = $self.$store.getters["assetStore/getCurrentPurchaseCycleByHash"]($self.assetHash);
-            if ($self.paymentExpired(purchaseCycle) < 0) {
-              $self.$store.dispatch("assetStore/cancelPurchase", asset.assetHash);
-            } else {
-              $self.startCountdown();
-              $self.bitcoinUri = bitcoinService.getBitcoinUri(asset);
-              $self.lightningUri = bitcoinService.getLightningUri(asset);
-            }
-          } else if (asset && asset.status === 7) {
-            $self.$store.dispatch("myArtworksStore/transferArtworkToBuyer", asset).then((asset) => {
-              $self.$notify({type: 'success', title: 'Artwork Transferred', text: 'Artwork transferred to your storage.'});
-            });
-          }
-
-          $self.loading = false;
-        });
+        } else if (asset && asset.status === 7) {
+          this.$store.dispatch("myItemStore/transferItemToBuyer", asset).then((asset) => {
+            this.$notify({type: 'success', title: 'Item Transferred', text: 'Item transferred to your storage.'});
+          });
+        }
+        this.loading = false;
       } else {
         console.log("Order id but no order?");
       }
@@ -168,8 +168,8 @@ export default {
           if (asset) {
             this.$notify({type: 'success', title: 'Payment Sent', text: 'Payment has been forwarded.'});
             if (asset && asset.status === 7) {
-              this.$store.dispatch("myArtworksStore/transferArtworkToBuyer", asset).then((asset) => {
-                this.$notify({type: 'success', title: 'Artwork Transferred', text: 'Artwork transferred to your storage.'});
+              this.$store.dispatch("myItemStore/transferItemToBuyer", asset).then((asset) => {
+                this.$notify({type: 'success', title: 'Item Transferred', text: 'Item transferred to your storage.'});
               });
             }
           }
@@ -186,14 +186,14 @@ export default {
       let asset = this.$store.getters["assetStore/getAssetByHash"](this.assetHash);
       return asset;
     },
-    myArtworkUrl() {
+    myItemUrl() {
       if (this.artwork) return `/my-artworks/${this.artwork.id}`;
     },
     purchased() {
-      return this.myProfile.username === this.artwork.owner;
+      return this.myProfile.username === this.item.owner;
     },
-    artworkId() {
-        if (this.artwork) return this.artwork.id;
+    itemId() {
+        if (this.item) return this.item.id;
     }
   }
 };

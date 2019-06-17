@@ -36,7 +36,7 @@ export default {
     if (this.$store.state.constants.featureBitcoin) {
       artworkSearchService.newQuery(this.$store, {field: "title", query: "*"});
     }
-    document.title = "All artists at radicle.art";
+    document.title = "All artists at dbid.io";
   },
   computed: {
     artists () {

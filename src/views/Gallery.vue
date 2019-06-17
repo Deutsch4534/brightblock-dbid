@@ -90,7 +90,7 @@ export default {
             this.gallery = gallery;
             this.$store.dispatch("artworkSearchStore/fetchArtworkByGallery", {gallerist: gallery.owner, galleryId: this.galleryId}).then((artworks) => {
             });
-            document.title = gallery.title + " at radicle.art";
+            document.title = gallery.title + " at dbid.io";
             this.loading = false;
           } else {
             this.loadingMessage = "Gallery is currently offline.";
@@ -98,7 +98,7 @@ export default {
         });
       } else {
         artworkSearchService.newQuery(this.$store, {field: "title", query: "*"});
-        document.title = "Galleries at radicle.art";
+        document.title = "Galleries at dbid.io";
         this.loading = false;
       }
     },

@@ -7,7 +7,7 @@
       <p><span class="text-danger" v-if="errorMessage">{{errorMessage}}</span></p>
     </div>
   </div>
-  <p><a href="https://search.brightblock.org/index/dapps/radicle.art/artwork/title?q=*" rel="noreferrer">e.g. {{searchUrl}}/index/dapps/radicle.art/artwork/title?q=*</a></p>
+  <p><a href="https://search.brightblock.org/index/dapps/dbid.io/artwork/title?q=*" rel="noreferrer">e.g. {{searchUrl}}/index/dapps/dbid.io/artwork/title?q=*</a></p>
   <div class="row">
     <div class="col-md-12">
       <h2>Search Names</h2>
@@ -119,7 +119,7 @@ export default {
       queryNamesTerm: "name",
       queryDappsTerm: "title",
       queryStringDapps: null,
-      endPoint: "/index/dapps/radicle.art/artwork/title?q=*",
+      endPoint: "/index/dapps/dbid.io/artwork/title?q=*",
       objType: "artwork",
       queryDomain: location.hostname
     };

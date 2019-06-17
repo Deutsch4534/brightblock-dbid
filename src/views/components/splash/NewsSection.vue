@@ -15,7 +15,7 @@
               <h5 class="my-4"><strong>Contact Info</strong></h5>
               <p>Brighton, BN1 1AL UK</p>
               <p>Phone: +49 6579 3 456<br />
-              Email: contact@radicle.art</p>
+              Email: contact@dbid.io</p>
             </div>
           </mdb-col>
           <mdb-col md="6">

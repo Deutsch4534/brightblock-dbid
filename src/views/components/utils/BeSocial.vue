@@ -51,12 +51,12 @@ export default {
       return this.myPageUrl;
     },
     myFBPostUrl() {
-      let pathname = encodeURI("https://radicle.art" + location.pathname);
+      let pathname = encodeURI("https://dbid.io" + location.pathname);
       let options = "u=" + pathname;
-      options += "&picture=https://radicle.art/static/logo-black-256x256.png";
+      options += "&picture=https://dbid.io/static/logo-black-256x256.png";
       //options += "&name=Facebook%20Dialogs&caption=Reference%20Documentation";
       //options += "&description=Dialogs%20provide%20a%20simple,%20consistent%20interface%20for%20applications%20to%20interact%20with%20users.";
-      //options += "&message=Facebook%20Dialogs%20are%20so%20easy!&redirect_uri=https://radicle.art/fbback&amp;src=sdkpreparse";
+      //options += "&message=Facebook%20Dialogs%20are%20so%20easy!&redirect_uri=https://dbid.io/fbback&amp;src=sdkpreparse";
       return encodeURI("https://www.facebook.com/sharer/sharer.php?" + encodeURI(options));
     },
   },

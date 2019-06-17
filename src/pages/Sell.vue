@@ -5,12 +5,12 @@
   </div>
   <div class="container mt-5" v-else>
     <div v-if="loggedIn">
-      <div class="d-flex bg-primary text-white border border-dark">
-        <div class="p-2 px-4" :class="activeTab === 1 ? 'bg-warning' : 'bg-primary'" v-if="sellerInfoNeeded"><router-link to="/seller-info">Seller Info - Required</router-link></div>
-        <div class="p-2 px-4" :class="activeTab === 1 ? 'bg-warning' : 'bg-primary'" v-else><router-link to="/seller-info">Seller Info</router-link></div>
-        <div class="py-2 px-4 border-left border-right border-dark" :class="activeTab === 2 ? 'bg-warning' : 'bg-primary'"><router-link to="/my-item/upload">{{updateOrUploadLabel}}</router-link></div>
-        <div class="py-2 px-4 border-left border-right border-dark" :class="activeTab === 3 ? 'bg-warning' : 'bg-primary'"><router-link to="/my-items">Listings</router-link></div>
-        <div v-if="activeTab === 4" class="py-2 px-4 border-left border-right border-dark" :class="activeTab === 4 ? 'bg-warning' : 'bg-primary'"><router-link :to="myItemUrl">{{listingLabel}}</router-link></div>
+      <div class="d-flex text-primary text-white border-bottom">
+        <div class="p-2 px-4 border-right" :class="activeTab === 1 ? 'text-secondary' : 'text-primary'" v-if="sellerInfoNeeded"><router-link to="/seller-info">Seller Info - Required</router-link></div>
+        <div class="p-2 px-4 border-right" :class="activeTab === 1 ? 'text-secondary' : 'text-primary'" v-else><router-link to="/seller-info">Seller Info</router-link></div>
+        <div class="py-2 px-4 border-right" :class="activeTab === 2 ? 'text-secondary' : 'text-primary'"><router-link to="/my-item/upload">{{updateOrUploadLabel}}</router-link></div>
+        <div class="py-2 px-4 border-right" :class="activeTab === 3 ? 'text-secondary' : 'text-primary'"><router-link to="/my-items">Listings</router-link></div>
+        <div v-if="activeTab === 4" class="py-2 px-4 border-left border-right border-dark" :class="activeTab === 4 ? 'text-secondary' : 'text-primary'"><router-link :to="myItemUrl">{{listingLabel}}</router-link></div>
       </div>
       <div v-if="activeTab === 1">
         <seller-info :formTitle="'Update Seller Info'" :profile="profile" @sellerInfoUpdated="updateSellerState"/>
@@ -72,7 +72,6 @@ export default {
   mounted() {
     this.$store.dispatch("myAccountStore/fetchMyAccount").then((profile) => {
       this.profile = profile;
-
       let routeName = this.$route.name;
       if (routeName === "seller-info") {
         this.setView();

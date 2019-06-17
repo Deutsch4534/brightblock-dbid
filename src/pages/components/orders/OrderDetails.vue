@@ -41,7 +41,6 @@
 
 <script>
 import moment from "moment";
-import myArtworksService from "@/services/myArtworksService";
 import _ from "lodash";
 
 // noinspection JSUnusedGlobalSymbols

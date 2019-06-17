@@ -1,6 +1,5 @@
 import itemSearchService from "@/services/itemSearchService";
 import _ from "lodash";
-import moneyUtils from "@/services/moneyUtils";
 import store from "@/storage/store";
 
 const itemSearchStore = {
@@ -76,10 +75,6 @@ const itemSearchStore = {
       let item = state.items.find(item => item.id === id);
       if (item && item.id) {
         return item;
-      } else {
-        return {
-          image: require("@/assets/img/missing/missing.jpg"),
-        };
       }
     },
     getArtistsPage: state => {
@@ -117,14 +112,14 @@ const itemSearchStore = {
     }
   },
   mutations: {
-    addItem(state, registeredItem) {
+    addItem(state, item) {
       let index = _.findIndex(state.items, function(o) {
-        return o.id === registeredItem.id;
+        return o.id === item.id;
       });
       if (index === -1) {
-        state.items.push(registeredItem);
+        state.items.push(item);
       } else {
-        state.items.splice(index, 1, registeredItem);
+        state.items.splice(index, 1, item);
       }
     },
     addSearchResult(state, item) {
@@ -135,18 +130,6 @@ const itemSearchStore = {
         state.searchResults.push(item);
       } else {
         state.searchResults.splice(index, 1, item);
-      }
-    },
-    addArtist(state, userProfile) {
-      if (userProfile && userProfile.username) {
-        let index = _.findIndex(state.artists, function(o) {
-          return o.username === userProfile.username;
-        });
-        if (index === -1) {
-          state.artists.push(userProfile);
-        } else {
-          state.artists.splice(index, 1, userProfile);
-        }
       }
     },
     clearSearchResults(state) {
@@ -160,39 +143,19 @@ const itemSearchStore = {
       });
     },
 
-    fetchRegisteredItems({ commit }, blockchainItems) {
-      // let blockchainItems = store.getters['ethStore/getBlockchainItems']
-      let maximum = Math.min(blockchainItems.length, 20);
-      let users = "";
-      for (var index = 0; index < maximum; index++) {
-        let blockchainItem = blockchainItems[index];
-        if (users.indexOf(blockchainItem.blockstackId) === -1) {
-          users += blockchainItem.blockstackId + ",";
+    fetchItem({ commit, getters }, itemId) {
+      return new Promise(resolve => {
+        let item = getters["getItem"](itemId);
+        if (item) {
+          resolve(item);
+        } else {
+          itemSearchService.newQuery(store, {field: "id", query: itemId}, function(item) {
+            commit("addItem", item);
+            resolve(item);
+          });
         }
-        itemSearchService.userItems(store,
-          {
-            username: blockchainItem.blockstackId,
-            title: blockchainItem.title
-          },
-          function(item) {
-            if (item) {
-              if (store.state.constants.featureEthereum) {
-                let fiatRate = store.getters["conversionStore/getFiatRate"](item.saleData.fiatCurrency);
-                let ethToBtc = store.getters["conversionStore/getCryptoRate"]("eth_btc");
-                moneyUtils.convertPrices(item, blockchainItem, fiatRate, ethToBtc);
-                if (item.bcitem.blockstackId && item.owner !== item.bcitem.blockstackId) {
-                  item.owner = item.bcitem.blockstackId;
-                }
-              }
-              commit("addItem", item);
-            }
-          },
-          function(error) {
-            console.log("Error fetching registered items: ", error);
-          }
-        );
-      }
-    }
+      });
+    },
   }
 };
 export default itemSearchStore;

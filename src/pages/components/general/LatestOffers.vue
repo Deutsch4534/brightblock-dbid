@@ -1,6 +1,6 @@
 <template>
 <div class="container">
-  <div class="d-flex bg-primary text-white p-3 mb-4">
+  <div class="d-flex text-primary border-bottom p-3 mb-4">
     <div>{{latestOffers}}</div>
   </div>
   <div class="container">
@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import SingleItem from "./SingleItem";
+import SingleItem from "@/pages/components/selling/SingleItem";
 
 export default {
   name: 'LatestOffers',

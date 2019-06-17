@@ -45,25 +45,14 @@
 </template>
 
 <script>
-import { mdbPopover, mdbIcon, mdbCardBody, mdbCardTitle, mdbCardText, mdbBtn } from "mdbvue";
-import { mdbTbl, mdbTblHead, mdbTblBody } from 'mdbvue';
+import { mdbBtn } from "mdbvue";
 import bitcoinService from "brightblock-lib/src/services/bitcoinService";
 import moment from "moment";
-import myArtworksService from "@/services/myArtworksService";
 
 // noinspection JSUnusedGlobalSymbols
 export default {
   name: "ConfirmationDetails",
   components: {
-    mdbCardBody,
-    mdbPopover,
-    mdbIcon,
-    mdbCardTitle,
-    mdbCardText,
-    mdbBtn,
-    mdbTbl,
-    mdbTblHead,
-    mdbTblBody
   },
   props: {
     assetHash: null,

@@ -1,7 +1,7 @@
 <template>
 <div class="row text-center">
   <div class="col-md-12 pt-3">
-    <a :href="bitcoinUri" class="btn btn-block btn-sm text-white teal lighten-1">OPEN IN WALLET</a>
+    <a :href="paymentUri" class="btn btn-block btn-sm text-white teal lighten-1">OPEN IN WALLET</a>
     <mdb-progress :height="20"  :value="validFor" color="blue" />
   </div>
   <div class="col-md-12">
@@ -12,26 +12,23 @@
     Pay with QR code or
     <br/>
     <small><a href="#" @click.prevent="copyAddress">COPY PAYMENT LINK</a></small>
-    <input id="payment-address" type="text" :value="bitcoinUri"/>
+    <input id="payment-address-btc" type="text" :value="paymentUri" style="color: white; border: none;"/>
   </div>
 </div>
 </template>
 
 <script>
-import xhrService from "brightblock-lib/src/services/xhrService";
 import QRCode from "qrcode";
-import moneyUtils from "brightblock-lib/src/services/moneyUtils";
-import { mdbContainer, mdbProgress } from 'mdbvue';
+import { mdbProgress } from 'mdbvue';
 
 // noinspection JSUnusedGlobalSymbols
 export default {
   name: "PaymentDetails",
   components: {
-    mdbContainer, mdbProgress
+    mdbProgress
   },
   props: {
-    bitcoinUri: null,
-    invoiceClaim: null,
+    paymentUri: null,
     validFor: ""
   },
   data() {
@@ -40,8 +37,13 @@ export default {
     };
   },
   mounted() {
-    if (this.bitcoinUri) {
-      this.addQrCode("qrcode1", this.bitcoinUri);
+    if (this.paymentUri) {
+      this.addQrCode("qrcode1", this.paymentUri);
+    }
+  },
+  mounted() {
+    if (this.paymentUri) {
+      this.addQrCode("qrcode1", this.paymentUri);
     }
   },
   computed: {
@@ -56,11 +58,11 @@ export default {
     },
   },
   methods: {
-    addQrCode(qrc, bitcoinUri) {
+    addQrCode(qrc, paymentUri) {
       let $qrCode = document.getElementById(qrc);
       let $self = this;
       let qrCanvas = QRCode.toCanvas(
-        $qrCode, bitcoinUri, { errorCorrectionLevel: "H" },
+        $qrCode, paymentUri, { errorCorrectionLevel: "H" },
         function(error) {
           if (error) console.error(error);
           console.log("success!");
@@ -71,14 +73,11 @@ export default {
       );
     },
     copyAddress() {
-      var copyText = document.getElementById("payment-address");
+      var copyText = document.getElementById("payment-address-btc");
       copyText.select();
       document.execCommand("copy");
       this.$notify({type: 'success', title: 'Copied Address', text: 'Copied the address to clipboard: ' + copyText.value});
     },
-    sentPayment() {
-      this.$emit("paymentSent");
-    }
   }
 };
 </script>

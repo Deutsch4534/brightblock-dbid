@@ -51,7 +51,7 @@
             <!-- Submit button row -->
             <div class="row">
               <div class="col-12 mt-3">
-                <a class="btn btn-sm btn-primary lighten-1" @click.prevent="checkForm">Save</a>
+                <a class="btn btn-sm btn-primary" @click.prevent="checkForm">Save</a >
               </div>
             </div>
           </div>
@@ -188,7 +188,7 @@ import MediaFilesUpload from "@/pages/components/utils/MediaFilesUpload";
               if (item) {
                 this.item = item;
                 this.showModal = false;
-                this.$router.push("/my-items/" + item.id);
+                this.$router.push("/my-item/set-price/" + item.id);
               } else {
                 this.modalContent = "File has not been updated.";
               }
@@ -200,7 +200,7 @@ import MediaFilesUpload from "@/pages/components/utils/MediaFilesUpload";
               if (item) {
                 this.item = item;
                 this.showModal = false;
-                this.$router.push("/my-items/" + item.id);
+                this.$router.push("/my-item/set-price/" + item.id);
               } else {
                 this.modalContent = "File has not been uploaded.";
               }

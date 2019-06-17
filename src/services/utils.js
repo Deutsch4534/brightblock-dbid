@@ -49,7 +49,12 @@ const utils = {
   },
 
   buildBitcoinHash(item) {
-    let hashBase = item.owner + ":" + item.supportingDocuments;
+    let hashBase;
+    if (item.supportingDocuments && item.supportingDocuments.length > 0) {
+      hashBase = item.owner + "::" + item.id + "::" + item.supportingDocuments;
+    } else {
+      hashBase = item.owner + "::" + item.id;
+    }
     return SHA256(hashBase).toString();
   },
 

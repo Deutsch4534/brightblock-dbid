@@ -192,7 +192,7 @@ export default {
       };
     },
     myPageUrl() {
-      let pathname = encodeURI("https://radicle.art" + location.pathname);
+      let pathname = encodeURI("https://dbid.io" + location.pathname);
       return pathname;
     },
     isRegisteredAndPriceSet() {

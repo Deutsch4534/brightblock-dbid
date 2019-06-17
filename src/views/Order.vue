@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import OrderItem from "./components/orders/OrderItem";
+import OrderItem from "@/pages/components/orders/OrderItem";
 import { mdbContainer, mdbCol, mdbRow, mdbIcon } from 'mdbvue';
 
 // noinspection JSUnusedGlobalSymbols

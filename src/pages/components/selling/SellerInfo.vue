@@ -6,11 +6,13 @@
       <bitcoin-address :allowDelete="true" @bitcoinAddressUpdate="updateBitcoinAddress"/>
     </div>
   </div>
+  <!--
   <div class="row my-5">
     <div class="col-12">
       <trusted-users :trustedIds="myProfile.auxiliaryProfile.trustedIds" @saveTrustedUsers="saveTrustedUsers"/>
     </div>
   </div>
+  -->
 </div>
 </template>
 
@@ -23,7 +25,7 @@ import BitcoinAddress from "./BitcoinAddress";
 
 // noinspection JSUnusedGlobalSymbols
 export default {
-  name: "AuxiliaryProfileForm",
+  name: "SellerInfo",
   components: {
     BitcoinAddress,
     TrustedUsers,

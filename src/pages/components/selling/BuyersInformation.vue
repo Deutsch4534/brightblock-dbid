@@ -1,20 +1,16 @@
 <template>
-<div>
-  <p class="font-weight-bold muted">{{item.owner}}</p>
-  <div v-if="sellingBuyNow">
-    <p class="font-weight-bold muted">Available to buy..</p>
-    <p class="font-weight-bold muted">{{sellingBuyNowPrice}}</p>
+<div class="">
+  <div v-if="buyNowEnabled">
+    <p class="text-muted">{{sellingBuyNowPrice}}</p>
+    <router-link v-if="buyNowEnabled" :to="itemUrl" class="btn btn-sm btn-primary">Buy Now</router-link>
   </div>
   <div v-else-if="sellingAuction">
-    <p class="font-weight-bold muted">Selling in Auction</p>
-    <p class="font-weight-bold muted">{{sellingAuctionPrice}}</p>
-    <div v-if="debugMode">
-      <router-link :to="manageAuctionUrl" v-if="canManageAuction">manage |</router-link>
-      <router-link :to="publicAuctionUrl">go to auction</router-link>
-    </div>
+    <p class="text-muted">Selling in Auction</p>
+    <p class="text-muted">{{sellingAuctionPrice}}</p>
+    <router-link v-if="buyNowEnabled" :to="itemUrl" class="btn btn-sm btn-primary">Place Bid</router-link>
   </div>
   <div v-else>
-    <p class="font-weight-bold muted">Not Selling</p>
+    <p class="text-muted">Not Selling</p>
   </div>
 </div>
 </template>
@@ -24,41 +20,51 @@ import moneyUtils from "@/services/moneyUtils";
 
 // noinspection JSUnusedGlobalSymbols
 export default {
-  name: "SellingOptions",
+  name: "BuyersInformation",
+  components: {
+  },
   props: {
     item: {
-      saleData: {}
-    }
+      type: Object,
+      default() {
+        return {};
+      }
+    },
   },
   data() {
-    return {};
+    return {
+    };
   },
   mounted() {},
+  methods: {
+  },
   computed: {
-    sellingBuyNow() {
-      let priceSet;
-      priceSet = this.item.saleData.amount > 0;
-      return priceSet && this.item.saleData.soid === 1;
+    itemUrl() {
+      return `/items/${this.item.id}`;
+    },
+    buyNowEnabled() {
+      let saleData = this.item.saleData;
+      return saleData.soid === 1 && saleData.amount > 0;
     },
     sellingBuyNowPrice() {
-      let fiatRate = store.getters["conversionStore/getFiatRate"](this.item.saleData.fiatCurrency);
+      let fiatRate = this.$store.getters["conversionStore/getFiatRate"](this.item.saleData.fiatCurrency);
       let symbol = fiatRate["symbol"];
       let currency = this.item.saleData.fiatCurrency;
       let priceFiat, priceBtc, priceEth;
       let saleData = this.item.saleData;
-      let ethToBtc = store.getters["conversionStore/getCryptoRate"]("eth_btc");
+      let ethToBtc = this.$store.getters["conversionStore/getCryptoRate"]("eth_btc");
       priceBtc = moneyUtils.valueInBitcoin(saleData.fiatCurrency, saleData.amount, fiatRate);
       priceFiat = this.item.saleData.amount;
       priceEth = moneyUtils.valueInEther(saleData.fiatCurrency, saleData.amount, fiatRate, ethToBtc);
       return symbol + " " + priceFiat + " " + currency + " / " + priceBtc + " btc";
     },
     sellingAuctionPrice() {
-      let fiatRate = store.getters["conversionStore/getFiatRate"](this.item.saleData.fiatCurrency);
+      let fiatRate = this.$store.getters["conversionStore/getFiatRate"](this.item.saleData.fiatCurrency);
       let symbol = fiatRate["symbol"];
       let currency = this.item.saleData.fiatCurrency;
       let priceFiat, priceBtc, priceEth;
       let saleData = this.item.saleData;
-      let ethToBtc = store.getters["conversionStore/getCryptoRate"]("eth_btc");
+      let ethToBtc = this.$store.getters["conversionStore/getCryptoRate"]("eth_btc");
       priceBtc = moneyUtils.valueInBitcoin(saleData.fiatCurrency, saleData.reserve, fiatRate, ethToBtc);
       priceFiat = this.item.saleData.reserve;
       priceEth = moneyUtils.valueInEther(saleData.fiatCurrency, saleData.reserve, fiatRate, ethToBtc);
@@ -90,8 +96,4 @@ export default {
 };
 </script>
 <style scoped>
-a {
-  color: inherit;
-  text-decoration: underline;
-}
 </style>

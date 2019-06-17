@@ -39,7 +39,7 @@ export default {
   },
   created () {
     this.username = this.$route.params.artistId
-    document.title = "Art by " + this.username + " at radicle.art";
+    document.title = "Art by " + this.username + " at dbid.io";
     if (this.$store.state.constants.featureBitcoin) {
       artworkSearchService.newQuery(this.$store, {field: "artist", query: this.username});
     }

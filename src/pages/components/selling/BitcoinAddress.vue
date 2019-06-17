@@ -7,10 +7,10 @@
     <div class="col-md-12 text-danger" v-if="message">
       <p>{{message}}</p>
     </div>
-    <div class="col-md-12" v-if="myProfile.publicKeyData.bitcoinAddress && !removedAddress">
+    <div class="col-md-12 text-secondary" v-if="myProfile.publicKeyData.bitcoinAddress && !removedAddress">
       {{myProfile.publicKeyData.bitcoinAddress}}
-      <span class="pl-5 pr-3 border-right border-dark"><a @click.prevent="toggleAddressInput"><i class="fas fa-pencil-alt"></i></a></span>
-      <span class="pl-3"><a @click.prevent="removeAddress" v-if="allowDelete && myProfile.publicKeyData.bitcoinAddress"><i class="far fa-trash-alt"></i></a></span>
+      <span class="pl-3 pr-3 border-right border-dark text-primary"><a @click.prevent="toggleAddressInput"><i class="fas fa-pencil-alt"></i></a></span>
+      <span class="pl-3 text-primary"><a @click.prevent="removeAddress" v-if="allowDelete && myProfile.publicKeyData.bitcoinAddress"><i class="far fa-trash-alt"></i></a></span>
     </div>
     <div class="col-md-12" v-if="changeBtcAddress || removedAddress">
       <input type="text" width="50%" class="form-control" required id="vc-bitcoin-address" placeholder="Your bitcoin address" v-on:keyup.13="saveBitcoinAddress($event)" v-model="myProfile.publicKeyData.bitcoinAddress">

@@ -1,12 +1,12 @@
 <template>
 <header class="mb-5">
 <login-tab-modal v-if="showModal" :modal="showModal" @closeModal="closeModal"/>
-<div class="d-flex bg-primary text-white" style="max-height: 60px;">
-  <div class="mr-auto p-2"><router-link to="/" class="nav-link navbar-link"><img :src="logo" height="30px" alt="main logo"></router-link></div>
-  <div class="py-2"><router-link class="nav-link navbar-link mr-1" to="/buy">buy</router-link></div>
-  <div class="py-2"><router-link class="nav-link navbar-link mr-5" to="/sell">sell</router-link></div>
-  <div class="py-2" v-if="loggedIn"><account-links @closeMenu="closeMenu"/></div>
-  <div class="py-2" v-else><a v-on:click.prevent="loginMultiPlayer" class="nav-link navbar-link">Login</a></div>
+<div class="d-flex bg-white text-dark border-bottom border-dark">
+  <div class="mr-auto p-0 ml-4"><router-link to="/" class="nav-link navbar-link"><img :src="logo" width="100px" alt="main logo"></router-link></div>
+  <div class="pt-3"><router-link class="nav-link navbar-link mr-1" to="/buy">BUY</router-link></div>
+  <div class="pt-3"><router-link class="nav-link navbar-link mr-5" to="/sell">SELL</router-link></div>
+  <div class="mr-4 pt-2" v-if="loggedIn"><account-links @closeMenu="closeMenu"/></div>
+  <div class="mr-4 py-2" v-else><a v-on:click.prevent="loginMultiPlayer" class="nav-link navbar-link">Login</a></div>
 </div>
 </header>
 </template>
@@ -32,7 +32,7 @@ export default {
       taglink2: '',
       toggleClass: '',
       showModal: false,
-      logo: require("@/assets/img/logo/navbar-logo.png")
+      logo: require("@/assets/img/logo/dB_short_433x200_dark.png")
     };
   },
   components: {

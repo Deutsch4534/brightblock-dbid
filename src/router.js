@@ -2,6 +2,7 @@ import Router from "vue-router";
 
 import Index from "./pages/Index.vue";
 import Sell from "./pages/Sell.vue";
+import ItemDetails from "./pages/ItemDetails.vue";
 
 import Admin from "./views/Admin.vue";
 import AdminSettings from "./views/components/admin/AdminSettings";
@@ -106,6 +107,16 @@ const router = new Router({
         footer: Footer
       },
       meta: { requiresAuth: false }
+    },
+    {
+      path: "/items/:itemId",
+      name: "item-details",
+      components: {
+        default: ItemDetails,
+        header: Navbar,
+        footer: Footer
+      },
+      meta: { requiresAuth: true },
     },
     {
       path: "/my-items",

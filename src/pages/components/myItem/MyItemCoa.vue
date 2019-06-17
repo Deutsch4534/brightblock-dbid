@@ -19,7 +19,7 @@
 
     <div class="d-flex justify-content-start">
       <button v-if="item.coa" class="btn btn-primary btn-sm" @click="openCoa()">Open COA</button>
-      <button v-else class="btn btn-primary btn-sm" @click="generateCoa()">Generate COA</button>
+      <button class="btn btn-primary btn-sm" @click="generateCoa()">Generate COA</button>
     </div>
   </div>
 </div>
@@ -129,7 +129,7 @@ export default {
         $self.downloadLink = $self.getPdfLink(item);
         // $self.$emit('updateCoa', response.data);
         $self.setByEventCoa(response.data);
-        $self.$emit("reload");
+        this.$notify({type: 'success', title: 'Certificate Generated', text: 'Your certificate is ready to downlod.'});
       });
     },
     getPdfLink: function(item) {

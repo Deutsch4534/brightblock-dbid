@@ -1,14 +1,14 @@
 {
-  "name": "Radicle Art",
-  "short_name": "Radicle",
-  "description": "A peer to peer marketplace and auction platform for art",
+  "name": "dBidio",
+  "short_name": "dBid",
+  "description": "A peer to peer marketplace and bidding platform",
   "start_url": "/gallery",
   "icons": [{
-    "src": "https://radicle.art/static/android-chrome-256x256.png",
+    "src": "https://dbid.io/static/dB_256x256_dark.png",
     "sizes": "256x256",
     "type": "image/png"
   }, {
-    "src": "https://radicle.art/static/android-chrome-512x512.png",
+    "src": "https://dbid.io/static/dB_512x512_dark.png",
     "sizes": "512x512",
     "type": "image/png"
   }],

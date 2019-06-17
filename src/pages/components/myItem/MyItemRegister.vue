@@ -10,7 +10,7 @@
     </div>
     <p><strong><a @click.prevent="" slot="reference">Register Item on Bitcoin Blockchain <span v-if="bitcoinState">({{bitcoinState.chain}} chain)</span></a></strong></p>
     <p class="grey-text">
-      We will create a piece of data that is unique to you and this piece of item
+      We will create a piece of data that is unique to you and this item
       and store it the bitcoin blockchain where it can be used to prove your
       ownership. You'll then be able to generate a Certificate of Ownership.
       <br/><br/>
@@ -19,8 +19,8 @@
     <p v-if="showItemHash">
       {{itemHash}}
     </p>
-    <div v-if="!asset.assetRegistrationTx">
-      <a class="btn btn-primary btn-md waves-effect waves-light d-flex justify-content-end"  @click="registerItemBitcoin()" v-if="!item.bitcoinTx">Register</a>
+    <div v-if="!asset.assetRegistrationTx" class="d-flex justify-content-start">
+      <a class="btn btn-primary btn-md waves-effect waves-light"  @click="registerItemBitcoin()" v-if="!item.bitcoinTx">Register</a>
     </div>
     <div v-else>
       asset registered in transaction {{asset.assetRegistrationTx}}
@@ -107,6 +107,7 @@ export default {
               $self.$emit("registerBitcoin", {error: true, message: "transaction failed - please try again later."});
             } else {
               $self.asset = asset;
+              item.bitcoinTx = asset.assetRegistrationTx;
               $self.$store.dispatch("myItemStore/updateItem", {item: item, updateProvData: false});
               $self.$emit("registerBitcoin", {error: false, message: "Registered item on the bitcoin blockchain."});
             }

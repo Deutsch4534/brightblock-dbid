@@ -22,7 +22,7 @@ export default {
     return {
       enabled: false,
       auctionId: null,
-      featureMessage: 'Get in touch about running <a href="mailto:mijoco@radicle.art">auctions</a>.',
+      featureMessage: 'Get in touch about running <a href="mailto:mjoecohen@gmail.com">auctions</a>.',
       loading: true
     };
   },

@@ -180,15 +180,15 @@ const assetStore = {
         });
       });
     },
-    initialiseAsset({ commit, state, getters}, artwork) {
+    initialiseAsset({ commit, state, getters}, item) {
       return new Promise(resolve => {
-        let objectIdent = "artwork_::_" + artwork.id;
+        let objectIdent = "item_::_" + item.id;
         let asset = {
           created: moment({}).valueOf(),
           assetId: objectIdent,
-          assetType: (artwork.medium === "image" || artwork.medium === "video" || artwork.medium === "sound") ? "digital" : "physical",
-          assetTitle: artwork.title,
-          assetHash: utils.buildBitcoinHash(artwork),
+          assetType: (item.medium === "image" || item.medium === "video" || item.medium === "sound") ? "digital" : "physical",
+          assetTitle: item.title,
+          assetHash: utils.buildBitcoinHash(item),
           assetRegistrationTx: null,
           confirmed: false,
           status: -1,
@@ -199,16 +199,16 @@ const assetStore = {
     },
     initialisePayment({ commit, state, getters}, data) {
       return new Promise(resolve => {
-        let artwork = data.artwork;
+        let item = data.item;
         let asset = data.asset;
-        store.dispatch("userProfilesStore/fetchUserProfile", { username: artwork.gallerist }, { root: true }).then(profile => {
+        store.dispatch("userProfilesStore/fetchUserProfile", { username: item.gallerist }, { root: true }).then(profile => {
           let gallerist = profile;
-          store.dispatch("userProfilesStore/fetchUserProfile", { username: artwork.owner }, { root: true }).then(profile => {
+          store.dispatch("userProfilesStore/fetchUserProfile", { username: item.owner }, { root: true }).then(profile => {
             let seller = profile;
-            store.dispatch("userProfilesStore/fetchUserProfile", { username: artwork.artist }, { root: true }).then(profile => {
+            store.dispatch("userProfilesStore/fetchUserProfile", { username: item.artist }, { root: true }).then(profile => {
               let artist = profile;
               let buyer = store.getters["myAccountStore/getMyProfile"];
-              let fiatRate = store.getters["conversionStore/getFiatRate"](artwork.saleData.fiatCurrency);
+              let fiatRate = store.getters["conversionStore/getFiatRate"](item.saleData.fiatCurrency);
               let otherData = {
                 fiatRate: fiatRate,
                 buyer: buyer,
@@ -216,7 +216,7 @@ const assetStore = {
                 seller: seller,
                 creator: artist,
               };
-              let purchaseCycle = utils.initialisePurchaseCycle(artwork, otherData);
+              let purchaseCycle = utils.initialisePurchaseCycle(item, otherData);
               if (!asset.purchaseCycles) {
                 asset.purchaseCycles = [];
               }
