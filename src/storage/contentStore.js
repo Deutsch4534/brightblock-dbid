@@ -27,6 +27,9 @@ const contentStore = {
     addTaxonomy(state, taxonomy) {
       state.taxonomy = taxonomy;
     },
+    addCategory(state, category) {
+      state.taxonomy.push(category);
+    },
     mainContent(state, o) {
       state.content["main-content"] = o;
     },
@@ -57,6 +60,14 @@ const contentStore = {
             resolve(taxonomy);
           });
         }
+      });
+    },
+    addCategory: function({ state, commit }, category) {
+      return new Promise(resolve => {
+        taxonomyService.addCategory(category).then(category => {
+          commit("addCategory", category);
+          resolve(category);
+        });
       });
     }
   }

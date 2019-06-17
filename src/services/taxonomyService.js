@@ -43,5 +43,19 @@ const bitcoinService = {
         });
     });
   },
+  addCategory: function(category) {
+    return new Promise((resolve, reject) => {
+      axios(httpParams("post", "save", category)).then(response => {
+        if (response && response.data && response.data.details) {
+          resolve(response.data.details);
+        } else {
+          reject(new Error("Unable to fulfil request."));
+        }
+      })
+        .catch(e => {
+          reject(new Error("Unable to fulfil request."));
+        });
+    });
+  },
 };
 export default bitcoinService;

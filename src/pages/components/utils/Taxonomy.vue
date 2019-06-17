@@ -3,7 +3,7 @@
   <p class="text-muted text-sm">Type and select from list or press add to create a new category</p>
   <vue-bootstrap-typeahead inputClass="validate" v-model="newKeyword" :data="keywordNames" @hit="hitOne"/>
   <div class="d-flex justify-content-end">
-    <button type="button" class="btn btn-primary btn-sm" @click="hitNew">add</button>
+    <a class="btn btn-primary btn-sm" @click.native="hitNew">add</a>
   </div>
   <span v-for="keyword in chosen" :key="keyword.name">
     <a @click.prevent="unchoose(keyword.name)"><mdb-btn rounded color="white" size="sm" class="mx-0 waves-light">{{keyword.name}}</mdb-btn></a>
@@ -57,7 +57,8 @@ export default {
       if (!keywordName || keywordName.length < 3) {
         return;
       }
-      this.hitOne(keywordName);
+      let category = this.hitOne(keywordName);
+      this.$store.dispatch("contentStore/addCategory", category);
     },
     hitOne: function(keywordName) {
       let indexInChosen = _.findIndex(this.chosen, function(o) {
@@ -74,8 +75,9 @@ export default {
       } else {
         this.chosen.push({name: keywordName});
       }
-      this.newKeyword = null;
+      // this.newKeyword = null;
       this.$emit("closeKeywords", this.chosen);
+      return {name: keywordName};
     }
   }
 };

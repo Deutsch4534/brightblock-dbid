@@ -4,7 +4,7 @@
     <div class="col-12 py-5">
       <!-- Supported elements -->
       <confirmation-modal :modal="showModal" :title="modalTitle" :content="modalContent" @closeModal="closeModal"/>
-      <form class="needs-validation form-transparent" novalidate @submit.prevent="checkForm" id="itemForm">
+      <form class="needs-validation form-transparent" novalidate v-on:submit.prevent id="itemForm">
         <!-- item type -->
         <div class="row">
           <div class="col-8 mb-4">
@@ -51,7 +51,7 @@
             <!-- Submit button row -->
             <div class="row">
               <div class="col-12 mt-3">
-                <button class="btn btn-sm btn-primary lighten-1">Save</button>
+                <a class="btn btn-sm btn-primary lighten-1" @click.prevent="checkForm">Save</a>
               </div>
             </div>
           </div>
