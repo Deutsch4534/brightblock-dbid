@@ -141,6 +141,7 @@ import MediaFilesUpload from "@/pages/components/utils/MediaFilesUpload";
         this.item = this.$store.getters["myItemStore/myItemOrDefault"](this.itemId);
         this.item.owner = this.myProfile.username;
         this.showMedia = true;
+        this.loading = false;
       }
     },
     computed: {
