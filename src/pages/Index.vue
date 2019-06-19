@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import LatestOffers from './components/general/LatestOffers';
+import LatestOffers from './components/browse/LatestOffers';
 
 export default {
   components: {

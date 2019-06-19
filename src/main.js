@@ -44,6 +44,8 @@ const app = new Vue({
       store.dispatch("assetStore/fetchBalance");
       store.dispatch("assetStore/fetchRadPayConfig");
       store.dispatch("assetStore/subscribeAssetTransferNews");
+      store.dispatch("contentStore/fetchTaxonomy");
+
       let profile = this.$store.getters["myAccountStore/getMyProfile"];
       if (profile.loggedIn) {
         store.dispatch("fetchServerTime");

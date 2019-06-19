@@ -10,20 +10,21 @@
     </div>
     <p><strong><a @click.prevent="" slot="reference">Register Item on Bitcoin Blockchain <span v-if="bitcoinState">({{bitcoinState.chain}} chain)</span></a></strong></p>
     <p class="grey-text">
-      We will create a piece of data that is unique to you and this item
-      and store it the bitcoin blockchain where it can be used to prove your
-      ownership. You'll then be able to generate a Certificate of Ownership.
-      <br/><br/>
-      <a @click.prevent="showItemHash = !showItemHash">Show this data!</a>
+      Registering your item on the blockchain is strong evidence of your ownership.
+      The process involves taking a cryptographic hash of the provenance data you've provided and
+      storing this in a transaction on bitcoin.
     </p>
-    <p v-if="showItemHash">
-      {{itemHash}}
-    </p>
+    <p class="grey-text">Once registered you can use dbidio tools to generate a Certificate of Authenticity for the item.</p>
     <div v-if="!asset.assetRegistrationTx" class="d-flex justify-content-start">
       <a class="btn btn-primary btn-md waves-effect waves-light"  @click="registerItemBitcoin()" v-if="!item.bitcoinTx">Register</a>
     </div>
     <div v-else>
-      asset registered in transaction {{asset.assetRegistrationTx}}
+      Your item has been registered on the bitcoin blockchain - <a @click.prevent="showTransaction = !showTransaction"><u>details</u></a>.
+      <p class="mt-3 text-muted" v-if="showTransaction">
+        Cryptographic hash: {{itemHash}}
+        <br/>
+        Transaction Id: <a :href="transactionUrl" target="_blank"><u>{{asset.assetRegistrationTx}}</u></a>
+      </p>
     </div>
   </div>
 </div>
@@ -62,7 +63,8 @@ export default {
     return {
       message: null,
       itemId: null,
-      showItemHash: null,
+      showItemHash: false,
+      showTransaction: false,
       loading: true,
       asset: {}
     };
@@ -93,30 +95,43 @@ export default {
       let state = this.$store.getters["assetStore/getBitcoinConfig"];
       return state;
     },
+    transactionUrl() {
+      try {
+        let chain = "test";
+        let bitcoinState = this.$store.getters["assetStore/getBitcoinConfig"];
+        if (bitcoinState) {
+          chain = bitcoinState.chain;
+        }
+        if (chain === "test") {
+          return `https://testnet.smartbit.com.au/tx/${this.asset.assetRegistrationTx}`;
+        }
+        return `https://www.blockchain.com/btc/tx/${this.asset.assetRegistrationTx}`;
+      } catch (err) {
+        return "#";
+      }
+    },
   },
   methods: {
     registerItemBitcoin: function() {
       let item = this.item;
       this.modal = true;
       try {
-        let $self = this;
-        this.$emit("registerBitcoin", {error: false, message: "Registering please wait.."});
-        bitcoinService.registerAsset(asset).then(asset => {
+        bitcoinService.registerAsset(this.asset).then(asset => {
           if (!asset || !asset.assetRegistrationTx) {
-            $self.$emit("registerBitcoin", {error: true, message: "transaction failed - please try again later."});
+            this.$notify({type: 'error', title: 'Register Item', text: 'Unable to register item at the moment - please try again later.'});
           } else {
-            $self.asset = asset;
+            this.asset = asset;
             item.bitcoinTx = asset.assetRegistrationTx;
-            $self.$store.dispatch("myItemStore/updateItem", {item: item, updateProvData: false});
-            $self.$emit("registerBitcoin", {error: false, message: "Registered item on the bitcoin blockchain."});
+            this.$store.dispatch("myItemStore/updateItem", {item: item, updateProvData: false});
+            this.$notify({type: 'success', title: 'Register Item', text: 'Registered item on the bitcoin blockchain.'});
           }
         })
           .catch(err => {
             console.log(err);
-            $self.$emit("registerBitcoin", {failed: true, message: err.message});
+            this.$notify({type: 'error', title: 'Register Item', text: 'Unable to register item at the moment - please try again later.'});
           });
       } catch (err) {
-        $self.$emit("registerBitcoin", {error: true, message: 'transaction failed - please try again later'});
+        this.$notify({type: 'error', title: 'Register Item', text: 'Unable to register item at the moment - please try again later.'});
         console.log(err);
       }
     },

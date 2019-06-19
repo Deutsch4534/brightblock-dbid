@@ -12,7 +12,7 @@
       <div class="mr-auto"><h3 class="mb-3 font-weight-bold dark-grey-text"><strong>{{item.title}}</strong></h3></div>
       <div><item-action-links :item="item" :itemAction="'manage'" :asset="asset" :buttonMode="false"/></div>
     </div>
-    <p class="grey-text"><description-overflow :text="item.description"/></p>
+    <p class="grey-text"><description-container :text="item.description"/></p>
     <p>by <a class="font-weight-bold dark-grey-text">{{ownerProfile.name}}</a>, 11/08/2018</p>
     <p v-if="item.bitcoinTx"><span>registered</span></p>
     <p v-else><span>not registered</span></p>
@@ -27,7 +27,7 @@ import notify from "@/notify";
 import ethereumService from "@/services/ethereumService";
 import ConfirmationModal from "../utils/ConfirmationModal";
 import DeleteItemModal from "./DeleteItemModal";
-import DescriptionOverflow from "@/views/components/utils/DescriptionOverflow";
+import DescriptionContainer from "@/pages/components/utils/DescriptionContainer";
 import ItemImageListView from "./ItemImageListView";
 import ItemActionLinks from "./ItemActionLinks";
 
@@ -35,7 +35,7 @@ import ItemActionLinks from "./ItemActionLinks";
 export default {
   name: "MyItemManage",
   components: {
-    ItemImageListView, DescriptionOverflow, ItemActionLinks,
+    ItemImageListView, DescriptionContainer, ItemActionLinks,
     ConfirmationModal,
     DeleteItemModal,
   },

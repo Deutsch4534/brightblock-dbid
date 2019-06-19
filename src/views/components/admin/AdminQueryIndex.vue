@@ -42,6 +42,7 @@
     </div>
     <div class="form-group mb-2 pr-2">
       <select class="browser-default custom-select" v-model="objType">
+        <option value="item">item</option>
         <option value="artwork">artwork</option>
         <option value="gallery">gallery</option>
         <option value="auction">auction</option>
@@ -119,8 +120,8 @@ export default {
       queryNamesTerm: "name",
       queryDappsTerm: "title",
       queryStringDapps: null,
-      endPoint: "/index/dapps/dbid.io/artwork/title?q=*",
-      objType: "artwork",
+      endPoint: "/index/dapps/dbid.io/item/title?q=*",
+      objType: "item",
       queryDomain: location.hostname
     };
   },

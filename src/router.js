@@ -3,7 +3,6 @@ import Router from "vue-router";
 import Index from "./pages/Index.vue";
 import Sell from "./pages/Sell.vue";
 import ItemDetails from "./pages/ItemDetails.vue";
-import ItemTransaction from "./pages/ItemTransaction.vue";
 
 import Admin from "./views/Admin.vue";
 import AdminSettings from "./views/components/admin/AdminSettings";
@@ -104,16 +103,6 @@ const router = new Router({
       name: "seller-info",
       components: {
         default: Sell,
-        header: Navbar,
-        footer: Footer
-      },
-      meta: { requiresAuth: false }
-    },
-    {
-      path: "/item/transaction/:assetHash",
-      name: "item-transaction",
-      components: {
-        default: ItemTransaction,
         header: Navbar,
         footer: Footer
       },

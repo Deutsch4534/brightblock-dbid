@@ -1,45 +1,35 @@
 <template>
-<div class="row mb-5">
-  <div class="col-12">
-    <div class="row">
-      <div class="col-md-6 col-sm-8">
-        <order-details :purchaseCycle="purchaseCycle"/>
-      </div>
-      <div class="col-md-3 col-sm-6" v-if="asset.status === 3">
-        <div v-if="!purchaseExpired">
-          <div>
-            Pay using: <a @click.prevent="toggleNetwork()"><b><u>{{network}}</u></b></a>
-          </div>
-          <payment-details-btc v-if="network === 'bitcoin'" :paymentUri="bitcoinUri" :validFor="validFor"/>
-          <payment-details-lnd v-else :paymentUri="lightningUri" :validFor="validFor"/>
-        </div>
-        <div v-else>
-          <payment-expired :assetHash="assetHash" :itemId="itemId"/>
-        </div>
-      </div>
-      <div class="col-md-3 col-sm-6" v-else-if="asset.status > 3">
-        <confirmation-details :debugMode="debugMode" :assetHash="assetHash" :purchaseCycle="purchaseCycle" @paySeller="paySeller"/>
-      </div>
-      <div class="col-md-3 col-sm-6" v-else-if="purchased">
-        Purchase successful - the item has been transferred to your storage.
-        <br/>
-        <router-link :to="myItemUrl" class="inline-block">
-          <mdb-btn class="btn teal lighten-1" size="sm" waves-light>manage item</mdb-btn>
-        </router-link>
-      </div>
-      <div class="col-md-3 col-sm-6" v-else>
-        <payment-expired :assetHash="assetHash" :itemId="itemId"/>
-      </div>
+<div class="container" v-if="loading">
+  <div class="spinner-border" role="status">
+    <span class="sr-only">Loading...</span>
+  </div>
+</div>
+<div class="row mb-5" v-else>
+  <div class="col-12" v-if="asset.status === 3">
+    <div v-if="eternal || !purchaseExpired">
+      <payment-details :eternal="eternal" :asset="asset" :validFor="validFor"/>
     </div>
+    <div v-else>
+      <payment-expired :assetHash="assetHash" :itemId="itemId"/>
+    </div>
+  </div>
+  <div class="col-12" v-else-if="asset.status > 3">
+    <confirmation-details :debugMode="debugMode" :assetHash="assetHash" :purchaseCycle="purchaseCycle" @paySeller="paySeller"/>
+  </div>
+  <div class="col-12" v-else-if="purchased">
+    Purchase successful - the item has been transferred to your storage.
+    <br/>
+    <router-link class="btn btn-primary btn-md waves-effect waves-light" :to="myItemUrl">manage item</router-link>
+  </div>
+  <div class="col-12" v-else>
+    <payment-expired :assetHash="assetHash" :itemId="item.id"/>
   </div>
 </div>
 </template>
 
 <script>
 import { mdbBtn } from "mdbvue";
-import bitcoinService from "brightblock-lib/src/services/bitcoinService";
-import PaymentDetailsBtc from "./PaymentDetailsBtc";
-import PaymentDetailsLnd from "./PaymentDetailsLnd";
+import PaymentDetails from "./PaymentDetails";
 import PaymentExpired from "./PaymentExpired";
 import ConfirmationDetails from "./ConfirmationDetails";
 import OrderDetails from "./OrderDetails";
@@ -53,22 +43,20 @@ export default {
     mdbBtn,
     OrderDetails,
     ConfirmationDetails,
-    PaymentDetailsBtc, PaymentDetailsLnd, PaymentExpired
+    PaymentDetails, PaymentExpired
   },
   props: {
     debugMode: false,
     myProfile: null,
-    assetHash: null
+    assetHash: null,
+    item: null
   },
   data() {
     return {
       loading: true,
-      network: "bitcoin",
+      eternal: true,
       showConfirmationDetails: false,
-      bitcoinUri: null,
-      lightningUri: null,
-      item: null,
-      validFor: 100,
+      validFor: 3600,
       myPaymentInterval: null,
       purchaseExpired: false
     };
@@ -81,29 +69,23 @@ export default {
   mounted() {
     this.$store.dispatch("assetStore/lookupAssetByHash", this.assetHash).then(asset => {
       if (asset) {
-        let itemId = Number(asset.assetId.split("_::_")[1]);
-        this.$store.dispatch("itemSearchStore/fetchItem", itemId).then((item) => {
-          this.item = item;
-          if (asset.status === -1) {
-            //this.$router.push("/items/" + this.item.id);
-            //return;
+        if (asset.status === -1) {
+          //this.$router.push("/items/" + this.item.id);
+          //return;
+        }
+        if (asset.status === 3) {
+          let purchaseCycle = this.$store.getters["assetStore/getCurrentPurchaseCycleByHash"](this.assetHash);
+          this.startCountdown();
+          if (this.paymentExpired(purchaseCycle) < 0) {
+            this.$emit("cancelOrder", this.assetHash);
+            return;
           }
-          if (asset.status === 3) {
-            let purchaseCycle = this.$store.getters["assetStore/getCurrentPurchaseCycleByHash"](this.assetHash);
-            if (this.paymentExpired(purchaseCycle) < 0) {
-              this.$store.dispatch("assetStore/cancelPurchase", asset.assetHash);
-            } else {
-              this.startCountdown();
-              this.bitcoinUri = bitcoinService.getBitcoinUri(asset);
-              this.lightningUri = bitcoinService.getLightningUri(asset);
-            }
-          } else if (asset && asset.status === 7) {
-            this.$store.dispatch("myItemStore/transferItemToBuyer", asset).then((asset) => {
-              this.$notify({type: 'success', title: 'Item Transferred', text: 'Item transferred to your storage.'});
-            });
-          }
-          this.loading = false;
-        });
+        } else if (asset && asset.status === 7) {
+          this.$store.dispatch("myItemStore/transferItemToBuyer", asset).then((asset) => {
+            this.$notify({type: 'success', title: 'Item Transferred', text: 'Item transferred to your storage.'});
+          });
+        }
+        this.loading = false;
       } else {
         console.log("Order id but no order?");
       }
@@ -128,26 +110,22 @@ export default {
         if (purchaseCycle.buyer.chainData.txid) {
           clearInterval(countdown);
         } else {
-          $self.validFor = $self.paymentExpired(purchaseCycle);
+          let now = moment({}).valueOf();
+          //let diff = (now - purchaseCycle.created) / 1000;
+          let diff = 3600 - ((now - purchaseCycle.created) / 1000);
+          $self.validFor = diff; // $self.paymentExpired(purchaseCycle);
           let expired = $self.validFor < 0;
           if (expired) {
             $self.purchaseExpired = true;
             clearInterval(countdown);
           }
         }
-      }, 5000);
+      }, 1000);
     },
     paymentExpired(purchaseCycle) {
       let now = moment({}).valueOf();
       let diff = now - purchaseCycle.created;
       return (100 - ((diff) / 1000));
-    },
-    toggleNetwork() {
-      if (this.network === "bitcoin") {
-        this.network = "lightning";
-      } else {
-        this.network = "bitcoin";
-      }
     },
     paySeller() {
       let $self = this;

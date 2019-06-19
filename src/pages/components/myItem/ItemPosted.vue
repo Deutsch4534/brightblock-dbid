@@ -1,5 +1,5 @@
 <template>
-<p class="d-flex justify-content-end text-muted">Listed: <!--by; <a class="font-weight-bold dark-grey-text">{{ownerProfile.name}}</a> --> {{getDate}}</p>
+<p>Listed: <!--by; <a class="font-weight-bold dark-grey-text">{{ownerProfile.name}}</a> --> {{getDate}}</p>
 </template>
 
 <script>

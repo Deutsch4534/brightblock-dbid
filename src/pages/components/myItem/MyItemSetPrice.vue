@@ -21,13 +21,13 @@
 
       <div v-if="isAuctions">
         <div class="form-row">
-          <div class="col-6">
+          <div class="col-4">
             <mdb-btn type="button" color="white" size="md" class="btn-rounded btn-block"
                      value="direct" v-model="mySalePlace" @click.native="mySalePlace = 'marketplace'" :active="mySalePlace === 'marketplace'" required>
               Radicle Marketplace
             </mdb-btn>
           </div>
-          <div class="col-6">
+          <div class="offset-1 col-4">
             <mdb-btn type="button" color="white" size="md" class="btn-rounded btn-block"
                      value="auction" v-model="mySalePlace" @click.native="mySalePlace = 'auctionplace'" :active="mySalePlace === 'auctionplace'" required>
               Auction
@@ -41,11 +41,11 @@
       </div>
 
       <div class="d-flex justify-content-between mb-4">
-        <mdb-btn type="button" color="white" size="sm" class="btn-rounded btn-block"
+        <mdb-btn type="button" color="white" size="sm" class="btn-rounded btn-block mr-3"
                  value="direct" v-model="mySaleType" @click.native="mySaleType = 'direct'" :active="mySaleType === 'direct'" required>
           Buy Now (Fixed Price)
         </mdb-btn>
-        <mdb-btn type="button" color="white" size="sm" class="btn-rounded btn-block"
+        <mdb-btn type="button" color="white" size="sm" class="btn-rounded btn-block ml-3"
                  value="auction" v-model="mySaleType" @click.native="mySaleType = 'auction'" :active="mySaleType === 'auction'" required>
           Via Bidding
         </mdb-btn>

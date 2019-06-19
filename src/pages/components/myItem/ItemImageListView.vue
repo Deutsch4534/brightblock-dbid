@@ -1,6 +1,6 @@
 <template>
-<div class="mdb-lightbox" style="max-width: 500px;" v-if="isImage">
-  <mdb-carousel showControls showIndicators> <!-- :interval="1000"  -->
+<div class="mdb-lightbox" v-if="isImage">
+  <mdb-carousel showControls :interval="false" showIndicators> <!-- :interval="1000"  -->
     <mdb-carousel-item img v-for="(image, index) in item.images" :key="index" :src="image.dataUrl" mask="light" :alt="item.title">
       <a @click.prevent="show(0)"><mdb-carousel-caption :text="item.title"></mdb-carousel-caption></a>
     </mdb-carousel-item>

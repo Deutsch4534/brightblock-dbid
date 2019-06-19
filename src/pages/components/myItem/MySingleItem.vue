@@ -8,7 +8,7 @@
       <div class="mr-auto"><h3 class="mb-3 font-weight-bold dark-grey-text"><strong>{{item.title}}</strong></h3></div>
       <div><item-action-links :item="item" :itemAction="'manage'" :asset="asset" :buttonMode="false"/></div>
     </div>
-    <p><description-overflow :text="item.description"/></p>
+    <p><description-container :text="item.description"/></p>
     <item-posted :owner="item.owner" :created="item.created" />
   </div>
 </div>
@@ -16,7 +16,7 @@
 
 <script>
 import moment from "moment";
-import DescriptionOverflow from "../utils/DescriptionOverflow";
+import DescriptionContainer from "../utils/DescriptionContainer";
 import ItemActionLinks from "./ItemActionLinks";
 import ItemImageListView from "./ItemImageListView";
 import ItemPosted from "./ItemPosted";
@@ -25,7 +25,7 @@ import ItemPosted from "./ItemPosted";
 export default {
   name: "MySingleItem",
   components: {
-    ItemActionLinks, DescriptionOverflow, ItemImageListView, ItemPosted
+    ItemActionLinks, DescriptionContainer, ItemImageListView, ItemPosted
   },
   props: {
     item: {

@@ -26,7 +26,7 @@ const searchIndexService = {
     return new Promise(function(resolve) {
       indexable.domain = location.hostname;
       indexable.objType = objType;
-      console.log(settings);
+      indexable.keywords = indexable.keywords.map(keyword => keyword.name).join(",");
       let saleType = settings.taxonomy.saleTypes[0];
       if (indexable.saleData) {
         let index = _.findIndex(settings.taxonomy.saleTypes, function(o) {
@@ -37,7 +37,6 @@ const searchIndexService = {
         }
       }
       indexable.metaData = {
-        keywords: indexable.keywords,
         medium: indexable.medium,
         saleType: saleType.value,
         saleAmount: (indexable.saleData) ? indexable.saleData.amount : 0,

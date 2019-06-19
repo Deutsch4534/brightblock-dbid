@@ -143,6 +143,12 @@ const itemSearchStore = {
       });
     },
 
+    searchItems({ commit }, data) {
+      return new Promise(resolve => {
+        itemSearchService.newQuery(store, data);
+      });
+    },
+
     fetchItem({ commit, getters }, itemId) {
       return new Promise(resolve => {
         let item = getters["getItem"](itemId);
