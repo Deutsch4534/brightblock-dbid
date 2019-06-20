@@ -16,7 +16,7 @@
         <seller-info :formTitle="'Update Seller Info'" :myProfile="myProfile" @sellerInfoUpdated="updateSellerState"/>
       </div>
       <div v-if="activeTab === 2">
-        <div class="d-flex justify-content-start">
+        <div class="d-flex justify-content-center">
           <item-upload-form :formTitle="updateOrUploadLabel" :itemId="itemId" :mode="updateOrUploadMode" :myProfile="myProfile"/>
         </div>
       </div>

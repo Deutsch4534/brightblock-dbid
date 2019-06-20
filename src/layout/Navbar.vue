@@ -1,12 +1,17 @@
 <template>
-<header class="mb-5">
+<header class="mb-5" style="">
 <login-tab-modal v-if="showModal" :modal="showModal" @closeModal="closeModal"/>
-<div class="d-flex bg-white text-dark border-bottom border-dark">
-  <div class="mr-auto p-0 ml-4"><router-link to="/" class="nav-link navbar-link"><img :src="logo" width="100px" alt="main logo"></router-link></div>
-  <div class="pt-3"><router-link class="nav-link navbar-link mr-1" to="/buy">BUY</router-link></div>
-  <div class="pt-3"><router-link class="nav-link navbar-link mr-1" to="/sell">SELL</router-link></div>
-  <div class="mr-4 pt-3" v-if="!loggedIn"><a v-on:click.prevent="loginMultiPlayer" class="nav-link navbar-link">LOGIN</a></div>
-  <div class="mr-4 pt-2" v-else><account-links @closeMenu="closeMenu"/></div>
+<div class="d-flex blue-grey lighten-1 pb-0" style="border-bottom: 2pt solid #64dd17; position: relative; top: 2px;">
+  <div class="mr-auto p-0 px-4 d-none d-sm-block" style="border-bottom: 2pt solid #33b5e5; position: relative; top: 2px;"><router-link to="/" class="nav-link navbar-link"><img :src="logo" width="100px" alt="main logo"></router-link></div>
+  <div class="mr-auto pt-2 d-xs-block d-sm-none text-danger" style="font-size: 1.8rem; border-bottom: 2pt solid #33b5e5; position: relative; top: 2px;"><router-link to="/" class="nav-link navbar-link">dB</router-link></div>
+  <!-- #33b5e5 #ffea00 #ff8800 #64dd17 #ab47bc -->
+  <div class="text-center mr-auto pt-4" style="border-bottom: 2pt solid #33b5e5; position: relative; top: 2px;">
+    <router-link class="btn btn-sm bg-success mr-1 ml-3" style="display:inline;" to="/buy">BUY <i class="fas fa-caret-up"></i></router-link>
+    <router-link class="btn btn-sm bg-danger ml-1 mr-3" style="display:inline;" to="/sell">SELL <i class="fas fa-caret-down"></i></router-link>
+  </div>
+
+  <div class="pr-3 pt-2" style="border-bottom: 2pt solid #ab47bc; position: relative; top: 2px;" v-if="!loggedIn"><a v-on:click.prevent="loginMultiPlayer" class="nav-link navbar-link">Login <i class="fas fa-sign-in-alt"></i></a></div>
+  <div class="pl-3 pt-2" style="border-bottom: 2pt solid #ab47bc; position: relative; top: 2px;" v-else><account-links @closeMenu="closeMenu"/></div>
 </div>
 </header>
 </template>

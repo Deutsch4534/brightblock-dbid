@@ -1,13 +1,18 @@
 <template>
-<div class="border-bottom">
+<div class="text-dark text-sm">
   <p class="text-muted text-sm">Type and select from list or press add to create a new category</p>
+  <vue-bootstrap-typeahead v-model="newKeyword" :data="keywordNames" @hit="hitOne"/>
   <div class="d-flex justify-content-start">
-    <vue-bootstrap-typeahead inputClass="validate" v-model="newKeyword" :data="keywordNames" @hit="hitOne"/>
+    <!--
     <a class="btn btn-white btn-sm" style="position: relative; top: -7px;" @click="hitNew">add</a>
+    -->
   </div>
-  <span v-for="keyword in chosen" :key="keyword.name">
-    <a @click.prevent="unchoose(keyword.name)"><mdb-btn rounded color="white" size="sm" class="mx-0 waves-light">{{keyword.name}}</mdb-btn></a>
-  </span>
+  <div class="my-4">Selected Categories [{{chosen.length}}]</div>
+  <div class="d-flex justify-content-center">
+    <span class="mt-2 mr-3" v-for="keyword in chosen" :key="keyword.name">
+      <a @click.prevent="unchoose(keyword.name)" class="btn btn-white btn-rounded" v-html="keyword.name"></a>
+    </span>
+  </div>
 </div>
 </template>
 

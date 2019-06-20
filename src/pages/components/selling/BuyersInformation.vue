@@ -1,11 +1,11 @@
 <template>
 <div class="">
   <div v-if="myItem">
-    <p class="text-muted">{{sellingBuyNowPrice}}</p>
+    <p class="text-muted" v-html="sellingBuyNowPrice"></p>
     <router-link :to="myItemSetPriceUrl" class="btn btn-sm btn-primary btn-white m-0">Change Price</router-link>
   </div>
   <div v-else-if="buyNowEnabled">
-    <p class="text-muted">{{sellingBuyNowPrice}}</p>
+    <p class="text-muted" v-html="sellingBuyNowPrice"></p>
     <router-link v-if="action === 'details'" :to="itemUrl" class="btn btn-sm btn-primary btn-white m-0">Buy Now</router-link>
     <a v-if="action === 'buy'" :to="itemUrl" class="btn btn-sm btn-primary btn-white m-0" @click.prevent="buyNow">Place Order</a>
   </div>
@@ -96,7 +96,7 @@ export default {
       priceBtc = moneyUtils.valueInBitcoin(saleData.fiatCurrency, saleData.amount, fiatRate);
       priceFiat = this.item.saleData.amount;
       priceEth = moneyUtils.valueInEther(saleData.fiatCurrency, saleData.amount, fiatRate, ethToBtc);
-      return symbol + " " + priceFiat + " " + currency + " / " + priceBtc + " btc";
+      return "<small>" + symbol + " " + priceFiat + " " + currency + "<br/>" + priceBtc + " BTC</small>";
     },
     sellingAuctionPrice() {
       let fiatRate = this.$store.getters["conversionStore/getFiatRate"](this.item.saleData.fiatCurrency);

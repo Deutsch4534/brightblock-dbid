@@ -30,7 +30,7 @@
     "dotenv": "^6.2.0",
     "fs": "0.0.1-security",
     "luxon": "^1.10.0",
-    "mdbvue": "./mdbvue-v5.1.0.tgz",
+    "mdbvue": "file:mdbvue-5.5.0.tgz",
     "mini-css-extract-plugin": "^0.5.0",
     "moment": "^2.22.2",
     "net": "^1.0.2",

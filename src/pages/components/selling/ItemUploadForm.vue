@@ -9,40 +9,50 @@
     <div class="col-12 py-5">
       <!-- Supported elements -->
       <confirmation-modal :modal="showModal" :title="modalTitle" :content="modalContent" @closeModal="closeModal"/>
-      <form class="needs-validation form-transparent" novalidate v-on:submit.prevent="checkForm" id="itemForm">
+      <form class="bg-light text-dark p-5 text-white needs-validation form-transparent" novalidate v-on:submit.prevent="checkForm" id="itemForm">
         <!-- item type -->
         <div class="row">
-          <div class="col-8 mb-4">
+          <div class="col-12 mb-4">
             <p v-if="errors.length">
               <b>Please correct the following error(s):</b>
               <ul>
                 <li v-for="error in errors" :key="error.id">{{ error }}</li>
               </ul>
             </p>
-            <div class="form-row mb-2"><h5>{{formTitle}}</h5></div>
+            <div class="form-row mb-3"><h5>{{formTitle}}</h5></div>
             <div class="form-row mb-3">
               <input type="text" class="form-control" id="validationCustom01" :placeholder="'Item Title (' + limits.title + ' chars max)'" v-model="item.title" required :maxlength="limits.title">
               <div class="invalid-feedback">Please enter a title!</div>
             </div>
-            <div class="form-row mb-3">
-                <!--<label for="validationCustom02">Description of Item</label>-->
-                <textarea type="text" class="form-control" id="validationCustom02" :placeholder="'Description of the Item (' + limits.description + ' chars max)'" v-model="item.description" required :maxlength="limits.description"></textarea>
-                <div class="invalid-feedback">
-                  Please enter a description!
-                </div>
+            <div class="form-row mb-5">
+              <!--<label for="validationCustom02">Description of Item</label>-->
+              <textarea type="text" class="form-control" id="validationCustom02" :placeholder="'Description of the Item (' + limits.description + ' chars max)'" v-model="item.description" required :maxlength="limits.description"></textarea>
+              <div class="invalid-feedback">
+                Please enter a description!
+              </div>
             </div>
-            <div class="form-row mb-2"><h5>categories</h5></div>
-            <div class="form-row mb-2">
+
+            <div class="form-row mb-3"><h5>Categories</h5></div>
+            <div class="form-row mb-5">
               <div id="vc-040-error" class="invalid-feedback">
-                Please enter or select some categories!
+                Please select some categories!
               </div>
               <taxonomy @closeKeywords="closeKeywords" :initKeywords="item.keywords"/>
             </div>
 
-            <!-- Right column - image drop -->
-            <div class="form-row mb-2" v-if="showMedia">
-              <h5>images</h5>
+            <div class="form-row mb-3"><h5>Images</h5></div>
+            <div class="form-row mb-5">
+              <div id="vc-040-error" class="invalid-feedback">
+                Please select some categories!
+              </div>
               <media-files-upload :parentalError="parentalError" :contentModel="contentModel3" :mediaFiles="mediaFiles3" :limit="5" :sizeLimit="2500" :mediaTypes="'image'" @updateMedia="setByEventLogo3($event)"/>
+            </div>
+
+            <div class="form-row mb-3"><h5>Ownership Files</h5></div>
+            <div class="form-row mb-5">
+              <div id="vc-040-error" class="invalid-feedback">
+                Please select some categories!
+              </div>
               <media-files-upload :contentModel="contentModel2" :mediaFiles="mediaFiles2" :limit="5" :sizeLimit="2500" :mediaTypes="'image,doc'" @updateMedia="setByEventLogo2($event)"/>
             </div>
 
@@ -56,7 +66,7 @@
             <!-- Submit button row -->
             <div class="row">
               <div class="col-12">
-                <button type="submit" class="btn btn-sm btn-primary" @click.prevent="checkForm">Save</button>
+                <button type="submit" class="btn btn-sm btn-light" @click.prevent="checkForm">Save</button>
               </div>
             </div>
           </div>
@@ -106,12 +116,12 @@ import MediaFilesUpload from "@/pages/components/utils/MediaFilesUpload";
           keywords: 100
         },
         contentModel2: {
-          title: "Ownership Files",
+          title: null,
           errorMessage: "",
           popoverBody: "Provide bills of sale, receipts, images or video clips which prove your ownership (evidence of this data can optionally be stored in the blockchain).<br/><br/>Up to 5 images / documents.",
         },
         contentModel3: {
-          title: "Gallery Images",
+          title: null,
           errorMessage: "",
           popoverBody: "Images for potential buyers to see your item from different angles.<br/><br/>Up to 5 (100kb or less) images.",
         },

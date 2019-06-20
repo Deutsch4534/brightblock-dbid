@@ -87,8 +87,7 @@ export default {
       return this.asset && this.asset.assetHash === assetHash && !this.asset.assetRegistrationTx;
     },
     canCertificate() {
-      let assetHash = utils.buildBitcoinHash(this.item);
-      return this.asset && this.asset.assetHash === assetHash && this.asset.assetRegistrationTx;
+      return this.item.bitcoinTx;
     },
     editUrl() {
       return `/my-items/update/${this.item.id}`;

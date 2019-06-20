@@ -83,7 +83,7 @@ export default {
         this.latestOffers = "Recent items";
       } else {
         //this.latestOffers = "Found " + this.itemsSize + ": ";
-        this.latestOffers = "Found: ";
+        this.latestOffers = "Search: ";
         if (this.query && this.query.length > 0) {
           this.latestOffers += this.query;
         }

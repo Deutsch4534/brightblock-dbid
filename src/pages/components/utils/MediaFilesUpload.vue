@@ -1,7 +1,7 @@
 <template>
 <!-- droppable area 1 -->
-<div class="col-md-12 mb-3 px-3">
-  <mdb-popover trigger="click" :options="{placement: 'top'}">
+<div class="col-md-12">
+  <mdb-popover trigger="click" :options="{placement: 'top'}" v-if="contentModel.title">
     <div class="popover">
       <div class="popover-header">
         {{contentModel.title}}
@@ -25,31 +25,24 @@
       {{internalError}}
     </div>
     <!-- Drop area -->
-    <div class="row mt-2 pb-3 border-bottom">
-      <div class="col-6">
+    <div class="row mx-0">
+      <div class="col-8">
         <div class="load-item" v-if="checkQuantity">
           <div class="drop-area" @drop.prevent="loadMediaObjects" @dragover.prevent>
             <p class="drop-label">Drop file</p>
           </div>
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-8">
         <div class="" v-if="checkQuantity">
-          <input class="m-3" type="file" id="file-input" @change.prevent="loadMediaObjects"/>
+          <input class="mt-3" type="file" id="file-input" @change.prevent="loadMediaObjects"/>
         </div>
       </div>
-    </div>
-    <div class="row mt-2">
-      <div class="col-6">
+      <div class="col-8 text-right">
         <p class="grey-text small">
-          <span class="mr-5">Max Files: {{limit}}</span>
+          <span class="mr-3">Max Files: {{limit}}</span>
           <span class="">Max Size: {{sizeLimit}}Kb</span>
         </p>
-      </div>
-      <div class="col-6 text-right">
-        <a class="d-inline-block" @click.prevent="clearMediaObjects" v-if="mediaObjects.length > 0">
-          <mdb-btn color="white" size="md" class="mx-0">Clear Files</mdb-btn>
-        </a>
       </div>
     </div>
   </div>
@@ -71,6 +64,11 @@
       <div v-if="ispdf(file)">
         <p class="mb-0 small">{{ file.type }}</p>
       </div>
+    </div>
+    <div class="col-12 text-right">
+      <a class="d-inline-block" @click.prevent="clearMediaObjects" v-if="mediaObjects.length > 0">
+        <button class="btn btn-sm btn-light"">Clear Files</button>
+      </a>
     </div>
   </div>
 </div>

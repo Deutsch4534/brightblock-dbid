@@ -1,18 +1,20 @@
 <template>
 <div>
   <help-topic-modal :modal="helpModal" :topic="'bitcoin-address'" @closeModal="helpModalClose"/>
-  <h4 class="text-capitalize"><a @click.prevent="helpModal = !helpModal">Bitcoin Address - <span class="text-primary">{{bitcoinState.chain}}</span> network</a></h4>
-  <p class="text-muted">Payments will be sent to this address.</p>
+  <h4 class="text-capitalize"><a href="/" @click.prevent="helpModal = !helpModal">Bitcoin Address - <span class="text-primary">{{bitcoinState.chain}}</span> network</a></h4>
+  <p class="text-muted">Payments will be sent to this address.  (<a @click.prevent="showHint = !showHint">hint</a>)</p>
+  <p class="text-muted" v-if="showHint">Use this bitcoin test net address for testing - tb1q5d2p3tejxrjfqelcwght3km3ua9wgrd09w05es
+  <br/>or see <a href="https://bitcoin.stackexchange.com/questions/76598/how-to-get-electrum-3-1-3-on-bitcoin-testnet" target="_blank"><u>this post</u></a> for helping running the electrum bitcoin wallet on testnet</p>
   <div class="row">
     <div class="col-md-12 text-danger" v-if="message">
       <p>{{message}}</p>
     </div>
-    <div class="col-md-12 text-secondary" v-if="myProfile.publicKeyData.bitcoinAddress && !removedAddress">
+    <div class="col-md-12 text-secondary mb-4" v-if="myProfile.publicKeyData.bitcoinAddress && !removedAddress">
       {{myProfile.publicKeyData.bitcoinAddress}}
       <span class="pl-3 pr-3 border-right border-dark text-primary"><a @click.prevent="toggleAddressInput"><i class="fas fa-pencil-alt"></i></a></span>
       <span class="pl-3 text-primary"><a @click.prevent="removeAddress" v-if="allowDelete && myProfile.publicKeyData.bitcoinAddress"><i class="far fa-trash-alt"></i></a></span>
     </div>
-    <div class="col-md-12" v-if="changeBtcAddress || removedAddress">
+    <div class="col-md-12 mb-4" v-if="changeBtcAddress || removedAddress">
       <input type="text" width="50%" class="form-control" required id="vc-bitcoin-address" placeholder="Your bitcoin address" v-on:keyup.13="saveBitcoinAddress($event)" v-model="myProfile.publicKeyData.bitcoinAddress">
     </div>
     <div class="col-md-12">
@@ -39,6 +41,7 @@ export default {
   data() {
     return {
       helpModal: false,
+      showHint: false,
       changeBtcAddress: false,
       message: null,
       removedAddress: false,

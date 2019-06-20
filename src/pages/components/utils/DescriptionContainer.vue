@@ -30,7 +30,7 @@ export default {
       if (this.text && this.text.length > this.limit && this.truncated) {
         let words = this.text.split(" ");
         let limit = words.length - 1;
-        let trunc = Math.min(limit, 5);
+        let trunc = Math.min(limit, 4);
         let truncStr = words.slice(0,trunc);
         return "<small>" + truncStr.join(" ") + "..."  + "</small>";
       } else {

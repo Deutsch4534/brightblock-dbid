@@ -1,22 +1,34 @@
 <template>
 <div class="container">
-  <facets @doSearch="doSearch($event)" :itemsSize="itemsSize"/>
+  <div class="row">
+    <facets-mdb @doSearch="doSearch($event)" :itemsSize="itemsSize"/>
+  </div>
+  <mdb-masonry horizontal>
+    <mdb-masonry-item :itemStyle="{'width': '222px', 'height': 'auto'}" class="p-0" v-for="(item, index) of items" :key="index">
+      <single-item-card :item="item" :myProfile="myProfile"/>
+    </mdb-masonry-item>
+  </mdb-masonry>
+  <!--
   <div class="">
     <div class="row">
-        <single-item class="col-md-6" v-for="(item, index) of items" :key="index" :item="item" :myProfile="myProfile"/>
+        <single-item-card class="col-md-4" v-for="(item, index) of items" :key="index" :item="item" :myProfile="myProfile"/>
     </div>
   </div>
+  -->
 </div>
 </template>
 
 <script>
-import Facets from "@/pages/components/browse/Facets";
-import SingleItem from "@/pages/components/browse/SingleItem";
+import FacetsMdb from "@/pages/components/browse/FacetsMdb";
+import SingleItemCard from "@/pages/components/browse/SingleItemCard";
+import { mdbMasonry, mdbMasonryItem } from 'mdbvue';
 
 export default {
   name: 'LatestOffers',
   components: {
-    SingleItem, Facets
+    SingleItemCard, FacetsMdb,
+    mdbMasonry,
+    mdbMasonryItem
   },
   props: {
     myProfile: {
@@ -66,4 +78,21 @@ export default {
 }
 </script>
 <style scoped>
+.masonry-horizontal div {
+  display: flex;
+  justify-content: left;
+  align-items: top;
+  color: white;
+  width: 100%;
+  height: auto;
+  margin: 0.5rem;
+  font-weight: 900;
+  font-size: 2rem;
+}
+@media (max-width: 800px) {
+  .masonry-horizontal div {
+    justify-content: center;
+  }
+}
+
 </style>

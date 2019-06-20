@@ -26,7 +26,11 @@ const searchIndexService = {
     return new Promise(function(resolve) {
       indexable.domain = location.hostname;
       indexable.objType = objType;
-      indexable.keywords = indexable.keywords.map(keyword => keyword.name).join(",");
+      if (Array.isArray(indexable.keywords)) {
+        indexable.keywords = indexable.keywords.map(keyword => keyword.name).join(",");
+      } else {
+        indexable.keywords = indexable.keywords;
+      }
       let saleType = settings.taxonomy.saleTypes[0];
       if (indexable.saleData) {
         let index = _.findIndex(settings.taxonomy.saleTypes, function(o) {

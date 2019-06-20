@@ -1,5 +1,5 @@
 import 'bootstrap-css-only/css/bootstrap.min.css';
-import 'mdbvue/build/css/mdb.css';
+//import 'mdbvue/build/css/mdb.css';
 import './assets/styles.css';
 import Vue from "vue";
 import App from "./App.vue";

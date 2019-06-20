@@ -1,15 +1,19 @@
 <template>
   <mdb-dropdown>
-    <mdb-dropdown-toggle tag="a" navLink color="" slot="toggle"  waves-fixed>
+    <mdb-dropdown-toggle tag="a" navLink color="" slot="toggle"  waves-fixed v-if="avatar">
       <img class="avatar" :src="avatarUrl"/>
-      <!--<mdb-icon icon="user-circle" />-->
     </mdb-dropdown-toggle>
+    <mdb-dropdown-toggle tag="a" navLink color="" slot="toggle"  waves-fixed v-else>
+      <mdb-icon icon="user-circle" />
+    </mdb-dropdown-toggle>
+      <!-- <img class="avatar" :src="avatarUrl"/> -->
+      <!--<mdb-icon icon="user-circle" />-->
 
     <mdb-dropdown-menu class="dropdown-menu-right" id="userMainMenu" >
       <mdb-dropdown-item tag="div">
        <strong>{{ username }}</strong>
       </mdb-dropdown-item>
-
+      <div class="dropdown-divider"></div>
       <mdb-dropdown-item>
         <router-link class="dropdown-item" to="/profile/update"><a @click="closeMenu">Settings</a></router-link>
       </mdb-dropdown-item>
@@ -17,7 +21,7 @@
       <mdb-dropdown-item>
         <router-link class="dropdown-item" to="/admin/settings" v-if="showAdmin"><a @click="closeMenu">Admin</a></router-link>
       </mdb-dropdown-item>
-
+      <div class="dropdown-divider"></div>
       <mdb-dropdown-item>
         <a href="#" class="dropdown-item" @click.prevent="logout">Logout</a>
       </mdb-dropdown-item>
@@ -73,19 +77,19 @@ export default {
     username() {
       return this.$store.state.myAccountStore.myProfile.name;
     },
-    avatar() {
+    avatarUrl() {
       let myProfile = this.$store.getters["myAccountStore/getMyProfile"];
       if (myProfile.loggedIn) {
-        return (
-          '<img style="width: 30px; height: 30px; border-radius: 30px;" src="' +
-          myProfile.avatarUrl +
-          '"/>'
-        );
+        if (myProfile.avatarUrl) {
+          return '<img style="width: 30px; height: 30px; border-radius: 30px;" src="' +myProfile.avatarUrl + '"/>'
+        } else {
+          return '<i class="far fa-user"></i>'
+        }
       } else {
         return '<span class="icon-user"></span>';
       }
     },
-    avatarUrl() {
+    avatar() {
       let myProfile = this.$store.getters["myAccountStore/getMyProfile"];
       return myProfile.avatarUrl;
     },
@@ -119,7 +123,6 @@ export default {
 .nav-link {
   text-transform: capitalize;
   font-size: 1.3em;
-  font-weight: 900;
 }
 .dropdown-menu {
   min-width: 200px;
@@ -131,11 +134,6 @@ export default {
 
 .btn.dropdown-toggle { color: black; }
 .dropdown .dropdown-menu .dropdown-item,
-.dropdown .dropdown-menu .dropdown-item:hover {
-  background: initial;
-  box-shadow: none;
-  color: initial!important;
-}
 
 .dropdown-submenu {
   position:relative;
@@ -148,10 +146,8 @@ export default {
 
 .dropdown-item {
   font-size: 0.9375rem;
-  font-weight: 900;
 }
 .navbar .dropdown-menu a {
-  font-weight: 900;
 }
 
 .dropdown-item > a {

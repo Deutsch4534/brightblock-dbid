@@ -5,10 +5,10 @@
       <mdb-dropdown>
         <mdb-dropdown-toggle slot="toggle" color="primary" size="sm">Payment Options</mdb-dropdown-toggle>
         <mdb-dropdown-menu>
-          <mdb-dropdown-item><a @click="toggleNetwork('bitcoin')">Bitcoin</a></mdb-dropdown-item>
-          <mdb-dropdown-item><a @click="toggleNetwork('lightning')">Lighting</a></mdb-dropdown-item>
+          <mdb-dropdown-item><a @click.prevent="toggleNetwork('bitcoin', $event)">Bitcoin</a></mdb-dropdown-item>
+          <mdb-dropdown-item><a @click.prevent="toggleNetwork('lightning', $event)">Lighting</a></mdb-dropdown-item>
           <div class="dropdown-divider"></div>
-          <mdb-dropdown-item><a @click="toggleNetwork('opennode')">Opennode</a></mdb-dropdown-item>
+          <mdb-dropdown-item><a @click.prevent="toggleNetwork('opennode', $event)">Opennode</a></mdb-dropdown-item>
         </mdb-dropdown-menu>
       </mdb-dropdown>
       <div>
@@ -29,9 +29,9 @@
     <div class="d-flex justify-content-center" v-else>
       <img class="mx-auto " :src="qrImage" alt="'scan qr code'" width="auto">
     </div>
-    <div class="d-flex p-2 justify-content-center" v-if="network !== 'opennode'">
-      <a :href="paymentUri" class="btn btn-primary">Open in wallet <i class="fas fa-external-link-alt"></i></a>
-      <a class="btn btn-primary" @click.prevent="copyAddress">Copy <i class="fas fa-clone ml-4"></i></a>
+    <div class="d-flex p-2 text-light justify-content-center" v-if="network !== 'opennode'">
+      <a :href="paymentUri" class="btn btn-primary mr-3">Open in wallet <i class="fas fa-external-link-alt"></i></a>
+      <a class="btn btn-primary ml-3" @click.prevent="copyAddress">Copy <i class="fas fa-clone ml-4"></i></a>
     </div>
   </div>
   <div class="d-flex bg-white p-2 justify-content-center">
@@ -135,7 +135,7 @@ export default {
         }
       );
     },
-    toggleNetwork(network) {
+    toggleNetwork(network, event) {
       if (network === "lightning") {
         this.paymentUri = this.lightningUri;
         this.addQrCode("qrcode1", this.paymentUri);
@@ -145,6 +145,10 @@ export default {
       }  else if (network === "opennode") {
         this.paymentUri = null;
       }
+      //let gp = event.currentTarget.parentElement.parentElement.classList.remove("show");
+      let gp = event.currentTarget.parentElement.parentElement.parentElement;
+      gp.classList.add("collapse")
+      gp.classList.remove("collapse-item");
       this.network = network;
     },
     copyAddress() {

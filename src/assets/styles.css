@@ -27,6 +27,7 @@ body {
   font-weight: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #d7ccc8;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -34,7 +35,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 header {
-  max-height: 60px;
+  background-color: #78909c;
 }
 
 p {
@@ -45,6 +46,7 @@ p {
 
 a {
   color: inherit !important;
+  cursor: pointer;
 }
 
 .serif {

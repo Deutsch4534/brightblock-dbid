@@ -17,6 +17,12 @@ const contentStore = {
         return matches;
       }
     },
+    getLevel1: state => {
+      let matches = state.taxonomy.filter(category => category.level === 1);
+      if (matches && matches.length > 0) {
+        return matches;
+      }
+    },
     getContent: state => pageId => {
       let matches = state.content.filter(content => content.pages.id === pageId);
       return matches;

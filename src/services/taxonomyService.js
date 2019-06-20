@@ -10,17 +10,20 @@ var httpParams = function(httpMethod, method, postData) {
   //let hubConfig = localStorage.getItem("blockstack-gaia-hub-config");
   //let hubJSON = JSON.parse(hubConfig);
   let account = loadUserData();
-  var authResponseToken = account.authResponseToken;
-  var decodedToken = decodeToken(authResponseToken);
-  var publicKey = decodedToken.payload.public_keys[0];
-
-  let token = "v1:" + account.authResponseToken;
-
   let headers = {
-    IdentityAddress: publicKey,
     "Content-Type": "application/json",
-    Authorization: "Bearer " + token
   };
+  if (account) {
+    var authResponseToken = account.authResponseToken;
+    var decodedToken = decodeToken(authResponseToken);
+    var publicKey = decodedToken.payload.public_keys[0];
+    let token = "v1:" + account.authResponseToken;
+    headers = {
+      IdentityAddress: publicKey,
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + token
+    };
+  }
   return {
     method: httpMethod,
     url: gatewayUrl + "/taxonomy/" + method,
