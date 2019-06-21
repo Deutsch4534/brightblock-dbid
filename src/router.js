@@ -3,6 +3,10 @@ import Router from "vue-router";
 import Index from "./pages/Index.vue";
 import Sell from "./pages/Sell.vue";
 import ItemDetails from "./pages/ItemDetails.vue";
+import HelpTopics from "./pages/HelpTopics";
+import HelpTopic from "./pages/HelpTopic";
+import Contact from "./pages/Contact.vue";
+import UserSettings from "./pages/UserSettings.vue";
 
 import Admin from "./views/Admin.vue";
 import AdminSettings from "./views/components/admin/AdminSettings";
@@ -12,7 +16,6 @@ import AdminRegistrations from "./views/components/admin/AdminRegistrations";
 import AdminBuildIndex from "./views/components/admin/AdminBuildIndex";
 import AdminQueryIndex from "./views/components/admin/AdminQueryIndex";
 
-import Contact from "./views/Contact.vue";
 import NewsSignup from "./views/NewsSignup.vue";
 import Landing from "./views/Landing.vue";
 import Gallery from "./views/Gallery.vue";
@@ -24,7 +27,6 @@ import Artist from "./views/Artist.vue";
 import Artists from "./views/Artists.vue";
 import Login from "./views/Login.vue";
 import Profile from "./views/Profile.vue";
-import ProfileUpdate from "./views/ProfileUpdate.vue";
 import TeamProfile from "./views/TeamProfile.vue";
 import Navbar from "./layout/Navbar.vue";
 import Footer from "./layout/Footer.vue";
@@ -49,9 +51,6 @@ import MyAuctionManage from "./views/MyAuctionManage";
 import MyAuctionUpload from "./views/MyAuctionUpload";
 import MyAuctionUpdate from "./views/MyAuctionUpdate";
 import OnlineAuction from "./views/OnlineAuction";
-
-import About from "./views/About";
-import AboutAnswer from "./views/components/splash/AboutAnswer";
 
 import myAccountService from "@/services/myAccountService";
 
@@ -107,6 +106,15 @@ const router = new Router({
         footer: Footer
       },
       meta: { requiresAuth: false }
+    },
+    {
+      path: "/user/settings",
+      name: "user-settings",
+      components: {
+        default: UserSettings,
+        header: Navbar,
+        footer: Footer
+      }
     },
     {
       path: "/items/:itemId",
@@ -210,6 +218,22 @@ const router = new Router({
       meta: { requiresAuth: false }
     },
     {
+      path: "/help/topic/:topicId",
+      name: "help-topic",
+      components: {
+        default: HelpTopic,
+        header: Navbar,
+        footer: Footer
+      },
+      meta: { requiresAuth: false },
+    },
+    {
+      path: "/help/topics",
+      name: "help-topics",
+      meta: { requiresAuth: false },
+      components: { default: HelpTopics, header: Navbar, footer: Footer },
+    },
+    {
       path: "/home",
       name: "home",
       components: {
@@ -219,6 +243,7 @@ const router = new Router({
       },
       meta: { requiresAuth: false }
     },
+
     {
       path: "/my-galleries",
       name: "my-galleries",
@@ -296,15 +321,6 @@ const router = new Router({
         footer: { backgroundColor: "black" }
       },
       meta: { requiresAuth: true }
-    },
-    {
-      path: "/profile/update",
-      name: "profileUpdate",
-      components: {
-        default: ProfileUpdate,
-        header: Navbar,
-        footer: Footer
-      }
     },
     {
       path: "/landing",
@@ -540,22 +556,6 @@ const router = new Router({
         }
       ]
     },
-    {
-      path: "/topic/:topicId",
-      name: "topic",
-      components: {
-        default: AboutAnswer,
-        header: Navbar,
-        footer: Footer
-      },
-      meta: { requiresAuth: false },
-    },
-    {
-      path: "/about",
-      name: "about",
-      meta: { requiresAuth: false },
-      components: { default: About, header: Navbar, footer: Footer },
-    }
   ],
   scrollBehavior (to, from, savedPosition) {
     return {x: 0, y: 0};

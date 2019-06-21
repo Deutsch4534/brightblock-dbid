@@ -12,7 +12,7 @@
 
 <script>
 import MyAuctionUploadForm from "./components/auction/MyAuctionUploadForm";
-import ContactSection from "@/views/components/splash/ContactSection";
+import ContactSection from "@/pages/components/help/ContactSection";
 import LoadingView from "@/views/components/utils/LoadingView";
 
 // noinspection JSUnusedGlobalSymbols

@@ -1,9 +1,9 @@
 <template>
-<header class="mb-5" style="">
+<header class="" style="">
 <login-tab-modal v-if="showModal" :modal="showModal" @closeModal="closeModal"/>
 <div class="d-flex blue-grey lighten-1 pb-0" style="border-bottom: 2pt solid #64dd17; position: relative; top: 2px;">
   <div class="mr-auto p-0 px-4 d-none d-sm-block" style="border-bottom: 2pt solid #33b5e5; position: relative; top: 2px;"><router-link to="/" class="nav-link navbar-link"><img :src="logo" width="100px" alt="main logo"></router-link></div>
-  <div class="mr-auto pt-2 d-xs-block d-sm-none text-danger" style="font-size: 1.8rem; border-bottom: 2pt solid #33b5e5; position: relative; top: 2px;"><router-link to="/" class="nav-link navbar-link">dB</router-link></div>
+  <div class="mr-auto pt-2 d-xs-block d-none text-danger" style="font-size: 1.8rem; border-bottom: 2pt solid #33b5e5; position: relative; top: 2px;"><router-link to="/" class="nav-link navbar-link">dB</router-link></div>
   <!-- #33b5e5 #ffea00 #ff8800 #64dd17 #ab47bc -->
   <div class="text-center mr-auto pt-4" style="border-bottom: 2pt solid #33b5e5; position: relative; top: 2px;">
     <router-link class="btn btn-sm bg-success mr-1 ml-3" style="display:inline;" to="/buy">BUY <i class="fas fa-caret-up"></i></router-link>

@@ -1,21 +1,14 @@
 <template>
 <div>
-  <div class="row mb-4">
+  <div class="row mb-1">
     <div class="col-md-12">
-      <mdb-popover trigger="click" :options="{placement: 'top'}">
-        <div class="popover">
-          <div class="popover-header">
-            {{addressTitle}}
-          </div>
-          <div class="popover-body">{{addressBlurb}}</div>
-        </div>
-        <a @click.prevent="" slot="reference">
-          {{addressTitle}} <mdb-icon far icon="question-circle" />
-        </a>
-      </mdb-popover>
+      <h5>{{addressTitle}}</h5>
+    </div>
+    <div class="col-md-12">
+      <p class="text-muted" v-html="addressBlurb"></p>
     </div>
   </div>
-  <form class="needs-validation py-1" novalidate @submit.prevent=checkForm($event) id="addressForm">
+  <form v-on:submit.prevent="checkForm" class="needs-validation py-1" novalidate>
   <div class="row mb-4">
     <div class="col-md-6">
       <input type="text" class="form-control" id="vline1" placeholder="Address line 1" v-model="address.line1" required @change="addressChange" required>
@@ -34,7 +27,7 @@
   </div>
   <div class="row mb-4">
     <div class="col-md-6">
-      <input type="text" class="form-control" id="vline5" placeholder="Region" v-model="address.region" @change="addressChange">
+      <input type="text" class="form-control" id="vline5" placeholder="Region" v-model="address.region" @change="addressChange" required>
     </div>
     <div class="col-md-6">
       <input type="text" class="form-control" id="vline6" placeholder="Zip or postcode*" v-model="address.postcode" @change="addressChange" required>
@@ -42,7 +35,7 @@
   </div>
   <div class="row mb-4">
     <div class="col-md-12">
-      <a @click="checkForm($event)"><mdb-btn size="sm" type="submit" class="btn teal lighten-1">save</mdb-btn></a>
+      <a><mdb-btn size="sm" type="submit" class="btn btn-light lighten-1">Continue</mdb-btn></a>
     </div>
   </div>
   </form>

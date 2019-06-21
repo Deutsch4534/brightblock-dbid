@@ -32,6 +32,19 @@
               </div>
             </div>
 
+            <div class="form-row mb-3"><h5>Item Type</h5></div>
+            <div class="form-row mb-5" v-if="!mediumLocked">
+              <select id="validationCustom06-1" @change="doMedium" class="text-black browser-default custom-select" v-model="medium" required>
+                <option v-for="(medium) in media" :key="medium.value" :value="medium.value">{{medium.label}}</option>
+              </select>
+              <div class="invalid-feedback">
+                Please enter the artwork medium!
+              </div>
+            </div>
+            <div class="col-4 mb-5" v-else>
+              Digital Video
+            </div>
+
             <div class="form-row mb-3"><h5>Categories</h5></div>
             <div class="form-row mb-5">
               <div id="vc-040-error" class="invalid-feedback">
@@ -109,6 +122,9 @@ import MediaFilesUpload from "@/pages/components/utils/MediaFilesUpload";
         showKeywords: false,
         modalTitle: "Saving Item",
         modalContent: "<p>Please wait while we update your data.</p>",
+        media: this.$store.state.constants.taxonomy.media,
+        medium: "physical",
+        mediumLocked: false,
         limits: {
           title: 50,
           description: 1000,
@@ -144,6 +160,9 @@ import MediaFilesUpload from "@/pages/components/utils/MediaFilesUpload";
             this.modalContent = "File has not been uploaded.";
             this.showModal = true;
           }
+          if (item.medium) {
+            this.medium = item.medium;
+          }
           this.showMedia = true;
           this.loading = false;
         })
@@ -173,6 +192,9 @@ import MediaFilesUpload from "@/pages/components/utils/MediaFilesUpload";
     methods: {
       closeModal: function() {
         this.showModal = false;
+      },
+      doMedium () {
+        this.item.medium = this.medium;
       },
       closeKeywords: function(chosen) {
         this.showKeywords = false;
@@ -247,6 +269,10 @@ import MediaFilesUpload from "@/pages/components/utils/MediaFilesUpload";
           this.errors.push("Please select or add some categories.");
           document.getElementById("vc-040-error").style.display = "block";
           document.getElementById("vc-040-error").innerHTML = "Please select or add some categories.";
+        }
+        this.item.medium = this.medium;
+        if (!this.item.medium || (this.item.medium !== "physical" && this.item.medium !== "digital")) {
+          this.errors.push("Item type needs to be either physical or digital.");
         }
         if (!this.item.owner || this.item.owner.indexOf(".id") === -1) {
           this.errors.push("Blockstack id of the owner is missing.");

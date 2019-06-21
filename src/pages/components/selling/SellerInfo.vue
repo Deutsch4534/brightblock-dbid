@@ -20,8 +20,8 @@
 import ConfirmationModal from "../utils/ConfirmationModal";
 import moment from "moment";
 import myAccountService from "@/services/myAccountService";
-import TrustedUsers from "./TrustedUsers";
-import BitcoinAddress from "./BitcoinAddress";
+import TrustedUsers from "../user-settings/TrustedUsers";
+import BitcoinAddress from "../user-settings/BitcoinAddress";
 
 // noinspection JSUnusedGlobalSymbols
 export default {

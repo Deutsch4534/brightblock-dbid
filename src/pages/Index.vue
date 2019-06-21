@@ -1,5 +1,5 @@
 <template>
-<div id="my-app-element" v-if="loaded">
+<div id="my-app-element" class="main pt-5" v-if="loaded">
   <div class="container p-2">
     <latest-offers :myProfile="myProfile"/>
   </div>
@@ -24,12 +24,12 @@ export default {
     document.querySelector('body').classList.add('index');
     this.$store.dispatch("myAccountStore/fetchMyAccount").then((myProfile) => {
       this.myProfile = myProfile;
+      this.loaded = true;
+
       this.$prismic.client.getSingle("main-content").then(document => {
         this.$store.commit("contentStore/mainContent", document.data);
-        this.loaded = true;
       });
     });
-
   },
   beforeDestroy() {
     document.querySelector('body').classList.remove('index');

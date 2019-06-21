@@ -70,6 +70,7 @@ const myItemStore = {
         item = {
           keywords: [],
           owner: "unknown",
+          medium: "physical",
           saleData: {},
           images: [],
           created: moment({}),

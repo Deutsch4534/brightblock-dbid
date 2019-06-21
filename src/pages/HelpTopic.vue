@@ -1,31 +1,31 @@
 <template>
-<mdb-container id="my-app-element" fluid class="m-0 p-0" v-if="loaded">
-  <mdb-container class="mt-5" style="border-top: 1pt solid grey;">
-    <div class="row mb-5">
-      <div class="col-md-12 my-5">
-        <router-link to="/about" class="teal-text" style="font-weight: 900;">Go Back</router-link>
-      </div>
+<div id="my-app-element" class="bg-main container-fluid pt-5">
+  <div class="container spinner-border" role="status" v-if="loading">
+    <span class="sr-only">Loading...</span>
+  </div>
+  <div class="container" v-else>
+    <div class="d-flex justify-content-end">
+      <router-link to="/help/topics">Back</router-link>
     </div>
-    <div class="row mb-5">
+    <div class="row">
       <div class="col-md-2 col-xs-12">
-        <span class="teal-text mb-4">Help Topics</span>
+        <span class="text-muted">Topics</span>
         <ul class="list-unstyled mt-4">
           <li v-for="(ans, index) in answers" :key="index" class="mb-2" style="text-decoration: capitalise;"><a href="#" @click.prevent="slugUrl(ans.slug)">{{ans.slug.split("-").join(" ")}}</a></li>
         </ul>
       </div>
       <div class="col-md-10 col-xs-12" v-if="answer">
-        <about-item :answer="answer"/>
+        <single-topic :answer="answer"/>
       </div>
     </div>
-  </mdb-container>
-</mdb-container>
+  </div>
+</div>
 </template>
 
 <script>
   import { mdbContainer, mdbRow, mdbCol, mdbView, mdbMask, mdbBtn } from 'mdbvue';
-  import Navbar from '../../../layout/Navbar';
-  import AboutItem from './AboutItem';
-  import AboutSection from "./AboutSection";
+  import SingleTopic from '@/pages/components/help/SingleTopic';
+  import AboutSection from "@/pages/components/help/AboutSection";
 
   export default {
     name: 'AboutAnswer',
@@ -33,11 +33,11 @@
       return {
         answer: null,
         answers: null,
-        loaded: false,
+        loading: true,
       };
     },
     components: {
-      AboutItem,
+      SingleTopic,
       AboutSection,
       mdbContainer,
       mdbRow,
@@ -45,7 +45,6 @@
       mdbView,
       mdbMask,
       mdbBtn,
-      Navbar
     },
     mounted() {
       let slug = this.$route.params.topicId;
@@ -63,7 +62,7 @@
             $self.answers = answers;
             $self.answer = answers[index];
             $self.$store.commit("contentStore/answers", answers);
-            $self.loaded = true;
+            $self.loading = false;
           });
         });
       } else {
@@ -72,7 +71,7 @@
           return o.slug === slug;
         });
         this.answer = this.answers[index];
-        this.loaded = true;
+        this.loading = false;
       }
     },
     computed: {
@@ -96,12 +95,12 @@
         return answers;
       },
       slugUrl (slug) {
-        // return `/topic/${slug}`;
+        // return `/help/topic/${slug}`;
         let index = _.findIndex(this.answers, function(o) {
           return o.slug === slug;
         });
         this.answer = this.answers[index];
-        this.$router.push("/topic/" + slug);
+        this.$router.push("/help/topic/" + slug);
       }
     }
   }

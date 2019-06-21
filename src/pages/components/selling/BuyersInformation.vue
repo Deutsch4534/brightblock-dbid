@@ -2,18 +2,18 @@
 <div class="">
   <div v-if="myItem">
     <p class="text-muted" v-html="sellingBuyNowPrice"></p>
-    <router-link :to="myItemSetPriceUrl" class="btn btn-sm btn-primary btn-white m-0">Change Price</router-link>
+    <router-link :to="myItemSetPriceUrl" class="btn btn-sm btn-primary text-white m-0">Change Price</router-link>
   </div>
   <div v-else-if="buyNowEnabled">
     <p class="text-muted" v-html="sellingBuyNowPrice"></p>
     <router-link v-if="action === 'details'" :to="itemUrl" class="btn btn-sm btn-primary btn-white m-0">Buy Now</router-link>
-    <a v-if="action === 'buy'" :to="itemUrl" class="btn btn-sm btn-primary btn-white m-0" @click.prevent="buyNow">Place Order</a>
+    <a v-if="action === 'buy'" :to="itemUrl" class="btn btn-sm btn-primary text-white m-0" @click.prevent="buyNow">Place Order</a>
   </div>
   <div v-else-if="sellingAuction">
     <p class="text-muted">Selling in Auction</p>
     <p class="text-muted">{{sellingAuctionPrice}}</p>
-    <router-link v-if="action === 'details'" :to="itemUrl" class="btn btn-sm btn-primary btn-white m-0">Bidding</router-link>
-    <router-link v-if="action === 'bid'" :to="itemTransactionUrl" class="btn btn-sm btn-primary btn-white m-0">Place Bid</router-link>
+    <router-link v-if="action === 'details'" :to="itemUrl" class="btn btn-sm btn-primary text-white m-0">Bidding</router-link>
+    <router-link v-if="action === 'bid'" :to="itemTransactionUrl" class="btn btn-sm btn-primary text-white m-0">Place Bid</router-link>
   </div>
   <div v-else>
     <p class="text-muted">Not Selling</p>
@@ -68,7 +68,7 @@ export default {
           }
         });
       } else {
-        this.showLoginInfoModal = true;
+        this.$notify({type: 'warning', title: 'Login Required', text: 'Please login to continue.'});
       }
     },
   },

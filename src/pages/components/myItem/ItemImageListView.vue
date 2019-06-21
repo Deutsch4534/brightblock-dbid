@@ -6,9 +6,9 @@
     </mdb-carousel-item>
   </mdb-carousel>
   <mdb-lightbox
-  :visible="visible"
-  :imgs="images"
-  :index="index"
+    :visible="visible"
+    :imgs="images"
+    :index="index"
   @hide="handleHide"></mdb-lightbox>
 </div>
 <div class="view overlay z-depth-1-half" style="max-width: 500px;" v-else>

@@ -1,13 +1,9 @@
 <template>
   <mdb-dropdown>
-    <mdb-dropdown-toggle tag="a" navLink color="" slot="toggle"  waves-fixed v-if="avatar">
-      <img class="avatar" :src="avatarUrl"/>
+    <mdb-dropdown-toggle tag="a" navLink color="" slot="toggle"  waves-fixed>
+      <img class="avatar" :src="avatarUrl" v-if="avatar"/>
+      <mdb-icon icon="user-circle" v-else/>
     </mdb-dropdown-toggle>
-    <mdb-dropdown-toggle tag="a" navLink color="" slot="toggle"  waves-fixed v-else>
-      <mdb-icon icon="user-circle" />
-    </mdb-dropdown-toggle>
-      <!-- <img class="avatar" :src="avatarUrl"/> -->
-      <!--<mdb-icon icon="user-circle" />-->
 
     <mdb-dropdown-menu class="dropdown-menu-right" id="userMainMenu" >
       <mdb-dropdown-item tag="div">
@@ -15,7 +11,7 @@
       </mdb-dropdown-item>
       <div class="dropdown-divider"></div>
       <mdb-dropdown-item>
-        <router-link class="dropdown-item" to="/profile/update"><a @click="closeMenu">Settings</a></router-link>
+        <router-link class="dropdown-item" to="/user/settings"><a @click="closeMenu">Settings</a></router-link>
       </mdb-dropdown-item>
 
       <mdb-dropdown-item>

@@ -77,8 +77,12 @@ a {
   background-color: white;
 }
 
+.bg-action {
+  background-color: #d7ccc8;
+}
+
 .bg-main {
-  background-color: #5400E8;
+  /** background-color: #5400E8; **/
 }
 
 .border-shadow::after {

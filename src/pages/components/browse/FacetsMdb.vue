@@ -1,9 +1,7 @@
 <template>
 <div class="container mb-5">
-    <div class="row">
-      <div class="col-4 d-none d-sm-none d-md-block">
-        <div class="text-lowercase"><mdb-btn color="elegant-color" rounded><a href="#" v-html="latestOffers"></a> [{{resultSize}}]</mdb-btn></div>
-      </div>
+    <div class="d-flex justify-content-between">
+      <div class="text-lowercase ml-0 pl-0 d-none d-sm-none d-md-block"><mdb-btn class="ml-0 pl-0" color="elegant-color" rounded><a href="#" v-html="latestOffers"></a> [{{resultSize}}]</mdb-btn></div>
       <div class="col-8 text-right">
         <div class="d-flex justify-content-end">
         <div class="input-group md-form form-sm form-1 pl-0">
@@ -19,9 +17,16 @@
       </div>
     </div>
   </div>
-  <div class="" v-if="showCategories">
-    <div><vue-bootstrap-typeahead inputClass="validate" :minMatchingChars="0" :data="keywordNames" v-model="searchword" @hit="findByKeyword"/></div>
-    <div><p class="text-lowercase mr-2"><a v-for="(category, index) in level1Categories" class="mr-2" :key="index"  @click="findByKeyword(category.name)"><u><span v-html="category.name"></span></u></a></p></div>
+  <div class="mt-3" v-if="showCategories">
+    <div class="d-flex justify-content-start">
+      <span class="mr-4 text-white d-none d-sm-none d-md-block" style="position:relative; top: 7px;">Advanced Search Options</span>
+      <vue-bootstrap-typeahead inputClass="validate" placeholder="Keywords" :minMatchingChars="0" :data="keywordNames" v-model="searchword" @hit="findByKeyword"/>
+      <select class="text-black browser-default custom-select custom-select-md mb-3 ml-4" v-model="medium" style="width:150px;" v-on:change="findByMedium">
+        <option>Type</option>
+        <option v-for="(medium) in filters.media" :key="medium.value" :value="medium.value">{{medium.label}}</option>
+      </select>
+    </div>
+    <div class="d-flex justify-content-center"><p class="text-lowercase mr-2"><a v-for="(category, index) in level1Categories" class="mr-2" :key="index"  @click="findByKeyword(category.name)"><u><span v-html="category.name"></span></u></a></p></div>
   </div>
 </div>
 </template>
@@ -45,10 +50,15 @@ export default {
       keywordNames: [],
       searchword: null,
       rawKeyword: null,
-      medium: "Any Medium",
+      medium: "Type",
       saleType: "Any Sale Type",
       username: null,
       showCategories: false,
+      filters: {
+        media: this.$store.state.constants.taxonomy.media,
+        saleTypes: this.$store.state.constants.taxonomy.saleTypes,
+        price: 0
+      },
     }
   },
   mounted() {

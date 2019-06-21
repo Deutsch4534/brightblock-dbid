@@ -30,7 +30,7 @@
 import utils from "@/services/utils";
 import SingleAuction from "./components/auction/SingleAuction";
 import { mdbContainer, mdbRow, mdbCol } from 'mdbvue';
-import ContactSection from "@/views/components/splash/ContactSection";
+import ContactSection from "@/pages/components/help/ContactSection";
 import LoadingView from "@/views/components/utils/LoadingView";
 
 // noinspection JSUnusedGlobalSymbols

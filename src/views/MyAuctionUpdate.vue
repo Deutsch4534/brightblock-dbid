@@ -4,7 +4,6 @@
 </div>
 <div class="container-fluid bg-light flex-1" v-else>
   <my-auction-upload-form v-if="enabled" :auctionId="auctionId" :mode="'update'"/>
-  <contact-section :featureMessage="featureMessage" v-else class="black-text"/>
 </div>
 </template>
 

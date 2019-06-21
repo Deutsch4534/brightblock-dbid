@@ -12,14 +12,8 @@ export const CONSTANTS = {
   taxonomy: {
     keywords: ["contemporary", "modern", "outsider", "political", "bauhaus", "impressionism", "noir", "cartoon", "illustration", "grafitti"],
     media: [
-      {label: "Digital Image", value: "image"},
-      {label: "Digital Sound", value: "sound"},
-      {label: "Digital Video", value: "video"},
-      {label: "Jewellery", value: "jewellery"},
-      {label: "Painting", value: "painting"},
-      {label: "Photography", value: "photography"},
-      {label: "Print", value: "print"},
-      {label: "Sculpture", value: "sculpture"},
+      {label: "Digital", value: "digital"},
+      {label: "Physical", value: "physical"},
     ],
     saleTypes: [
       {label: "Buy Now", value: "buyNow", soid: 1},

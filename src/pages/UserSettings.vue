@@ -1,22 +1,22 @@
 <template>
-<mdb-container fluid class="bg-light flex-1 px-5">
-  <mdb-container class="bg-white mt-5 p-3" v-if="loading">
-    <div>Loading user profile - please wait...</div>
-  </mdb-container>
-  <mdb-container class="mt-5" v-else>
+<div id="my-app-element" class="container pt-5">
+  <div class="container spinner-border" role="status" v-if="loading">
+    <span class="sr-only">Loading...</span>
+  </div>
+  <div class="container" v-else>
     <auxiliary-profile-form :formTitle="'RA Profile'" :mode="'update'" :profile="profile" v-if="loggedIn"/>
     <div v-else><router-link to="/login">Please log in</router-link></div>
-  </mdb-container>
-</mdb-container>
+  </div>
+</div>
 </template>
 
 <script>
-import AuxiliaryProfileForm from "./components/profile/AuxiliaryProfileForm";
+import AuxiliaryProfileForm from "./components/user-settings/AuxiliaryProfileForm";
 import { mdbContainer } from "mdbvue";
 
 // noinspection JSUnusedGlobalSymbols
 export default {
-  name: "ProfileUpdate",
+  name: "UserSettings",
   bodyClass: "index-page",
   components: {
     AuxiliaryProfileForm, mdbContainer

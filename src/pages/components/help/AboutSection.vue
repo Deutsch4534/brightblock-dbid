@@ -1,30 +1,13 @@
 <template>
-  <div>
-    <div class="view" :style="headerStyle">
-      <div class="mask d-flex  text-center">
-        <div class="container">
-          <div class="row">
-            <div class="col-md-12 mb-4 mt-5 px-5 mx-5 white-text text-center">
-              <h3 class="about1" v-html="about1"></h3>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- Full Page Intro -->
-    <mdb-container fluid class="pt-5" v-if="showAll">
-      <div class="row text-center">
-        <div class="col-md-6 offset-md-3 col-sm-12 ">
-          <h4 class="about2" v-html="about2"></h4>
-        </div>
-      </div>
-    </mdb-container>
+<div class="row text-center" v-if="showAll">
+  <div class="col-md-6 offset-md-3 col-sm-12 ">
+    <h4 class="about2" v-html="about2"></h4>
   </div>
+</div>
 </template>
 
 <script>
   import { mdbContainer, mdbRow, mdbCol, mdbView, mdbMask } from 'mdbvue';
-  import Navbar from '../../../layout/Navbar';
 
   export default {
     name: 'AboutSection',
@@ -41,7 +24,6 @@
       mdbCol,
       mdbView,
       mdbMask,
-      Navbar
     },
     mounted() {
       this.about1 = this.aboutContent["about1"][0].text;

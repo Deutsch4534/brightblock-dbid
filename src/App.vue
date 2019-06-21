@@ -3,7 +3,7 @@
     <div id="fb-root"></div>
     <notifications position="bottom left" style="width: 600px;"/>
     <router-view name="header"/>
-    <main class="main pb-5">
+    <main class="main py-0">
       <router-view/>
     </main>
     <router-view name="footer"/>

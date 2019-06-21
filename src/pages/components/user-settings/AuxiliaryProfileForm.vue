@@ -1,11 +1,11 @@
 <template>
-<mdb-container class="py-5">
+<mdb-container class="">
   <div class="row">
     <div class="col-md-3 nowrap">
       <confirmation-modal :modal="modal" :title="modalTitle" :content="modalContent" @closeModal="closeModal"/>
       <mdb-navbar class="blue lighten-5 py-4">
         <mdb-navbar-nav nav vertical>
-          <mdb-nav-item><h5>RA User Profile</h5></mdb-nav-item>
+          <mdb-nav-item><h5>Settings</h5></mdb-nav-item>
           <mdb-nav-item href="#" active><a @click.prevent="showNav = 1">Blockstack Profile</a></mdb-nav-item>
           <mdb-nav-item href="#"><a @click.prevent="showNav = 2">Email Address</a></mdb-nav-item>
           <mdb-nav-item href="#"><a @click.prevent="showNav = 3">Bitcoin Info</a></mdb-nav-item>
@@ -37,18 +37,18 @@ import { mdbNavbar, mdbNavbarNav, mdbNavItem } from "mdbvue";
 import ConfirmationModal from "../utils/ConfirmationModal";
 import moment from "moment";
 import myAccountService from "@/services/myAccountService";
-import TrustedUsersSection from "../utils/TrustedUsersSection";
+import TrustedUsers from "../user-settings/TrustedUsers";
 import BlockstackSection from "../utils/BlockstackSection";
-import BitcoinAddressEntry from "../utils/BitcoinAddressEntry";
+import BitcoinAddress from "./BitcoinAddress";
 import EmailAddressEntry from "../utils/EmailAddressEntry";
-import AddressForm from "@/views/components/utils/AddressForm";
+import AddressForm from "@/pages/components/user-settings/AddressForm";
 
 // noinspection JSUnusedGlobalSymbols
 export default {
   name: "AuxiliaryProfileForm",
   components: {
-    BitcoinAddressEntry,
-    TrustedUsersSection,
+    BitcoinAddress,
+    TrustedUsers,
     BlockstackSection,
     EmailAddressEntry,
     ConfirmationModal,

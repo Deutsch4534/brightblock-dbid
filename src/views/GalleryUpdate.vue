@@ -12,7 +12,7 @@
 
 <script>
 import GalleryUploadForm from "./components/gallery/GalleryUploadForm";
-import ContactSection from "./components/splash/ContactSection";
+import ContactSection from "../pages/components/help/ContactSection";
 
 // noinspection JSUnusedGlobalSymbols
 export default {

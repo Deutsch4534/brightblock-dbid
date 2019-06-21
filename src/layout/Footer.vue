@@ -1,24 +1,28 @@
 <template>
-<footer class="container-fluid text-black page-footer bg-dark text-white">
-    <mdb-row class="d-flex flex-row text-right align-items-center py-2">
-      <mdb-col col="12">
-        <span class="mr-3"><a href="https://medium.com/@radicleart" target="_blank" rel="noreferrer"><mdb-icon fab icon="medium" /></a></span>
-        <span class="mx-3"><a href="https://twitter.com/radicleart" target="_blank" rel="noreferrer"><mdb-icon fab icon="twitter" /></a></span>
-        <span class="mr-3"><a href="https://github.com/radicleart/brightblock-oam" target="_blank" rel="noreferrer"><mdb-icon fab icon="github" /></a></span>
-      </mdb-col>
-    </mdb-row>
+<footer class="container-fluid text-black py-2 page-footer bg-dark text-white" style="margin-top: 0px;">
+  <div class="d-flex justify-content-between py-2">
+    <div>
+      <span class="mr-3"><router-link to="/contact"><i class="fas fa-envelope-square"></i></router-link></span>
+      <span class="mr-3"><router-link to="/help/topics">ABOUT</router-link></span>
+    </div>
+    <div>
+      <span class="copyright d-none d-sm-block">© 2018 DBID.IO</span>
+    </div>
+    <div>
+      <span class="mr-3"><a href="https://medium.com/@radicleart" target="_blank" rel="noreferrer"><i class="fab fa-medium"></i></a></span>
+      <span class="mr-3"><a href="https://twitter.com/radicleart" target="_blank" rel="noreferrer"><i class="fab fa-twitter"></i></a></span>
+      <span class="mr-3"><a href="https://github.com/radicleart/brightblock-oam" target="_blank" rel="noreferrer"><i class="fab fa-github"></i></a></span>
+    </div>
+  </div>
 </footer>
 </template>
 
 <script>
-import { mdbContainer, mdbRow, mdbCol, mdbIcon } from 'mdbvue';
+import { mdbFooter, mdbContainer, mdbRow, mdbCol } from 'mdbvue';
 
 export default {
   components: {
-    mdbContainer,
-    mdbRow,
-    mdbCol,
-    mdbIcon
+    mdbFooter, mdbContainer, mdbRow, mdbCol
   },
   props: {
     backgroundColor: String,

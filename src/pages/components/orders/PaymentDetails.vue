@@ -1,6 +1,6 @@
 <template>
 <div class="">
-  <div class="bg-light p-2">
+  <div class="p-2">
     <div class="d-flex p-2 justify-content-between">
       <mdb-dropdown>
         <mdb-dropdown-toggle slot="toggle" color="primary" size="sm">Payment Options</mdb-dropdown-toggle>
@@ -34,8 +34,8 @@
       <a class="btn btn-primary ml-3" @click.prevent="copyAddress">Copy <i class="fas fa-clone ml-4"></i></a>
     </div>
   </div>
-  <div class="d-flex bg-white p-2 justify-content-center">
-    <input class="" id="payment-address-btc" type="text" :value="paymentUri" style="color: white; border: none;"/>
+  <div class="d-flex p-2 justify-content-center" style="background-color: #d7ccc8;">
+    <input class="" id="payment-address-btc" type="text" :value="paymentUri" style="background-color: #d7ccc8; color: #d7ccc8; border: none;"/>
     <canvas id="qrcode1"></canvas>
   </div>
 </div>

@@ -3,7 +3,7 @@
     <mdb-row class="py-5 d-flex text-center">
       <mdb-col class="col-md-12 feature-text"  v-html="title"></mdb-col>
       <mdb-col class="col-md-12 feature-text" >
-        <p class="my-5"><router-link to="/about"><button class="btn btn-large teal" style="font-size: 2.0em; border-radius: 5px">find out more</button></router-link></p>
+        <p class="my-5"><router-link to="/help/topics"><button class="btn btn-large teal" style="font-size: 2.0em; border-radius: 5px">find out more</button></router-link></p>
       </mdb-col>
       <mdb-col md="4" class="border-list" v-html="feature1"></mdb-col>
       <mdb-col md="4" class="border-list" v-html="feature2"></mdb-col>

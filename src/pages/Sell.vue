@@ -1,9 +1,9 @@
 <template>
-<div class="container">
-  <div class="container mt-5 spinner-border" role="status" v-if="loading">
+<div id="my-app-element" class="container pt-5">
+  <div class="container spinner-border" role="status" v-if="loading">
     <span class="sr-only">Loading...</span>
   </div>
-  <div class="container mt-5" v-else>
+  <div class="container pt-5" v-else>
     <div v-if="loggedIn">
       <div class="d-flex text-primary text-white border-bottom">
         <div class="p-2 px-4 border-right" :class="activeTab === 1 ? 'text-secondary' : 'text-primary'" v-if="sellerInfoNeeded"><router-link to="/seller-info">Seller Info - Required</router-link></div>

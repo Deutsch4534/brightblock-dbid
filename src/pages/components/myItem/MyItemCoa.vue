@@ -28,7 +28,7 @@
 <script>
 import xhrService from "@/services/xhrService";
 import { mdbPopover, mdbIcon, mdbCardBody, mdbCardTitle, mdbCardText, mdbBtn } from "mdbvue";
-import BitcoinAddress from "../selling/BitcoinAddress";
+import BitcoinAddress from "../user-settings/BitcoinAddress";
 import ItemImageListView from "./ItemImageListView";
 import ItemActionLinks from "./ItemActionLinks";
 

@@ -1,20 +1,27 @@
 <template>
-  <mdb-container id="my-app-element" fluid class="m-0 p-0" v-if="loaded">
+<div id="my-app-element" class="bg-main container-fluid pt-5">
+  <div class="container spinner-border" role="status" v-if="loading">
+    <span class="sr-only">Loading...</span>
+  </div>
+  <div v-else>
+    <!--
     <div id="aboutSection">
-      <about-section :aboutContent="aboutContent" :showAll="true"/>
+      <about-section :aboutContent="aboutContent" :showAll="false"/>
     </div>
-    <div id="aboutButtons" class="m-5">
+    -->
+    <div id="aboutButtons" class="p-5">
       <about-buttons :answers="answers" @showAnswer="showAnswer"/>
     </div>
-</mdb-container>
+  </div>
+</div>
 </template>
 
 <script>
   import { mdbContainer, mdbRow, mdbCol } from 'mdbvue';
-  import HelpArticle from "./components/about/HelpArticle";
-  import HelpFaq from "./components/about/HelpFaq";
-  import AboutSection from "./components/splash/AboutSection";
-  import AboutButtons from "./components/splash/AboutButtons";
+  import HelpArticle from "./components/help/HelpArticle";
+  import HelpFaq from "./components/help/HelpFaq";
+  import AboutSection from "./components/help/AboutSection";
+  import AboutButtons from "./components/help/AboutButtons";
 
   export default {
     components: {
@@ -26,11 +33,11 @@
       mdbRow,
       mdbCol
     },
-    name: "about",
+    name: "HelpTopics",
     data () {
       return {
         answers: null,
-        loaded: false,
+        loading: true,
         aboutContent: null
       }
     },
@@ -49,14 +56,14 @@
       } else {
         this.answers = this.$store.state.contentStore.content["answers"];
         this.answer = this.answers[0].topic;
-        this.loaded = true;
+        this.loading = false;
       }
     },
     computed: {
     },
     methods: {
       showAnswer(data) {
-        let url = "/topic/" + data.question;
+        let url = "/help/topic/" + data.question;
         this.$router.push(url);
       },
       getTopicIds (pdoc) {
@@ -83,7 +90,7 @@
         });
         $self.$store.commit("contentStore/answers", topics);
         $self.answers = topics;
-        $self.loaded = true;
+        $self.loading = false;
       }
     }
   }

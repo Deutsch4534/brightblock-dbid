@@ -44,7 +44,7 @@ import { mdbContainer, mdbRow,  mdbCard,
     mdbBtn } from 'mdbvue';
 import { mdbNavbar, mdbNavbarNav, mdbNavItem } from "mdbvue";
 import SingleGallery from "./components/gallery/SingleGallery";
-import ContactSection from "@/views/components/splash/ContactSection";
+import ContactSection from "@/pages/components/help/ContactSection";
 import LoadingView from "@/views/components/utils/LoadingView";
 
 // noinspection JSUnusedGlobalSymbols

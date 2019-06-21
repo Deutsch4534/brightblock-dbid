@@ -13,7 +13,7 @@
 <script>
 import MyArtworkUploadForm from "./components/myArtwork/MyArtworkUploadForm";
 import { mdbContainer, mdbRow, mdbCol } from 'mdbvue';
-import ContactSection from "@/views/components/splash/ContactSection";
+import ContactSection from "@/pages/components/help/ContactSection";
 import LoadingView from "@/views/components/utils/LoadingView";
 
 // noinspection JSUnusedGlobalSymbols
