@@ -1,23 +1,27 @@
 <template>
 <div class="">
   <div v-if="myItem">
-    <div class="d-flex align-items-center flex-column text-muted">
-      <div class="" style="font-size: 0.8rem;"><span v-html="sellingBuyNowFiat"></span></div>
-      <div class="" style="font-size: 0.8rem;"><span v-html="sellingBuyNowBtc"></span></div>
-      <div class=""><router-link :to="myItemSetPriceUrl" class="btn btn-sm btn-primary text-white m-0">Change Price</router-link></div>
+    <div class="d-flex align-items-start flex-column text-muted mb-3">
+      <div class="mb-2"><router-link :to="myItemSetPriceUrl" class="btn btn-sm btn-primary text-white m-0">Change Price</router-link></div>
+      <div class="" style="font-size: 0.8rem;">
+        <span class="mr-2" v-html="sellingBuyNowFiat"></span>
+        / <span class="ml-2" v-html="sellingBuyNowBtc"></span>
+      </div>
     </div>
   </div>
   <div v-else-if="buyNowEnabled">
-    <div class="d-flex align-items-center flex-column text-muted">
-      <div class="" style="font-size: 0.8rem;"><span v-html="sellingBuyNowFiat"></span></div>
-      <div class="" style="font-size: 0.8rem;"><span v-html="sellingBuyNowBtc"></span></div>
+    <div class="d-flex align-items-start flex-column text-muted">
       <div class="" v-if="action === 'details'"><router-link :to="itemUrl" class="btn btn-sm btn-primary text-white m-0">Buy Now</router-link></div>
-      <div class="" v-if="action === 'buy'"><a :to="itemUrl" class="btn btn-sm btn-primary text-white m-0" @click.prevent="buyNow">Place Order</a></div>
+      <div class="mb-2" v-if="action === 'buy'"><a :to="itemUrl" class="btn btn-sm btn-primary text-white m-0" @click.prevent="buyNow">Place Order</a></div>
+      <div class="" style="font-size: 0.8rem;">
+        <span class="mr-2" v-html="sellingBuyNowFiat"></span>
+        / <span class="ml-2" v-html="sellingBuyNowBtc"></span>
+      </div>
     </div>
   </div>
   <div v-else-if="sellingAuction">
     <div class="" style="font-size: 0.8rem;"><span v-html="sellingAuctionFiat"></span></div>
-    <div class="" style="font-size: 0.8rem;"><span v-html="sellingAuctionBtc"></span></div>
+    <div class="mb-2" style="font-size: 0.8rem;"><span v-html="sellingAuctionBtc"></span></div>
     <router-link v-if="action === 'details'" :to="itemUrl" class="btn btn-sm btn-primary text-white m-0">Open</router-link>
     <router-link v-if="action === 'bid'" :to="itemTransactionUrl" class="btn btn-sm btn-primary text-white m-0">Place Bid</router-link>
   </div>
@@ -32,7 +36,7 @@ import moneyUtils from "@/services/moneyUtils";
 
 // noinspection JSUnusedGlobalSymbols
 export default {
-  name: "BuyersInformation",
+  name: "BuyersInformationItemDetails",
   components: {
   },
   props: {

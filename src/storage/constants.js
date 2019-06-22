@@ -29,7 +29,6 @@ export const CONSTANTS = {
   debugMode: false,
   domain: location.origin,
   invoicesRootFileName: "invoices_v01.json",
-  auxiliaryProfileRootFileName: "profiles_v01.json",
   publicKeyDataRootFileName: "public_key_data_v01.json",
   artworkRootFileName: "records_v01.json",
   auctionsRootFileName: "auctions_v01.json",

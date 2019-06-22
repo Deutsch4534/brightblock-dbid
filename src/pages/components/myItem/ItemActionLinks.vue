@@ -1,35 +1,48 @@
 <template>
 <div>
-  <div v-if="buttonMode">
-    <router-link :to="registerUrl" class="btn btn-primary btn-md waves-effect waves-light" v-if="canRegister">Register</router-link>
-    <router-link :to="registerUrl" class="btn btn-primary btn-md waves-effect waves-light" v-else>Registered</router-link>
-    <router-link :to="coaUrl" class="btn btn-primary btn-md waves-effect waves-light" v-if="canCertificate">Certification</router-link>
-    <router-link :to="registerForSaleUrl" class="btn btn-primary btn-md waves-effect waves-light" v-if="canSell">Sell</router-link>
-    <a @click="deleteItem(item.id)" class="btn btn-primary btn-md waves-effect waves-light" v-if="debugMode">Delete</a>
-    <router-link :to="editUrl" class="btn btn-primary btn-md waves-effect waves-light" v-if="editable">Edit</router-link>
-    <router-link :to="myItemUrl" class="btn btn-primary btn-md waves-effect waves-light">Open</router-link>
-  </div>
-  <div v-else>
-    <router-link :to="registerUrl" title="Register on blockchain" class="text-primary border-right px-2" v-if="canRegister"><i class="far fa-registered"></i></router-link>
-    <router-link :to="registerUrl" title="Registered on blockchain" class="text-primary border-right px-2" v-else><i class="far fa-registered"></i></router-link>
-    <router-link :to="coaUrl" title="certificate of authenticity" class="text-primary border-right px-2" v-if="canCertificate"><i class="fas fa-certificate"></i></router-link>
-    <router-link :to="registerForSaleUrl" title="Set price" class="text-primary border-right px-2" v-if="canSell"><i class="fas fa-gavel"></i></router-link>
-    <a @click="deleteItem(item.id)" title="Delete item" class="text-primary border-right px-2" v-if="debugMode"><i class="far fa-trash-alt"></i></a>
-    <router-link :to="editUrl" title="Edit item" class="text-primary border-right px-2" v-if="editable"><i class="fas fa-pencil-alt"></i></router-link>
-    <router-link :to="myItemUrl" title="Preview item" class="text-primary border-right px-2"><i class="far fa-folder-open"></i></router-link>
-    <mdb-popover trigger="click" :options="{placement: 'top'}">
-      <div class="popover">
-        <div class="popover-header">
-          Item Management
+<div class="d-flex justify-content-start">
+  <div class="mr-auto"><router-link :to="myItemUrl" title="Open item"><strong>{{item.title}}</strong></router-link></div>
+</div>
+<div class="d-flex justify-content-end my-3">
+  <div>
+    <div v-if="buttonMode">
+      <router-link :to="registerUrl" class="btn btn-primary btn-md waves-effect waves-light" v-if="canRegister">Register</router-link>
+      <router-link :to="registerUrl" class="btn btn-primary btn-md waves-effect waves-light" v-else>Registered</router-link>
+      <router-link :to="coaUrl" class="btn btn-primary btn-md waves-effect waves-light" v-if="canCertificate">Certification</router-link>
+      <router-link :to="registerForSaleUrl" class="btn btn-primary btn-md waves-effect waves-light" v-if="canSell">Sell</router-link>
+      <a @click="deleteItem(item.id)" class="btn btn-primary btn-md waves-effect waves-light" v-if="debugMode">Delete</a>
+      <router-link :to="editUrl" class="btn btn-primary btn-md waves-effect waves-light" v-if="editable">Edit</router-link>
+      <router-link :to="myItemUrl" class="btn btn-primary btn-md waves-effect waves-light">Open</router-link>
+    </div>
+    <div v-else class="text-nowrap">
+      <router-link :to="editUrl" title="Edit item" class="text-primary border-right px-1" :class="itemAction === 'update' ? 'bg-danger' : ''" v-if="editable"><i class="fas fa-pencil-alt"></i></router-link>
+      <router-link :to="registerForSaleUrl" title="Set price" class="text-primary border-right px-1" v-if="canSell"><i class="fas fa-gavel"></i></router-link>
+      <router-link :to="registerUrl" title="Register on blockchain" class="text-primary border-right px-1" v-if="canRegister"><i class="far fa-registered"></i></router-link>
+      <router-link :to="registerUrl" title="Registered on blockchain" class="text-primary border-right px-1" v-else><i class="far fa-registered"></i></router-link>
+      <router-link :to="coaUrl" title="certificate of authenticity" class="text-primary border-right px-1" v-if="canCertificate"><i class="fas fa-certificate"></i></router-link>
+      <a @click="deleteItem(item.id)" title="Delete item" class="text-primary border-right px-1" v-if="debugMode"><i class="far fa-trash-alt"></i></a>
+      <router-link :to="myItemUrl" title="Open item" class="text-primary border-right px-1"><i class="far fa-folder-open"></i></router-link>
+      <mdb-popover trigger="click" :options="{placement: 'top'}">
+        <div class="popover">
+          <div class="popover-header">
+            Item Management
+          </div>
+          <div class="popover-body">
+            <p>dBid tools allow you to easily manage your listings;</p>
+            <ul>
+              <li><i class="fas fa-pencil-alt"></i> - update item details</li>
+              <li><i class="fas fa-gavel"></i> - set buy now / bidding data</li>
+              <li><i class="far fa-registered"></i> - register ownership on the blockchain</li>
+              <li><i class="fas fa-certificate"></i> - generate certificates of authenticity</li>
+              <li><i class="far fa-folder-open"></i> - open item management page</li>
+            </ul>
+          </div>
         </div>
-        <div class="popover-body">
-          A range of tools allows you to manage the usual marketplace task but goes much further as they also
-          enable registering items on the bitcoin blockchain - allowing generation of certificates of authenticity.
-        </div>
-      </div>
-      <a @click.prevent="" slot="reference" class="text-primary px-2"><i class="far fa-question-circle"></i></h3></a>
-    </mdb-popover>
+        <a @click.prevent="" slot="reference" class="text-primary px-1"><i class="far fa-question-circle"></i></h3></a>
+      </mdb-popover>
+    </div>
   </div>
+</div>
 </div>
 </template>
 
@@ -48,6 +61,7 @@ export default {
     item: null,
     asset: null,
     buttonMode: false,
+    itemAction: null
   },
   data() {
     return {};

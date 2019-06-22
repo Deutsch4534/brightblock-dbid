@@ -17,14 +17,14 @@
     <div class="col-md-9 py-4" v-if="showNav > 0">
 
       <h4 class="h4-responsive">{{myProfile.name}}</h4>
-      <p class="text-muted small">Note: Your profile data is encrypted and stored in your storage - it is only ever
-      decrypted to display to another user to complete a transaction.</p>
+      <p class="text-muted small">Your data is encrypted and stored in your storage
+      - it is only displayed when necessary to complete a purchase.</p>
 
       <blockstack-section v-if="showNav === 1" :myProfile="myProfile"/>
       <email-address-entry v-if="showNav === 2" :emailAddress="myProfile.auxiliaryProfile.emailAddress" @saveEmail="saveEmail"/>
-      <bitcoin-address-entry v-if="showNav === 3" :allowDelete="true" @bitcoinAddressUpdate="updateBitcoinAddress"/>
+      <bitcoin-address v-if="showNav === 3" :allowDelete="true" @bitcoinAddressUpdate="updateBitcoinAddress"/>
       <address-form v-if="showNav === 4" :addressTitle="'Shipping Address'" :addressBlurb="addressBlurb" :address="myProfile.auxiliaryProfile.shippingAddress" @saveAddress="saveAddress"/>
-      <trusted-users-section v-if="showNav === 5" :trustedIds="myProfile.auxiliaryProfile.trustedIds" @saveTrustedUsers="saveTrustedUsers"/>
+      <trusted-users v-if="showNav === 5" :trustedIds="myProfile.auxiliaryProfile.trustedIds" @saveTrustedUsers="saveTrustedUsers"/>
 
     </div>
   </div>
@@ -37,10 +37,10 @@ import { mdbNavbar, mdbNavbarNav, mdbNavItem } from "mdbvue";
 import ConfirmationModal from "../utils/ConfirmationModal";
 import moment from "moment";
 import myAccountService from "@/services/myAccountService";
-import TrustedUsers from "../user-settings/TrustedUsers";
-import BlockstackSection from "../utils/BlockstackSection";
-import BitcoinAddress from "./BitcoinAddress";
-import EmailAddressEntry from "../utils/EmailAddressEntry";
+import TrustedUsers from "@/pages/components/user-settings/TrustedUsers";
+import BlockstackSection from "@/pages/components/user-settings/BlockstackSection";
+import BitcoinAddress from "@/pages/components/user-settings/BitcoinAddress";
+import EmailAddressEntry from "@/pages/components/user-settings/EmailAddressEntry";
 import AddressForm from "@/pages/components/user-settings/AddressForm";
 
 // noinspection JSUnusedGlobalSymbols
@@ -130,12 +130,10 @@ export default {
       let $self = this;
       this.$store.dispatch("myAccountStore/updateAuxiliaryProfile", this.myProfile.auxiliaryProfile)
         .then(auxiliaryProfile => {
-          $self.modal = true;
+          this.$notify({type: 'success', title: 'Settings', text: 'Settings saved.'});
         })
         .catch(() => {
-          $self.modalTitle = "Profile.";
-          $self.modalContent = "Error updating profile.";
-          $self.modal = true;
+          this.$notify({type: 'warning', title: 'Settings', text: 'Unable to update your settings at present.'});
         });
     },
     saveEmail: function(email) {

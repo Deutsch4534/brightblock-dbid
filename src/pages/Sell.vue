@@ -1,32 +1,36 @@
 <template>
-<div id="my-app-element" class="container pt-5">
-  <div class="container spinner-border" role="status" v-if="loading">
-    <span class="sr-only">Loading...</span>
+<div id="my-app-element" class="container my-5">
+  <div class="container bg-card p-5" role="status" v-if="loading">
+    <div class="container spinner-border" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
   </div>
-  <div class="container pt-5" v-else>
+  <div class="container my-5" v-else>
     <div v-if="loggedIn">
-      <div class="d-flex text-primary text-white border-bottom">
+      <div class="d-flex text-primary text-white border-bottom mb-5">
         <div class="p-2 px-4 border-right" :class="activeTab === 1 ? 'text-secondary' : 'text-primary'" v-if="sellerInfoNeeded"><router-link to="/seller-info">Seller Info - Required</router-link></div>
         <div class="p-2 px-4 border-right" :class="activeTab === 1 ? 'text-secondary' : 'text-primary'" v-else><router-link to="/seller-info">Seller Info</router-link></div>
-        <div class="py-2 px-4 border-right" :class="activeTab === 2 ? 'text-secondary' : 'text-primary'"><router-link to="/my-item/upload">{{updateOrUploadLabel}}</router-link></div>
+        <div class="py-2 px-4 border-right" :class="activeTab === 2 ? 'text-secondary' : 'text-primary'"><router-link to="/my-item/upload">New Listing</router-link></div>
         <div class="py-2 px-4 border-right" :class="activeTab === 3 ? 'text-secondary' : 'text-primary'"><router-link to="/my-items">Listings</router-link></div>
         <div v-if="activeTab === 4" class="py-2 px-4 border-right" :class="activeTab === 4 ? 'text-secondary' : 'text-primary'"><router-link :to="myItemUrl">{{listingLabel}}</router-link></div>
       </div>
       <div v-if="activeTab === 1">
-        <seller-info :formTitle="'Update Seller Info'" :myProfile="myProfile" @sellerInfoUpdated="updateSellerState"/>
+        <div class="d-flex justify-content-center bg-card">
+          <seller-info :formTitle="'Update Seller Info'" :myProfile="myProfile" @sellerInfoUpdated="updateSellerState"/>
+        </div>
       </div>
       <div v-if="activeTab === 2">
-        <div class="d-flex justify-content-center">
-          <item-upload-form :formTitle="updateOrUploadLabel" :itemId="itemId" :mode="updateOrUploadMode" :myProfile="myProfile"/>
+        <div class="d-flex justify-content-center bg-card">
+          <item-upload-form :formTitle="'New Item'" :itemId="itemId" :mode="'upload'" :myProfile="myProfile"/>
         </div>
       </div>
       <div v-if="activeTab === 3">
-        <div class="d-flex justify-content-start">
+        <div class="d-flex justify-content-start bg-card">
           <my-items :formTitle="'Listings'" :myProfile="myProfile"/>
         </div>
       </div>
       <div v-if="activeTab === 4">
-        <div class="d-flex justify-content-start">
+        <div class="d-flex justify-content-start mb-5">
           <my-item :itemId="itemId" :myProfile="myProfile" :itemAction="itemAction"/>
         </div>
       </div>
@@ -55,7 +59,6 @@ export default {
     return {
       loading: true,
       listingLabel: "Manage Item",
-      updateOrUploadLabel: "Create Listing",
       updateOrUploadMode: "upload",
       itemAction: "manage",
       itemId: null,
@@ -97,7 +100,6 @@ export default {
     },
     setView: function() {
       let routeName = this.$route.name;
-      this.updateOrUploadLabel = "Create Listing";
       this.updateOrUploadMode = "upload";
       this.itemId = null;
       if (routeName === "seller-info") {
@@ -106,9 +108,8 @@ export default {
         this.activeTab = 2;
       } else if (routeName === "my-item-update") {
         this.itemId = Number(this.$route.params.itemId);
-        this.updateOrUploadLabel = "Update Listing";
-        this.updateOrUploadMode = "update";
-        this.activeTab = 2;
+        this.itemAction = "update";
+        this.activeTab = 4;
       } else if (routeName === "my-items") {
         this.activeTab = 3;
       } else if (routeName === "my-item-register") {

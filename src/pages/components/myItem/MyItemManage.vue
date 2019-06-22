@@ -8,10 +8,7 @@
     <item-image-list-view :item="item"/>
   </div>
   <div class="col-lg-7 col-xl-7 ml-xl-4 mb-4">
-    <div class="d-flex">
-      <div class="mr-auto"><h3 class="mb-3 font-weight-bold dark-grey-text"><strong>{{item.title}}</strong></h3></div>
-      <div><item-action-links :item="item" :itemAction="'manage'" :asset="asset" :buttonMode="false"/></div>
-    </div>
+    <item-action-links :item="item" :itemAction="'manage'" :asset="asset" :buttonMode="false"/>
     <p class="grey-text"><description-container :text="item.description"/></p>
     <p>by <a class="font-weight-bold dark-grey-text">{{ownerProfile.name}}</a>, 11/08/2018</p>
     <p v-if="item.bitcoinTx"><span>registered</span></p>

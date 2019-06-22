@@ -4,11 +4,8 @@
     <item-image-list-view :item="item"/>
   </div>
   <div class="col-lg-7 col-xl-7 ml-xl-4 mb-4">
-    <div class="d-flex">
-      <div class="mr-auto"><h3 class="mb-3 font-weight-bold dark-grey-text"><strong>{{item.title}}</strong></h3></div>
-      <div><item-action-links :item="item" :itemAction="'manage'" :asset="asset" :buttonMode="false"/></div>
-    </div>
-    <form class="needs-validation pt-3 form-transparent" novalidate @submit.prevent="checkForm" id="setPriceForm">
+    <item-action-links :item="item" :itemAction="'set-price'" :asset="asset" :buttonMode="false"/>
+    <form class="needs-validation pt-3 form-transparent bg-card p-2" novalidate @submit.prevent="checkForm" id="setPriceForm">
       <div class="form-group mb-3" :key="errors.length">
         <mdb-alert color="danger" v-if="errors.length" :key="errors.length" class="w-100">
           <h6 class="alert-heading">Please correct the following;</h6>
@@ -179,8 +176,8 @@
     </div>
 
     <div class="d-flex justify-content-start">
-      <button class="btn btn-primary btn-sm">Save</button>
-      <a class="btn btn-primary btn-sm" @click.prevent="removeFromSale()">Reset</a>
+      <button class="btn btn-primary btn-sm mr-4">Save</button>
+      <button class="btn btn-primary btn-sm" @click.prevent="removeFromSale()">Reset</button>
     </div>
   </form>
   </div>

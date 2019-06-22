@@ -82,7 +82,7 @@ import { Datetime } from 'vue-datetime'
 import MediaFilesUpload from "../utils/MediaFilesUpload";
 import BitcoinAddressEntry from "../utils/BitcoinAddressEntry";
 import EmailAddressEntry from "../utils/EmailAddressEntry";
-import AddressForm from "../utils/AddressForm";
+import AddressForm from "@/pages/components/user-settings/AddressForm";
 
 // noinspection JSUnusedGlobalSymbols
 export default {

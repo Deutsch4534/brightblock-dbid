@@ -16,6 +16,8 @@ import moment from "moment";
 import userProfilesService from "./userProfilesService";
 import _ from "lodash";
 
+const auxiliaryProfileRootFileName = "profiles_v01.json";
+
 const myAccountService = {
   myBlockstackId: function() {
     return loadUserData().username;
@@ -127,7 +129,6 @@ const myAccountService = {
     }
   },
   updateAuxiliaryProfile: function(auxiliaryProfile, success, failure) {
-    let auxiliaryProfileRootFileName = settings.auxiliaryProfileRootFileName;
     putFile(auxiliaryProfileRootFileName, JSON.stringify(auxiliaryProfile), {encrypt: true})
       .then(function() {
         success(auxiliaryProfile);
@@ -204,7 +205,6 @@ const myAccountService = {
     });
   },
   getAuxiliaryProfile: function(success, failure) {
-    let auxiliaryProfileRootFileName = settings.auxiliaryProfileRootFileName;
     let auxiliaryProfile = {};
     let newRootFile = {
       created: moment({}).valueOf(),

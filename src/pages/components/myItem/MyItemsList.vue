@@ -1,5 +1,5 @@
 <template>
-<div class="container-fluid">
+<div class="">
   <my-single-item v-for="(item, index) of items" :key="index" :item="item" :myProfile="myProfile"/>
 </div>
 </template>

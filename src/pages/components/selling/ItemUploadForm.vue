@@ -1,93 +1,91 @@
 <template>
 <div>
-  <div class="bg-white mt-5 p-3" v-if="loading">
+  <div class="" v-if="loading">
     <div class="spinner-border" role="status">
       <span class="sr-only">Loading...</span>
     </div>
   </div>
-  <mdb-row v-else>
-    <div class="col-12 py-5">
-      <!-- Supported elements -->
-      <confirmation-modal :modal="showModal" :title="modalTitle" :content="modalContent" @closeModal="closeModal"/>
-      <form class="bg-light text-dark p-5 text-white needs-validation form-transparent" novalidate v-on:submit.prevent="checkForm" id="itemForm">
-        <!-- item type -->
-        <div class="row">
-          <div class="col-12 mb-4">
-            <p v-if="errors.length">
-              <b>Please correct the following error(s):</b>
-              <ul>
-                <li v-for="error in errors" :key="error.id">{{ error }}</li>
-              </ul>
-            </p>
-            <div class="form-row mb-3"><h5>{{formTitle}}</h5></div>
-            <div class="form-row mb-3">
-              <input type="text" class="form-control" id="validationCustom01" :placeholder="'Item Title (' + limits.title + ' chars max)'" v-model="item.title" required :maxlength="limits.title">
-              <div class="invalid-feedback">Please enter a title!</div>
-            </div>
-            <div class="form-row mb-5">
-              <!--<label for="validationCustom02">Description of Item</label>-->
-              <textarea type="text" class="form-control" id="validationCustom02" :placeholder="'Description of the Item (' + limits.description + ' chars max)'" v-model="item.description" required :maxlength="limits.description"></textarea>
-              <div class="invalid-feedback">
-                Please enter a description!
-              </div>
-            </div>
-
-            <div class="form-row mb-3"><h5>Item Type</h5></div>
-            <div class="form-row mb-5" v-if="!mediumLocked">
-              <select id="validationCustom06-1" @change="doMedium" class="text-black browser-default custom-select" v-model="medium" required>
-                <option v-for="(medium) in media" :key="medium.value" :value="medium.value">{{medium.label}}</option>
-              </select>
-              <div class="invalid-feedback">
-                Please enter the artwork medium!
-              </div>
-            </div>
-            <div class="col-4 mb-5" v-else>
-              Digital Video
-            </div>
-
-            <div class="form-row mb-3"><h5>Categories</h5></div>
-            <div class="form-row mb-5">
-              <div id="vc-040-error" class="invalid-feedback">
-                Please select some categories!
-              </div>
-              <taxonomy @closeKeywords="closeKeywords" :initKeywords="item.keywords"/>
-            </div>
-
-            <div class="form-row mb-3"><h5>Images</h5></div>
-            <div class="form-row mb-5">
-              <div id="vc-040-error" class="invalid-feedback">
-                Please select some categories!
-              </div>
-              <media-files-upload :parentalError="parentalError" :contentModel="contentModel3" :mediaFiles="mediaFiles3" :limit="5" :sizeLimit="2500" :mediaTypes="'image'" @updateMedia="setByEventLogo3($event)"/>
-            </div>
-
-            <div class="form-row mb-3"><h5>Ownership Files</h5></div>
-            <div class="form-row mb-5">
-              <div id="vc-040-error" class="invalid-feedback">
-                Please select some categories!
-              </div>
-              <media-files-upload :contentModel="contentModel2" :mediaFiles="mediaFiles2" :limit="5" :sizeLimit="2500" :mediaTypes="'image,doc'" @updateMedia="setByEventLogo2($event)"/>
-            </div>
-
-            <p class="mb-3" v-if="errors.length">
-              <b>Please correct the following error(s):</b>
-              <ul>
-                <li v-for="error in errors" :key="error">{{ error }}</li>
-              </ul>
-            </p>
-
-            <!-- Submit button row -->
-            <div class="row">
-              <div class="col-12">
-                <button type="submit" class="btn btn-sm btn-light" @click.prevent="checkForm">Save</button>
-              </div>
+  <div v-else>
+    <!-- Supported elements -->
+    <confirmation-modal :modal="showModal" :title="modalTitle" :content="modalContent" @closeModal="closeModal"/>
+    <form class="text-dark bg-card p-5 text-white needs-validation form-transparent" novalidate v-on:submit.prevent="checkForm" id="itemForm">
+      <!-- item type -->
+      <div class="row">
+        <div class="col-12 mb-4">
+          <p v-if="errors.length">
+            <b>Please correct the following error(s):</b>
+            <ul>
+              <li v-for="error in errors" :key="error.id">{{ error }}</li>
+            </ul>
+          </p>
+          <div class="form-row mb-3"><h5>{{formTitle}}</h5></div>
+          <div class="form-row mb-3">
+            <input type="text" class="form-control" id="validationCustom01" :placeholder="'Item Title (' + limits.title + ' chars max)'" v-model="item.title" required :maxlength="limits.title">
+            <div class="invalid-feedback">Please enter a title!</div>
+          </div>
+          <div class="form-row mb-5">
+            <!--<label for="validationCustom02">Description of Item</label>-->
+            <textarea type="text" class="form-control" id="validationCustom02" :placeholder="'Description of the Item (' + limits.description + ' chars max)'" v-model="item.description" required :maxlength="limits.description"></textarea>
+            <div class="invalid-feedback">
+              Please enter a description!
             </div>
           </div>
 
+          <div class="form-row mb-3"><h5>Item Type</h5></div>
+          <div class="form-row mb-5" v-if="!mediumLocked">
+            <select id="validationCustom06-1" @change="doMedium" class="text-black browser-default custom-select" v-model="medium" required>
+              <option v-for="(medium) in media" :key="medium.value" :value="medium.value">{{medium.label}}</option>
+            </select>
+            <div class="invalid-feedback">
+              Please enter the artwork medium!
+            </div>
+          </div>
+          <div class="col-4 mb-5" v-else>
+            Digital Video
+          </div>
+
+          <div class="form-row mb-3"><h5>Categories</h5></div>
+          <div class="form-row mb-5">
+            <div id="vc-040-error" class="invalid-feedback">
+              Please select some categories!
+            </div>
+            <taxonomy @closeKeywords="closeKeywords" :initKeywords="item.keywords"/>
+          </div>
+
+          <div class="form-row mb-3"><h5>Images</h5></div>
+          <div class="form-row mb-5">
+            <div id="vc-040-error" class="invalid-feedback">
+              Please select some categories!
+            </div>
+            <media-files-upload :parentalError="parentalError" :contentModel="contentModel3" :mediaFiles="mediaFiles3" :limit="5" :sizeLimit="2500" :mediaTypes="'image'" @updateMedia="setByEventLogo3($event)"/>
+          </div>
+
+          <div class="form-row mb-3"><h5>Ownership Files</h5></div>
+          <div class="form-row mb-5">
+            <div id="vc-040-error" class="invalid-feedback">
+              Please select some categories!
+            </div>
+            <media-files-upload :contentModel="contentModel2" :mediaFiles="mediaFiles2" :limit="5" :sizeLimit="2500" :mediaTypes="'image,doc'" @updateMedia="setByEventLogo2($event)"/>
+          </div>
+
+          <p class="mb-3" v-if="errors.length">
+            <b>Please correct the following error(s):</b>
+            <ul>
+              <li v-for="error in errors" :key="error">{{ error }}</li>
+            </ul>
+          </p>
+
+          <!-- Submit button row -->
+          <div class="row">
+            <div class="col-12">
+              <button type="submit" class="btn btn-sm btn-light" @click.prevent="checkForm">Save</button>
+            </div>
+          </div>
         </div>
-      </form>
-    </div>
-  </mdb-row>
+
+      </div>
+    </form>
+  </div>
 </div>
 </template>
 

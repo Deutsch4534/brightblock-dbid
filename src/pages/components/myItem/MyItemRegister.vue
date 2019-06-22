@@ -4,10 +4,7 @@
     <item-image-list-view :item="item"/>
   </div>
   <div class="col-lg-7 col-xl-7 ml-xl-4 mb-4">
-    <div class="d-flex">
-      <div class="mr-auto"><h3 class="mb-3 font-weight-bold dark-grey-text"><strong>{{item.title}}</strong></h3></div>
-      <div><item-action-links :item="item" :itemAction="'manage'" :asset="asset" :buttonMode="false"/></div>
-    </div>
+    <item-action-links :item="item" :itemAction="'register'" :asset="asset" :buttonMode="false"/>
     <p><strong><a @click.prevent="" slot="reference">Register Item on Bitcoin Blockchain <span v-if="bitcoinState">({{bitcoinState.chain}} chain)</span></a></strong></p>
     <p class="grey-text">
       Registering your item on the blockchain is strong evidence of your ownership.

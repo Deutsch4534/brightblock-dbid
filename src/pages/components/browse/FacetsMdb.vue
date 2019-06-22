@@ -1,14 +1,16 @@
 <template>
 <div class="container mb-5">
     <div class="d-flex justify-content-between">
-      <div class="text-lowercase ml-0 pl-0 d-none d-sm-none d-md-block"><mdb-btn class="ml-0 pl-0" color="elegant-color" rounded><a href="#" v-html="latestOffers"></a> [{{resultSize}}]</mdb-btn></div>
+      <button type="button" class="btn btn-primary">
+        <span v-html="latestOffers"></span> <span class="badge badge-light">{{resultSize}}</span>
+      </button>
       <div class="col-8 text-right">
         <div class="d-flex justify-content-end">
         <div class="input-group md-form form-sm form-1 pl-0">
           <div class="input-group-prepend">
-            <span class="input-group-text purple lighten-3" id="basic-text1">
-              <mdbIcon icon="search"/>
-            </span>
+            <a class="input-group-text purple lighten-3" id="basic-text1" @click="findBySearchTerm">
+              <i class="fas fa-search"></i>
+            </a>
           </div>
           <input class="form-control my-0 py-1" type="text"  v-on:keyup.13.prevent="findBySearchTerm" v-model="query" placeholder="Search" aria-label="Search">
           <a class="ml-2 text-light" @click.prevent="showCategories = !showCategories" title="toggle categories" style="position:relative; top:4px"><i class="fas fa-caret-square-down fa-2x"></i></a>
@@ -26,20 +28,24 @@
         <option v-for="(medium) in filters.media" :key="medium.value" :value="medium.value">{{medium.label}}</option>
       </select>
     </div>
-    <div class="d-flex justify-content-center"><p class="text-lowercase mr-2"><a v-for="(category, index) in level1Categories" class="mr-2" :key="index"  @click="findByKeyword(category.name)"><u><span v-html="category.name"></span></u></a></p></div>
+    <div class="d-flex text-lowercase mr-2">
+      <mdb-btn rounded color="white" size="sm" class="text-dark py-2 px-2 mr-2 waves-light" v-for="(category, index) in level1Categories" :key="index"  @click="findByKeyword(category.name)">
+        <span v-html="category.name"></span>
+      </mdb-btn>
+    </div>
   </div>
 </div>
 </template>
 
 <script>
 import _ from "lodash";
-import { mdbIcon, mdbFormInline, mdbInput, mdbBtn } from 'mdbvue';
+import { mdbBtn } from 'mdbvue';
 
 // noinspection JSUnusedGlobalSymbols
 export default {
   name: 'Filters',
   components: {
-    mdbIcon, mdbFormInline, mdbInput, mdbBtn
+    mdbBtn
   },
   props: ["itemsSize"],
   data () {

@@ -1,16 +1,17 @@
 <template>
-<div class="container-fluid flex-1 pt-5">
-  <div class="bg-white mt-5 p-3" v-if="loading">
+<div class="container-fluid flex-1">
+  <div class="bg-card p-3" v-if="loading">
     <div class="spinner-border" role="status">
       <span class="sr-only">Loading...</span>
     </div>
   </div>
   <div v-else>
-    <div class="bg-white mt-5 p-3" v-if="!item">
+    <div class="bg-card p-3" v-if="!item">
       <div>404 - item not found</div>
     </div>
-    <div class="bg-white mt-5 p-3" v-else>
+    <div class="bg-card p-3" v-else>
       <my-item-manage v-if="itemAction === 'manage'" :item="item" :asset="asset" :myProfile="myProfile"/>
+      <my-item-update v-else-if="itemAction === 'update'" :formTitle="'New Item'" :item="item" :mode="'upload'" :asset="asset" :myProfile="myProfile"/>
       <my-item-register v-else-if="itemAction === 'register'" :item="item" :asset="asset" :myProfile="myProfile"/>
       <my-item-coa v-else-if="itemAction === 'coa'" :item="item" :asset="asset" :myProfile="myProfile"/>
       <my-item-set-price v-else-if="itemAction === 'set-price'" :item="item" :asset="asset" :myProfile="myProfile"/>
@@ -20,6 +21,7 @@
 </template>
 
 <script>
+import MyItemUpdate from "./MyItemUpdate";
 import MyItemRegister from "./MyItemRegister";
 import MyItemManage from "./MyItemManage";
 import MyItemCoa from "./MyItemCoa";
@@ -32,7 +34,7 @@ export default {
   name: "MyItem",
   bodyClass: "index-page",
   components: {
-    MyItemManage, MyItemRegister, MyItemCoa, MyItemSetPrice,
+    MyItemManage, MyItemRegister, MyItemCoa, MyItemSetPrice, MyItemUpdate,
     mdbContainer,
     mdbRow,
     mdbCard,

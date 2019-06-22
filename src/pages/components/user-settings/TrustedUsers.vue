@@ -10,7 +10,7 @@
   </div>
   <div class="row mb-4">
     <div class="col-md-12">
-      <a @click="checkForm($event)"><button class="btn btn-small btn-white">save</button></a>
+      <a @click="checkForm($event)"><button class="btn btn-light lighten-1">save</button></a>
     </div>
   </div>
 </div>

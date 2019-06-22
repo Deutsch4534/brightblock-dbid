@@ -4,10 +4,7 @@
     <item-image-list-view :item="item"/>
   </div>
   <div class="col-lg-7 col-xl-7 ml-xl-4 mb-4">
-    <div class="d-flex">
-      <div class="mr-auto"><h3 class="mb-3 font-weight-bold dark-grey-text"><strong>{{item.title}}</strong></h3></div>
-      <div><item-action-links :item="item" :itemAction="'manage'" :asset="asset" :buttonMode="false"/></div>
-    </div>
+    <item-action-links :item="item" :itemAction="'coa'" :asset="asset" :buttonMode="false"/>
     <p><strong><a @click.prevent="" slot="reference">Certificate of Authenticity</span></a></strong></p>
     <p class="text-muted" v-if="!item.coa">
       Generate a certificate of authenticity for this item - we will generate a hash from your data

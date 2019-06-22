@@ -30,18 +30,37 @@ const myAccountStore = {
             if (loggedInState === 2) {
               myAccountService.doPendingSignin(function(res) {
                 myProfile = myAccountService.myProfile();
+                if (!myProfile.auxiliaryProfile) {
+                  myProfile.auxiliaryProfile = {
+                    shippingAddress: {}
+                  };
+                }
+                if (!myProfile.auxiliaryProfile.shippingAddress) {
+                  myProfile.auxiliaryProfile.shippingAddress = {};
+                }
                 commit("myProfile", myAccountService.myProfile());
                 store.dispatch("myAccountStore/fetchMyAccount");
                 resolve(myProfile);
               });
             } else {
               myProfile = myAccountService.myProfile();
+              if (!myProfile.auxiliaryProfile) {
+                myProfile.auxiliaryProfile = {
+                  shippingAddress: {}
+                };
+              }
+              if (!myProfile.auxiliaryProfile.shippingAddress) {
+                myProfile.auxiliaryProfile.shippingAddress = {};
+              }
               commit("myProfile", myProfile);
               resolve(myProfile);
             }
           } else {
             myProfile = {
-              loggedIn: false
+              loggedIn: false,
+              auxiliaryProfile: {
+                shippingAddress: {}
+              }
             };
             resolve(myProfile);
             return;

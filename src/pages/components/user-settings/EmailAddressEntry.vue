@@ -28,7 +28,7 @@
   </div>
   <div class="row mb-4">
     <div class="col-md-6">
-      <a @click="checkForm($event)"><mdb-btn size="sm" type="submit" class="btn teal lighten-1">save</mdb-btn></a>
+      <a @click="checkForm($event)"><mdb-btn size="sm" type="submit" class="btn btn-light lighten-1">save</mdb-btn></a>
     </div>
   </div>
 </div>

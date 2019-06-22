@@ -4,7 +4,7 @@
   <h4 class="text-capitalize"><a href="/" @click.prevent="helpModal = !helpModal">Bitcoin Address - <span class="text-primary">{{bitcoinState.chain}}</span> network</a></h4>
   <p class="text-muted">Payments will be sent to this address.  (<a @click.prevent="showHint = !showHint">hint</a>)</p>
   <p class="text-muted" v-if="showHint">Use this bitcoin test net address for testing - tb1q5d2p3tejxrjfqelcwght3km3ua9wgrd09w05es
-  <br/>or see <a href="https://bitcoin.stackexchange.com/questions/76598/how-to-get-electrum-3-1-3-on-bitcoin-testnet" target="_blank"><u>this post</u></a> for helping running the electrum bitcoin wallet on testnet</p>
+  <br/>or see <a href="https://bitcoin.stackexchange.com/questions/76598/how-to-get-electrum-3-1-3-on-bitcoin-testnet" target="_blank"><u>this post</u></a> for running the electrum bitcoin wallet on testnet</p>
   <div class="row">
     <div class="col-md-12 text-danger" v-if="message">
       <p>{{message}}</p>
@@ -117,8 +117,5 @@ export default {
   }
 };
 </script>
-<style>
-
-</style>
 <style scoped>
 </style>

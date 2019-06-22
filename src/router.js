@@ -7,6 +7,7 @@ import HelpTopics from "./pages/HelpTopics";
 import HelpTopic from "./pages/HelpTopic";
 import Contact from "./pages/Contact.vue";
 import UserSettings from "./pages/UserSettings.vue";
+import Login from "./pages/Login.vue";
 
 import Admin from "./views/Admin.vue";
 import AdminSettings from "./views/components/admin/AdminSettings";
@@ -25,7 +26,6 @@ import MyGalleries from "./views/MyGalleries.vue";
 
 import Artist from "./views/Artist.vue";
 import Artists from "./views/Artists.vue";
-import Login from "./views/Login.vue";
 import Profile from "./views/Profile.vue";
 import TeamProfile from "./views/TeamProfile.vue";
 import Navbar from "./layout/Navbar.vue";
@@ -78,6 +78,15 @@ const router = new Router({
       meta: { requiresAuth: false }
     },
     {
+      path: "/login",
+      name: "login",
+      components: { default: Login, header: Navbar, footer: Footer },
+      props: {
+        header: { colorOnScroll: 400 }
+      },
+      meta: { requiresAuth: false }
+    },
+    {
       path: "/buy",
       name: "buy",
       components: {
@@ -95,7 +104,7 @@ const router = new Router({
         header: Navbar,
         footer: Footer
       },
-      meta: { requiresAuth: false }
+      meta: { requiresAuth: true }
     },
     {
       path: "/seller-info",
@@ -105,7 +114,7 @@ const router = new Router({
         header: Navbar,
         footer: Footer
       },
-      meta: { requiresAuth: false }
+      meta: { requiresAuth: true }
     },
     {
       path: "/user/settings",
@@ -114,7 +123,8 @@ const router = new Router({
         default: UserSettings,
         header: Navbar,
         footer: Footer
-      }
+      },
+      meta: { requiresAuth: true }
     },
     {
       path: "/items/:itemId",
@@ -285,15 +295,6 @@ const router = new Router({
         footer: Footer
       },
       meta: { requiresAuth: true }
-    },
-    {
-      path: "/login",
-      name: "login",
-      components: { default: Login, header: Navbar, footer: Footer },
-      props: {
-        header: { colorOnScroll: 400 }
-      },
-      meta: { requiresAuth: false }
     },
     {
       path: "/profile/team/:profileId",
@@ -570,7 +571,7 @@ router.beforeEach((to, from, next) => {
       return next();
     } else {
       return next({
-        path: "/index",
+        path: "/login",
         query: { redirect: to.fullPath }
       });
     }

@@ -27,7 +27,7 @@
   </div>
   <div class="row mb-4">
     <div class="col-md-6">
-      <input type="text" class="form-control" id="vline5" placeholder="Region" v-model="address.region" @change="addressChange" required>
+      <input type="text" class="form-control" id="vline5" placeholder="Region" v-model="address.region" @change="addressChange">
     </div>
     <div class="col-md-6">
       <input type="text" class="form-control" id="vline6" placeholder="Zip or postcode*" v-model="address.postcode" @change="addressChange" required>

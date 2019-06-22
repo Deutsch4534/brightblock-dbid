@@ -77,7 +77,7 @@ export default {
       let myProfile = this.$store.getters["myAccountStore/getMyProfile"];
       if (myProfile.loggedIn) {
         if (myProfile.avatarUrl) {
-          return '<img style="width: 30px; height: 30px; border-radius: 30px;" src="' +myProfile.avatarUrl + '"/>'
+          return myProfile.avatarUrl;
         } else {
           return '<i class="far fa-user"></i>'
         }

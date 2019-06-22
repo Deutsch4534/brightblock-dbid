@@ -1,17 +1,17 @@
 <template>
-<mdb-card cascade class="m-0 p-0" style="max-width: 300px; border-radius: 10px; background-color: #eceff1;">
+<mdb-card cascade class="m-0 p-0 bg-card" style="max-width: 300px; border-radius: 10px; background-color: #eceff1;">
   <mdb-view hover cascade>
     <a href="#!">
-      <img style="max-height: 200px; width: 100%; border-top-left-radius: 10px; border-top-right-radius: 10px; border-bottom-left-radius: 5px;border-bottom-right-radius: 5px;" :src="item.images[0].dataUrl"  :alt="item.title"/>
+      <img style="max-height: 200px; min-height: 200px; width: 100%; border-top-left-radius: 10px; border-top-right-radius: 10px; border-bottom-left-radius: 5px;border-bottom-right-radius: 5px;" :src="item.images[0].dataUrl"  :alt="item.title"/>
       <mdb-mask flex-center style="max-width: 100%;" waves overlay="white-slight"></mdb-mask>
     </a>
   </mdb-view>
-  <mdb-card-body class="text-center" cascade style="min-height: 10vh;">
-    <mdb-card-title class="" style="color: #666;"><strong><router-link :to="itemUrl">{{item.title}}</router-link></strong></mdb-card-title>
-    <mdb-card-text><description-container :text="item.description"/></mdb-card-text>
-  </mdb-card-body>
-  <mdb-card-body class="text-center" cascade style="min-height: 10vh;">
-    <buyers-information :item="item" action="details" :myProfile="myProfile"/>
+  <mdb-card-body class="text-center" cascade >
+    <div class="d-flex align-items-center align-content-between flex-column" style="min-height: 200px;">
+      <div class=""><mdb-card-title><strong><router-link :to="itemUrl"><description-container :text="item.title" :limit="3" :morable="false" style="color: #445544;font-size: 1.4rem;"/></router-link></strong></mdb-card-title></div>
+      <div class="mb-auto"><mdb-card-text><description-container :text="item.description" :limit="4" :morable="true" class="text-muted" style="font-size: 1.1rem;"/></mdb-card-text></div>
+      <div class="mt-auto"><buyers-information :item="item" action="details" :myProfile="myProfile"/></div>
+    </div>
   </mdb-card-body>
   <mdb-card-footer>
     <div class="d-flex justify-content-between text-dark" style="font-size: 1.1rem;">
@@ -42,7 +42,7 @@ import { mdbContainer, mdbRow, mdbCol, mdbCard, mdbCardImage, mdbCardHeader, mdb
 
 // noinspection JSUnusedGlobalSymbols
 export default {
-  name: "SingleItem",
+  name: "SingleItemCard",
   components: {
     DescriptionContainer, ItemImageListView, BuyersInformation, ItemPosted,
     mdbContainer,

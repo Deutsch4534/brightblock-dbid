@@ -3,13 +3,20 @@
   <login-tab-modal v-if="showModal" :modal="showModal" @closeModal="closeModal"/>
   <mdb-modal v-if="login" @close="closeLogin">
     <mdb-modal-header class="text-center">
-      <mdb-modal-title tag="h4" bold class="w-100">Sign in</mdb-modal-title>
+      <mdb-modal-title tag="h4" bold class="w-100">Login</mdb-modal-title>
     </mdb-modal-header>
     <mdb-modal-body class="mx-3 grey-text text-center">
-      <mdb-btn v-on:click="loginMultiPlayer">Sign in with Blockstack</mdb-btn>
+      <mdb-btn><button class="btn btn-light btn-block" v-on:click="loginMultiPlayer">Login with Blockstack</button></mdb-btn>
     </mdb-modal-body>
-    <mdb-modal-footer right>
-      <p><small class="text-muted"><a href="https://blockstack.org/install/" target="_blank" rel="noreferrer">whats this?</a></small></p>
+    <mdb-modal-footer>
+      <div class="row">
+        <div class="col-12 text-right">
+          <small class="text-muted"><a @click.prevent="showBrowser = !showBrowser">whats this?</a></small>
+        </div>
+        <div class="col-12 text-right" v-if="showBrowser">
+          <small class="text-muted"><a href="https://blockstack.org/install/" target="_blank" rel="noreferrer">Install blockstack browser</a> to access the decentralised web 3.0!</small>
+        </div>
+      </div>
     </mdb-modal-footer>
   </mdb-modal>
 </mdb-container>
@@ -18,7 +25,7 @@
 <script>
 import { mdbContainer, mdbBtn, mdbModal, mdbModalHeader, mdbModalBody, mdbModalTitle, mdbModalFooter } from 'mdbvue';
 import myAccountService from "@/services/myAccountService";
-import LoginTabModal from "@/views/components/utils/LoginTabModal";
+import LoginTabModal from "@/pages/components/user-settings/LoginTabModal";
 
 export default {
   bodyClass: "login-page",
@@ -35,6 +42,7 @@ export default {
   data() {
     return {
       firstname: null,
+      showBrowser: false,
       email: null,
       password: null,
       showModal: false,

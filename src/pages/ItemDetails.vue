@@ -19,8 +19,8 @@
         <div class="mr-auto"><h3 class="mb-3">{{item.title}}</h3></div>
       </div>
       <p class="grey-text"><description-container :text="item.description"/></p>
-      <p>Listed <!--by; <a class="font-weight-bold dark-grey-text">{{ownerProfile.name}}</a> --> on <span class="font-weight-bold dark-grey-text">{{created}}</span></p>
-      <buyers-information :item="item" :asset="asset" action="buy" :myProfile="myProfile" @startPayment="startPayment"/>
+      <div class="d-flex text-muted justify-content-end mb-3"><small>Listed <!--by; <a class="font-weight-bold dark-grey-text">{{ownerProfile.name}}</a> --> on <span class="">{{created}}</span></small></div>
+      <buyers-information-item-details :item="item" :asset="asset" action="buy" :myProfile="myProfile" @startPayment="startPayment"/>
     </div>
   </div>
   <div class="row mx-5" v-else>
@@ -42,7 +42,7 @@ import moment from "moment";
 import utils from "@/services/utils";
 import DescriptionContainer from "@/pages/components/utils/DescriptionContainer";
 import ItemImageListView from "@/pages/components/myItem/ItemImageListView";
-import BuyersInformation from "@/pages/components/selling/BuyersInformation";
+import BuyersInformationItemDetails from "@/pages/components/selling/BuyersInformationItemDetails";
 import ItemOrderForm from "@/pages/components/orders/ItemOrderForm";
 import AddressForm from "@/pages/components/user-settings/AddressForm";
 
@@ -50,7 +50,7 @@ import AddressForm from "@/pages/components/user-settings/AddressForm";
 export default {
   name: "ItemDetails",
   components: {
-    AddressForm, DescriptionContainer, ItemImageListView, BuyersInformation, ItemOrderForm
+    AddressForm, DescriptionContainer, ItemImageListView, BuyersInformationItemDetails, ItemOrderForm
   },
   props: {
   },
@@ -80,6 +80,8 @@ export default {
           this.addressValid = this.isAddressValid();
           if (this.addressValid) {
             this.showAddress = false;
+          } else {
+            myProfile.auxiliaryProfile.shippingAddress = {};
           }
           let assetHash = utils.buildBitcoinHash(item);
           this.$store.dispatch("assetStore/lookupAssetByHash", assetHash).then(asset => {
@@ -125,7 +127,7 @@ export default {
       if (!address) {
         return false;
       }
-      let valid = address.line1 && address.line1.length > 0;
+      let valid = address && address.line1 && address.line1.length > 0;
       valid = valid && address.city && address.city.length > 0;
       valid = valid && address.region && address.region.length > 0;
       valid = valid && address.postcode && address.postcode.length > 0;

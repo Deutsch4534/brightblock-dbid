@@ -1,7 +1,7 @@
 <template>
 <div>
   <div><span class="pb-0 mb-0" v-html="displayable"></span>
-  <span v-if="overflow" class="text-muted">
+  <span v-if="overflow && morable" class="text-muted">
     <a @click.prevent="truncated = !truncated" v-if="truncated"><small>more</small></a>
     <a @click.prevent="truncated = !truncated" v-else><small>less</small></a>
   </span>
@@ -16,10 +16,9 @@ export default {
   name: "DescriptionContainer",
   components: {
   },
-  props: ["text"],
+  props: ["text", "limit", "morable"],
   data() {
     return {
-      limit: 50,
       truncated: true,
     };
   },
@@ -27,12 +26,12 @@ export default {
   },
   computed: {
     displayable() {
-      if (this.text && this.text.length > this.limit && this.truncated) {
+      if (this.text && this.text.split(" ").length > this.limit && this.truncated) {
         let words = this.text.split(" ");
         let limit = words.length - 1;
         let trunc = Math.min(limit, 4);
         let truncStr = words.slice(0,trunc);
-        return "<small>" + truncStr.join(" ") + "..."  + "</small>";
+        return "<small>" + truncStr.join(" ") + "</small>";
       } else {
         return "<small>" + this.text + "</small>";
       }
