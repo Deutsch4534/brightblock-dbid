@@ -14,22 +14,11 @@
     </div>
   </mdb-card-body>
   <mdb-card-footer>
-    <div class="d-flex justify-content-between text-dark" style="font-size: 1.1rem;">
-      <div><router-link :to="itemUrl"><i class="far fa-plus-square"></i></router-link></div>
+    <div class="d-flex justify-content-end text-dark" style="font-size: 1.1rem;">
       <div><router-link :to="itemUrl"><i class="far fa-eye mr-2"></i></router-link></div>
     </div>
   </mdb-card-footer>
 </mdb-card>
-<!--
-<mdb-card class="brown lighten-4">
-  <mdb-card-image :src="item.images[0].dataUrl" :alt="item.title" class=""></mdb-card-image>
-  <mdb-card-body>
-    <mdb-card-title><router-link :to="itemUrl">{{item.title}}</router-link></mdb-card-title>
-    <mdb-card-text><description-container :text="item.description"/></mdb-card-text>
-    <buyers-information :item="item" action="details" :myProfile="myProfile"/>
-  </mdb-card-body>
-</mdb-card>
--->
 </template>
 
 <script>

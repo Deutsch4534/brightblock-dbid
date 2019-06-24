@@ -1,21 +1,21 @@
 <template>
 <header class="" style="height: 70px;">
 <login-tab-modal v-if="showModal" :modal="showModal" @closeModal="closeModal"/>
-<div class="d-flex blue-grey lighten-1 pb-0" style="position: relative; top: 0px;height: 69px;">
-  <div class="mr-auto p-0 px-4 d-none d-sm-block"><router-link to="/index" class="nav-link navbar-link"><img :src="logo" width="100px" alt="main logo"></router-link></div>
-  <div class="mr-auto pt-2 d-xs-block d-none text-danger" style="font-size: 1.8rem; position: relative; top: 2px;"><router-link to="/" class="nav-link navbar-link">dB</router-link></div>
+<div class="d-flex justify-content-between blue-grey lighten-1 pb-0" style="position: relative; top: 0px;height: 69px;">
+  <div class="p-0 d-none d-sm-block"><router-link to="/index" class="nav-link navbar-link"><img :src="logo" width="100px" alt="main logo"></router-link></div>
+  <div class="pt-2 d-xs-block d-none text-danger" style="font-size: 1.8rem; position: relative; top: 2px;"><router-link to="/" class="nav-link navbar-link">dB</router-link></div>
   <!-- #33b5e5 #ffea00 #ff8800 #64dd17 #ab47bc -->
-  <div class="d-sm-none d-xs-block text-center mr-auto pt-4 " style="position: relative; top: -2px;">
-    <router-link class="d-inline btn btn-sm mr-1 ml-4 my-auto p-2" style="background-color: #64dd17;" to="/buy"><small>BUY <i class="fas fa-caret-up"></i></small></router-link>
-    <router-link class="d-inline btn btn-sm bg-danger ml-1 mr-1 my-auto p-2" style="background-color: #ffea00;" to="/sell"><small>SELL <i class="fas fa-caret-down"></i></small></router-link>
+  <div class="d-sm-none d-xs-block text-center pt-4 " style="position: relative; top: -2px;">
+    <router-link class="d-inline btn btn-sm my-auto p-2" style="background-color: #64dd17;" to="/buy"><small>BUY <i class="fas fa-caret-up"></i></small></router-link>
+    <router-link class="d-inline btn btn-sm bg-danger my-auto " style="background-color: #ffea00;" to="/sell"><small>SELL <i class="fas fa-caret-down"></i></small></router-link>
   </div>
-  <div class="d-none d-sm-block text-center mr-auto pt-4 mb-auto " style="position: relative; top: -2px;">
-    <router-link class="d-inline btn btn-sm bg-success mr-1 ml-1" style="background-color: #64dd17;" to="/buy">BUY <i class="fas fa-caret-up"></i></router-link>
-    <router-link class="d-inline btn btn-sm bg-danger ml-1 mr-1" style="background-color: #ffea00;" to="/sell">SELL <i class="fas fa-caret-down"></i></router-link>
+  <div class="d-none d-sm-block text-center pt-4" style="position: relative; top: -2px;">
+    <router-link class="d-inline btn btn-sm bg-success" style="background-color: #64dd17;" to="/buy">BUY <i class="fas fa-caret-up"></i></router-link>
+    <router-link class="d-inline btn btn-sm bg-danger" style="background-color: #ffea00;" to="/sell">SELL <i class="fas fa-caret-down"></i></router-link>
   </div>
 
-  <div class="pr-3 pt-2" style="position: relative; top: 2px;" v-if="!loggedIn"><a v-on:click.prevent="loginMultiPlayer" class="nav-link navbar-link">Login <i class="fas fa-sign-in-alt"></i></a></div>
-  <div class="pl-3 pt-2" style="position: relative; top: 2px;" v-else><account-links @closeMenu="closeMenu"/></div>
+  <div class="pt-2" style="position: relative; top: 2px;" v-if="!loggedIn"><a v-on:click.prevent="loginMultiPlayer" class="nav-link navbar-link">Login <i class="fas fa-sign-in-alt"></i></a></div>
+  <div class="pt-2" style="position: relative; top: 2px;" v-else><account-links @closeMenu="closeMenu"/></div>
 </div>
 <!-- #33b5e5 #ffea00 #ff8800 #64dd17 #ab47bc -->
 <div class="d-flex" style="height: 5px;">

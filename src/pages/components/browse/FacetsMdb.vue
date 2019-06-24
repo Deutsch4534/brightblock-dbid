@@ -29,9 +29,9 @@
       </select>
     </div>
     <div class="d-flex text-lowercase mr-2">
-      <mdb-btn rounded color="white" size="sm" class="text-dark py-2 px-2 mr-2 waves-light" v-for="(category, index) in level1Categories" :key="index"  @click="findByKeyword(category.name)">
-        <span v-html="category.name"></span>
-      </mdb-btn>
+    </div>
+    <div class="d-flex text-lowercase mr-2">
+      <span class="badge badge-pill badge-dark ml-2" v-for="(category, index) in level1Categories" :key="index"><a v-html="category.name" @click="findByKeyword(category.name)"></a></span>
     </div>
   </div>
 </div>
@@ -39,13 +39,13 @@
 
 <script>
 import _ from "lodash";
-import { mdbBtn } from 'mdbvue';
+import { mdbBtn, mdbBadge } from 'mdbvue';
 
 // noinspection JSUnusedGlobalSymbols
 export default {
   name: 'Filters',
   components: {
-    mdbBtn
+    mdbBtn, mdbBadge
   },
   props: ["itemsSize"],
   data () {

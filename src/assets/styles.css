@@ -69,6 +69,11 @@ a {
   background-color: #EFF1F2 !important;
 }
 
+.bg-banner3 {
+  background-color: #ffcdd2 !important;
+  color: #4B515D;
+}
+
 .bg-dark {
   background-color: #000000 !important;
 }

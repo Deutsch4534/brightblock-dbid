@@ -1,30 +1,73 @@
 <template>
-<div class="container-fluid" v-if="!loading">
+<div class="container-fluid bg-light" v-if="!loading">
   <div>
     <div class="d-flex flex-fill justify-content-between banner1">
+
       <div class="text-muted" :style="banner1Style">
-        <!-- on xs -->
-        <div class="d-block d-sm-none mt-5  ml-3" style="font-weight: 900; min-height: 150px; position:relative; left: 20px;" v-html="bannerPart1"></div>
-        <!-- on sm -->
-        <div class="d-none d-sm-block d-md-none mt-5  ml-5" style="font-size: 2.0rem; font-weight: 900; min-height: 150px; position:relative; left: 50px;" v-html="bannerPart1"></div>
-        <!-- on md up -->
-        <div class="d-none d-md-block mt-5  ml-5" style="font-size: 2.0rem; font-weight: 900; min-height: 150px; position:relative; left: 200px;" v-html="bannerPart1"></div>
+        <mdb-multi-carousel :interval="5000" hideIndicators slide>
+          <template>
+            <mdb-carousel-item>
+              <mdb-row class="carousel__item">
+                <div class="d-none d-sm-block mt-2  ml-5" style="font-size: 2.0rem; font-weight: 900; min-height: 150px; position:relative; left: 0px;" v-html="bannerScroll1"></div>
+              </mdb-row>
+            </mdb-carousel-item>
+            <mdb-carousel-item>
+              <mdb-row class="carousel__item">
+                <div class="d-none d-sm-block mt-2  ml-5" style="font-size: 2.0rem; font-weight: 900; min-height: 150px; position:relative; left: 0px;" v-html="bannerScroll2"></div>
+              </mdb-row>
+            </mdb-carousel-item>
+            <mdb-carousel-item>
+              <mdb-row class="carousel__item">
+                <div class="d-none d-sm-block mt-2  ml-5" style="font-size: 2.0rem; font-weight: 900; min-height: 150px; position:relative; left: 0px;" v-html="bannerScroll3"></div>
+              </mdb-row>
+            </mdb-carousel-item>
+          </template>
+          <template v-slot:mobile>
+            <mdb-carousel-item>
+              <mdb-row class="carousel__item">
+                <div class="mt-2  ml-3" v-html="bannerScroll1"></div>
+              </mdb-row>
+            </mdb-carousel-item>
+            <mdb-carousel-item>
+              <mdb-row class="carousel__item">
+                <div class="mt-2  ml-3" v-html="bannerScroll2"></div>
+              </mdb-row>
+            </mdb-carousel-item>
+            <mdb-carousel-item>
+              <mdb-row class="carousel__item">
+                <div class="mt-2  ml-3" v-html="bannerScroll3"></div>
+              </mdb-row>
+            </mdb-carousel-item>
+          </template>
+        </mdb-multi-carousel>
       </div>
-      <div class="d-none d-sm-block pr-5" :style="banner2Style">
-        <div class="mt-5 mr-5" style="position:relative; right: 90px;" v-html="bannerPart2">
+      <div class="" :style="banner2Style" style="position:relative; right: 0px; bottom: 0px;">
+        <div class="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         </div>
       </div>
     </div>
   </div>
-  <div>
-    <div class="banner2 m-0 p-4" style="background-color: #37474f;">
-      <div class="d-flex justify-content-around" v-html="bannerPart3">
+
+  <div class="d-none d-sm-block" style="background-color: #37474f;">
+    <div class="row">
+      <div class="col-sm-6 text-center">
+        <button class="btn btn-rounded banner-text3"><span class="mr-3 banner-text3a"><a href="/sell">Get Started</a></span> <i class="fas fa-long-arrow-alt-right fa-2x text-light"></i></button>
+      </div>
+      <div class="col-sm-6 text-center">
+        <div class="d-flex banner-text3b ">Earn your own Bitcoin!</div>
       </div>
     </div>
   </div>
+  <div class="d-block d-sm-none" style="background-color: #37474f;">
+    <div class="text-center">
+      <button class="btn btn-rounded banner-text3"><span class="mr-3 banner-text3a"><a href="/sell">Start Now</a></span> <i class="fas fa-long-arrow-alt-right fa-2x text-light"></i></button>
+    </div>
+    <div class="text-center banner-text3b ">Earn your own Bitcoin!</div>
+  </div>
+
   <div>
-    <div class="banner2 m-0 px-4 py-2 bg-light text-dark">
-      <div class="d-flex justify-content-center  text-muted" v-html="bannerPart4">
+    <div class="pl-3 pr-0 py-0 bg-banner3 text-dark">
+      <div class="d-flex justify-content-center" v-html="bannerPart4">
       </div>
     </div>
   </div>
@@ -32,8 +75,7 @@
 </template>
 
 <script>
-  import { mdbContainer, mdbRow, mdbCol, mdbView, mdbMask, mdbBtn } from 'mdbvue';
-
+import { mdbMultiCarousel, mdbCarouselItem, mdbContainer, mdbRow, mdbCol, mdbCard, mdbCardImage, mdbCardBody, mdbCardTitle, mdbCardText, mdbBtn } from 'mdbvue';
   export default {
     name: 'AboutButtons',
     props: ["answers"],
@@ -47,12 +89,7 @@
       };
     },
     components: {
-      mdbContainer,
-      mdbRow,
-      mdbCol,
-      mdbView,
-      mdbMask,
-      mdbBtn,
+      mdbMultiCarousel, mdbCarouselItem, mdbContainer, mdbRow, mdbCol, mdbCard, mdbCardImage, mdbCardBody, mdbCardTitle, mdbCardText, mdbBtn
     },
     mounted() {
       let content = this.$store.state.contentStore.content["main-content"];
@@ -85,19 +122,30 @@
         if (content) {
           return {
             "margin-top": "0px",
-            "height": "225px",
-            "width": "225px",
+            "height": "auto",
+            "min-width": "195px;",
             "background-repeat": "no-repeat",
-            "background-size": "200px",
             "background-image": `url(${content["banner-part2"].url})`,
             "background-position": "bottom right",
           };
         }
       },
-      bannerPart1() {
+      bannerScroll1() {
         let content = this.$store.state.contentStore.content["main-content"];
         if (content) {
-          return content["banner-text-part1"][0].text;
+          return content["banner-scroll-text1"][0].text;
+        }
+      },
+      bannerScroll2() {
+        let content = this.$store.state.contentStore.content["main-content"];
+        if (content) {
+          return content["banner-scroll-text2"][0].text;
+        }
+      },
+      bannerScroll3() {
+        let content = this.$store.state.contentStore.content["main-content"];
+        if (content) {
+          return content["banner-scroll-text3"][0].text;
         }
       },
       bannerPart1() {
@@ -133,22 +181,39 @@
   }
 </script>
 <style>
+.banner-scroll-header {
+  margin-top: 10px;
+}
+.banner-scroll-text {
+
+}
+.controls-top {
+  display: none!important;
+}
+.carousel__item {
+  padding: 10px;
+}
 .banner-text1 {
   letter-spacing: 0.3rem;
+}
+.banner-parar {
+  margin-top: -9px;
 }
 .banner-text3 {
   text-transform: uppercase;
   font-weight: 900;
   border-radius: 40px;
-  background-color: #fb8c00;
+  background-color: #ff6e40;
   color: #ffffff;
+  padding: 5px 20px;
 }
 .banner-text3a {
   position: relative;
-  top: -15px;
+  top: -5px;
 }
 .banner-text3b {
   color: #fdd835;
   font-size: 2.1rem;
+  font-weight: 900;
 }
 </style>
