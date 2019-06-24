@@ -1,10 +1,10 @@
 <template>
 <mdb-card cascade class="m-0 p-0 bg-card" style="max-width: 300px; border-radius: 10px; background-color: #eceff1;">
   <mdb-view hover cascade>
-    <a href="#!">
+    <router-link :to="itemUrl">
       <img style="max-height: 200px; min-height: 200px; width: 100%; border-top-left-radius: 10px; border-top-right-radius: 10px; border-bottom-left-radius: 5px;border-bottom-right-radius: 5px;" :src="item.images[0].dataUrl"  :alt="item.title"/>
       <mdb-mask flex-center style="max-width: 100%;" waves overlay="white-slight"></mdb-mask>
-    </a>
+    </router-link>
   </mdb-view>
   <mdb-card-body class="text-center" cascade >
     <div class="d-flex align-items-center align-content-between flex-column" style="min-height: 200px;">

@@ -1,12 +1,12 @@
 <template>
 <div class="container mb-5">
     <div class="d-flex justify-content-between">
-      <button type="button" class="btn btn-primary">
-        <span v-html="latestOffers"></span> <span class="badge badge-light">{{resultSize}}</span>
+      <button type="button" class="btn btn-primary btn-sm">
+        <span v-html="latestOffers" class="mr-3"></span> <span class="badge badge-light">{{resultSize}}</span>
       </button>
       <div class="col-8 text-right">
         <div class="d-flex justify-content-end">
-        <div class="input-group md-form form-sm form-1 pl-0">
+        <div class="input-group md-form form-sm form-1 pl-0 my-2">
           <div class="input-group-prepend">
             <a class="input-group-text purple lighten-3" id="basic-text1" @click="findBySearchTerm">
               <i class="fas fa-search"></i>
@@ -51,7 +51,7 @@ export default {
   data () {
     return {
       query: null,
-      latestOffers: "Recently Added",
+      latestOffers: "Recent",
       keywords: [],
       keywordNames: [],
       searchword: null,
@@ -68,7 +68,7 @@ export default {
     }
   },
   mounted() {
-    this.latestOffers = "Recently Added";
+    this.latestOffers = "Recent";
     let myProfile = this.$store.getters["myAccountStore/getMyProfile"];
     this.username = myProfile.username;
     let $self = this;
@@ -104,7 +104,7 @@ export default {
       }
 
       if (!this.query && !this.searchword) {
-        this.latestOffers = "Recent items";
+        this.latestOffers = "Recent";
       } else {
         //this.latestOffers = "Found " + this.itemsSize + ": ";
         this.latestOffers = "Search: ";

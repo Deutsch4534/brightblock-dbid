@@ -1,7 +1,7 @@
 <template>
 <div>
-  <div class="" v-if="loading">
-    <div class="spinner-border" role="status">
+  <div class="container bg-card p-5 text-center" role="status" v-if="loading">
+    <div class="container spinner-border text-center" role="status">
       <span class="sr-only">Loading...</span>
     </div>
   </div>
@@ -57,15 +57,7 @@
             <div id="vc-040-error" class="invalid-feedback">
               Please select some categories!
             </div>
-            <media-files-upload :parentalError="parentalError" :contentModel="contentModel3" :mediaFiles="mediaFiles3" :limit="5" :sizeLimit="2500" :mediaTypes="'image'" @updateMedia="setByEventLogo3($event)"/>
-          </div>
-
-          <div class="form-row mb-3"><h5>Ownership Files</h5></div>
-          <div class="form-row mb-5">
-            <div id="vc-040-error" class="invalid-feedback">
-              Please select some categories!
-            </div>
-            <media-files-upload :contentModel="contentModel2" :mediaFiles="mediaFiles2" :limit="5" :sizeLimit="2500" :mediaTypes="'image,doc'" @updateMedia="setByEventLogo2($event)"/>
+            <media-files-upload :parentalError="parentalError" :contentModel="contentModel3" :mediaFiles="mediaFilesImages" :limit="5" :sizeLimit="2500" :mediaTypes="'image'" @updateMedia="updateMediaImages($event)"/>
           </div>
 
           <p class="mb-3" v-if="errors.length">
@@ -129,11 +121,6 @@ import MediaFilesUpload from "@/pages/components/utils/MediaFilesUpload";
           maxEditions: 10,
           keywords: 100
         },
-        contentModel2: {
-          title: null,
-          errorMessage: "",
-          popoverBody: "Provide bills of sale, receipts, images or video clips which prove your ownership (evidence of this data can optionally be stored in the blockchain).<br/><br/>Up to 5 images / documents.",
-        },
         contentModel3: {
           title: null,
           errorMessage: "",
@@ -172,14 +159,7 @@ import MediaFilesUpload from "@/pages/components/utils/MediaFilesUpload";
       }
     },
     computed: {
-      mediaFiles2() {
-        let files = [];
-        if (this.item.supportingDocuments && this.item.supportingDocuments.length  > 0) {
-          files = this.item.supportingDocuments;
-        }
-        return files;
-      },
-      mediaFiles3() {
+      mediaFilesImages() {
         let files = [];
         if (this.item.images && this.item.images.length  > 0) {
           files = this.item.images;
@@ -208,10 +188,7 @@ import MediaFilesUpload from "@/pages/components/utils/MediaFilesUpload";
         this.item.gallerist = null;
         this.$notify({type: 'info', title: 'Gallery Removed', text: 'Item changed back to simple listing - press save!'});
       },
-      setByEventLogo2 (mediaObjects) {
-        this.item.supportingDocuments = mediaObjects.media;
-      },
-      setByEventLogo3 (mediaObjects) {
+      updateMediaImages (mediaObjects) {
         this.item.images = mediaObjects.media;
         this.parentalError = null;
       },

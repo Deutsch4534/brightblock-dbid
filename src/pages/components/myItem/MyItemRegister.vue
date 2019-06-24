@@ -1,27 +1,38 @@
 <template>
-<div class="row">
+<div class="row" v-if="!loading">
   <div class="col-lg-5 col-xl-4 mb-4">
     <item-image-list-view :item="item"/>
   </div>
   <div class="col-lg-7 col-xl-7 ml-xl-4 mb-4">
     <item-action-links :item="item" :itemAction="'register'" :asset="asset" :buttonMode="false"/>
-    <p><strong><a @click.prevent="" slot="reference">Register Item on Bitcoin Blockchain <span v-if="bitcoinState">({{bitcoinState.chain}} chain)</span></a></strong></p>
+    <p class="text-secondary"><a>Register on Blockchain</span></a></p>
+    <p class="text-muted"><span v-if="bitcoinState">({{bitcoinState.chain}} chain)</span></p>
     <p class="grey-text">
-      Registering your item on the blockchain is strong evidence of your ownership.
+      Registering your item provides strong evidence of your ownership.
       The process involves taking a cryptographic hash of the provenance data you've provided and
       storing this in a transaction on bitcoin.
     </p>
-    <p class="grey-text">Once registered you can use dbidio tools to generate a Certificate of Authenticity for the item.</p>
-    <div v-if="!asset.assetRegistrationTx" class="d-flex justify-content-start">
-      <a class="btn btn-primary btn-md waves-effect waves-light"  @click="registerItemBitcoin()" v-if="!item.bitcoinTx">Register</a>
+    <div class="form-row mb-3"><h5>Ownership Files</h5></div>
+    <div class="form-row mb-5">
+      <div id="vc-040-error" class="invalid-feedback">
+        Please select some categories!
+      </div>
+      <media-files-upload :contentModel="contentModel2" :mediaFiles="mediaFilesRecords" :limit="5" :sizeLimit="2500" :mediaTypes="'image,doc'" @updateMedia="updateMediaRecords($event)"/>
     </div>
-    <div v-else>
+    <p class="grey-text">Once registered you can use dbidio tools to generate a Certificate of Authenticity for the item.</p>
+    <div v-if="canRegister" class="d-flex justify-content-start">
+      <a class="btn btn-primary text-white"  @click="registerItemBitcoin()">Register</a>
+    </div>
+    <div v-else-if="asset.assetRegistrationTx" class="d-flex justify-content-start">
       Your item has been registered on the bitcoin blockchain - <a @click.prevent="showTransaction = !showTransaction"><u>details</u></a>.
       <p class="mt-3 text-muted" v-if="showTransaction">
         Cryptographic hash: {{itemHash}}
         <br/>
         Transaction Id: <a :href="transactionUrl" target="_blank"><u>{{asset.assetRegistrationTx}}</u></a>
       </p>
+    </div>
+    <div v-else>
+      Add ownership info.
     </div>
   </div>
 </div>
@@ -35,20 +46,16 @@ import bitcoinService from "brightblock-lib/src/services/bitcoinService";
 import { mdbPopover } from "mdbvue";
 import ItemImageListView from "./ItemImageListView";
 import ItemActionLinks from "./ItemActionLinks";
+import MediaFilesUpload from "@/pages/components/utils/MediaFilesUpload";
 
 // noinspection JSUnusedGlobalSymbols
 export default {
   name: "Registration",
   components: {
-    mdbPopover, ItemImageListView, ItemActionLinks
+    mdbPopover, ItemImageListView, ItemActionLinks, MediaFilesUpload
   },
   props: {
-    item: {
-      type: Object,
-      default() {
-        return {};
-      }
-    },
+    itemId: null,
     myProfile: {
       type: Object,
       default() {
@@ -59,34 +66,42 @@ export default {
   data() {
     return {
       message: null,
-      itemId: null,
+      loading: true,
       showItemHash: false,
       showTransaction: false,
       loading: true,
-      asset: {}
+      asset: {},
+      assetHash: null,
+      contentModel2: {
+        title: null,
+        errorMessage: "",
+        popoverBody: "Provide bills of sale, receipts, images or video clips which prove your ownership (evidence of this data can optionally be stored in the blockchain).<br/><br/>Up to 5 images / documents.",
+      },
     };
   },
   mounted() {
-    let $self = this;
-    let assetHash = utils.buildBitcoinHash($self.item);
-    this.$store.dispatch("assetStore/lookupAssetByHash", assetHash).then(asset => {
-      if (asset) {
-        $self.asset = asset;
-        $self.loading = false;
-      } else {
-        $self.$store.dispatch("assetStore/initialiseAsset", $self.item).then(asset => {
-          $self.asset = asset;
-        });
-        $self.loading = false;
-      }
-    });
+    this.item = this.$store.getters["myItemStore/myItem"](this.itemId);
+    this.assetHash = utils.buildBitcoinHash(this.item);
+    this.loading = false;
   },
   computed: {
     itemHash() {
       return utils.buildBitcoinHash(this.item);
     },
+    canRegister() {
+      let registered = this.asset.assetRegistrationTx;
+      let hasDocs = this.item.supportingDocuments && this.item.supportingDocuments.length > 0;
+      return !registered && hasDocs;
+    },
     myItemUrl() {
       return `/my-items/${this.item.id}`;
+    },
+    mediaFilesRecords() {
+      let files = [];
+      if (this.item.supportingDocuments && this.item.supportingDocuments.length  > 0) {
+        files = this.item.supportingDocuments;
+      }
+      return files;
     },
     bitcoinState() {
       let state = this.$store.getters["assetStore/getBitcoinConfig"];
@@ -109,24 +124,34 @@ export default {
     },
   },
   methods: {
+    updateMediaRecords (mediaObjects) {
+      this.item.supportingDocuments = mediaObjects.media;
+    },
     registerItemBitcoin: function() {
       let item = this.item;
-      this.modal = true;
       try {
-        bitcoinService.registerAsset(this.asset).then(asset => {
-          if (!asset || !asset.assetRegistrationTx) {
-            this.$notify({type: 'error', title: 'Register Item', text: 'Unable to register item at the moment - please try again later.'});
+        this.item.updated = moment({}).valueOf();
+        this.$store.dispatch("myItemStore/updateItem", {item: this.item, updateProvData: true}).then(item => {
+          if (item) {
+            this.item = item;
+            bitcoinService.registerAsset(this.asset).then(asset => {
+              if (!asset || !asset.assetRegistrationTx) {
+                this.$notify({type: 'error', title: 'Register Item', text: 'Unable to register item at the moment - please try again later.'});
+              } else {
+                this.asset = asset;
+                item.bitcoinTx = asset.assetRegistrationTx;
+                this.$store.dispatch("myItemStore/updateItem", {item: item, updateProvData: false});
+                this.$notify({type: 'success', title: 'Register Item', text: 'Registered item on the bitcoin blockchain.'});
+              }
+            })
+              .catch(err => {
+                console.log(err);
+                this.$notify({type: 'error', title: 'Register Item', text: 'Unable to register item at the moment - please try again later.'});
+              });
           } else {
-            this.asset = asset;
-            item.bitcoinTx = asset.assetRegistrationTx;
-            this.$store.dispatch("myItemStore/updateItem", {item: item, updateProvData: false});
-            this.$notify({type: 'success', title: 'Register Item', text: 'Registered item on the bitcoin blockchain.'});
-          }
-        })
-          .catch(err => {
-            console.log(err);
             this.$notify({type: 'error', title: 'Register Item', text: 'Unable to register item at the moment - please try again later.'});
-          });
+          }
+        });
       } catch (err) {
         this.$notify({type: 'error', title: 'Register Item', text: 'Unable to register item at the moment - please try again later.'});
         console.log(err);

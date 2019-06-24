@@ -1,10 +1,10 @@
 <template>
 <div class="row">
-  <div class="col-lg-5 col-xl-4 mb-4">
+  <div class="col-lg-5 col-xl-4 mb-4" v-if="showImage">
     <item-image-list-view :item="item"/>
   </div>
-  <div class="col-lg-7 col-xl-7 ml-xl-4 mb-4">
-    <item-action-links :item="item" :itemAction="'update'" :asset="asset" :buttonMode="false"/>
+  <div class="col-sm-10 offset-md-1 my-4">
+    <item-action-links class="mx-5 px-5" :item="item" :itemAction="'update'" :asset="asset" :buttonMode="false"/>
     <div class="d-flex justify-content-center bg-card">
       <item-upload-form :formTitle="'Update Listing'" :itemId="item.id" :mode="'update'" :myProfile="myProfile"/>
     </div>
@@ -20,7 +20,7 @@ import bitcoinService from "brightblock-lib/src/services/bitcoinService";
 import { mdbPopover } from "mdbvue";
 import ItemImageListView from "./ItemImageListView";
 import ItemActionLinks from "./ItemActionLinks";
-import ItemUploadForm from "../selling/ItemUploadForm";
+import ItemUploadForm from "./ItemUploadForm";
 
 // noinspection JSUnusedGlobalSymbols
 export default {
@@ -50,6 +50,7 @@ export default {
   },
   data() {
     return {
+      showImage: false,
     };
   },
   mounted() {

@@ -1,7 +1,9 @@
 <template>
 <div id="my-app-element" class="bg-main container-fluid pt-5">
-  <div class="container spinner-border" role="status" v-if="loading">
-    <span class="sr-only">Loading...</span>
+  <div class="container bg-card p-5 text-center" role="status" v-if="loading">
+    <div class="container spinner-border text-center" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
   </div>
   <div class="container" v-else>
     <div class="d-flex justify-content-end">

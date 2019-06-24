@@ -1,6 +1,6 @@
 <template>
-<div id="my-app-element" class="container pt-5" v-if="loading">
-  <div class="spinner-border" role="status">
+<div id="my-app-element" class="container bg-card p-5 text-center mt-5" role="status" v-if="loading">
+  <div class="container spinner-border text-center" role="status">
     <span class="sr-only">Loading...</span>
   </div>
 </div>

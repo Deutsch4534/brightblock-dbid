@@ -15,13 +15,13 @@
       <router-link :to="myItemUrl" class="btn btn-primary btn-md waves-effect waves-light">Open</router-link>
     </div>
     <div v-else class="text-nowrap">
-      <router-link :to="editUrl" title="Edit item" class="text-primary border-right px-1" :class="itemAction === 'update' ? 'bg-danger' : ''" v-if="editable"><i class="fas fa-pencil-alt"></i></router-link>
-      <router-link :to="registerForSaleUrl" title="Set price" class="text-primary border-right px-1" v-if="canSell"><i class="fas fa-gavel"></i></router-link>
-      <router-link :to="registerUrl" title="Register on blockchain" class="text-primary border-right px-1" v-if="canRegister"><i class="far fa-registered"></i></router-link>
-      <router-link :to="registerUrl" title="Registered on blockchain" class="text-primary border-right px-1" v-else><i class="far fa-registered"></i></router-link>
-      <router-link :to="coaUrl" title="certificate of authenticity" class="text-primary border-right px-1" v-if="canCertificate"><i class="fas fa-certificate"></i></router-link>
-      <a @click="deleteItem(item.id)" title="Delete item" class="text-primary border-right px-1" v-if="debugMode"><i class="far fa-trash-alt"></i></a>
-      <router-link :to="myItemUrl" title="Open item" class="text-primary border-right px-1"><i class="far fa-folder-open"></i></router-link>
+      <router-link :to="editUrl" title="Edit item" class="text-primary border-right px-1" :class="itemAction === 'update' ? 'text-success' : ''" v-if="editable"><i class="fas fa-pencil-alt"></i></router-link>
+      <router-link :to="registerForSaleUrl" title="Set price" class="text-primary border-right px-1" :class="itemAction === 'set-price' ? 'text-success' : ''" v-if="canSell"><i class="fas fa-gavel"></i></router-link>
+      <router-link :to="registerUrl" title="Register on blockchain" class="text-primary border-right px-1" :class="itemAction === 'register' ? 'text-success' : ''" v-if="canRegister"><i class="far fa-registered"></i></router-link>
+      <router-link :to="registerUrl" title="Registered on blockchain" class="text-primary border-right px-1" :class="itemAction === 'register' ? 'text-success' : ''" v-else><i class="far fa-registered"></i></router-link>
+      <router-link :to="coaUrl" title="certificate of authenticity" class="text-primary border-right px-1" :class="itemAction === 'coa' ? 'text-success' : ''" v-if="canCertificate"><i class="fas fa-certificate"></i></router-link>
+      <a @click="deleteItem(item.id)" title="Delete item" class="text-primary border-right px-1" :class="itemAction === 'delete' ? 'text-success' : ''" v-if="debugMode"><i class="far fa-trash-alt"></i></a>
+      <router-link :to="myItemUrl" title="Open item" class="text-primary border-right px-1"  :class="itemAction === 'manage' ? 'text-success' : ''"><i class="far fa-folder-open"></i></router-link>
       <mdb-popover trigger="click" :options="{placement: 'top'}">
         <div class="popover">
           <div class="popover-header">

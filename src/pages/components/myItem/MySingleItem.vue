@@ -4,7 +4,7 @@
     <item-image-list-view :item="item"/>
   </div>
   <div class="col-lg-7 col-xl-7 ml-xl-4 mb-4">
-    <item-action-links :item="item" :itemAction="'manage'" :asset="asset" :buttonMode="false"/>
+    <item-action-links :item="item" :itemAction="'listing'" :asset="asset" :buttonMode="false"/>
     <p><description-container :text="item.description"/></p>
     <item-posted :owner="item.owner" :created="item.created" />
   </div>

@@ -1,7 +1,7 @@
 <template>
 <div class="container-fluid flex-1">
-  <div class="bg-card p-3" v-if="loading">
-    <div class="spinner-border" role="status">
+  <div class="container bg-card p-5 text-center" role="status" v-if="loading">
+    <div class="container spinner-border text-center" role="status">
       <span class="sr-only">Loading...</span>
     </div>
   </div>
@@ -12,7 +12,7 @@
     <div class="bg-card p-3" v-else>
       <my-item-manage v-if="itemAction === 'manage'" :item="item" :asset="asset" :myProfile="myProfile"/>
       <my-item-update v-else-if="itemAction === 'update'" :formTitle="'New Item'" :item="item" :mode="'upload'" :asset="asset" :myProfile="myProfile"/>
-      <my-item-register v-else-if="itemAction === 'register'" :item="item" :asset="asset" :myProfile="myProfile"/>
+      <my-item-register v-else-if="itemAction === 'register'" :itemId="item.id" :asset="asset" :myProfile="myProfile"/>
       <my-item-coa v-else-if="itemAction === 'coa'" :item="item" :asset="asset" :myProfile="myProfile"/>
       <my-item-set-price v-else-if="itemAction === 'set-price'" :item="item" :asset="asset" :myProfile="myProfile"/>
     </div>

@@ -1,10 +1,10 @@
 <template>
-<div class="container" v-if="loading">
-  <div class="spinner-border" role="status">
+<div class="container bg-card p-3 text-center" role="status" v-if="loading">
+  <div class="container spinner-border text-center" role="status">
     <span class="sr-only">Loading...</span>
   </div>
 </div>
-<div class="row mb-5" v-else>
+<div class="row" v-else>
   <div class="col-12" v-if="asset.status === 3">
     <div v-if="eternal || !purchaseExpired">
       <payment-details :eternal="eternal" :asset="asset" :validFor="validFor"/>
