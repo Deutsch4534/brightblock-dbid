@@ -1,5 +1,12 @@
 <template>
 <div class="container mb-5">
+  <!--
+  <div class="d-flex justify-content-start">
+    <a href="https://www.producthunt.com/posts/dbid-2?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-dbid-2" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=159460&theme=light" alt="dBid - Turn unused stuff into Bitcoin | Product Hunt Embed" style="width: 250px; height: 54px;" width="250px" height="54px" /></a>
+  </div>
+
+  <div class=""><button class="btn btn-rounded banner-text3"><span class="mr-3 banner-text3a"><a href="/sell">Get Started</a></span> <i class="fas fa-long-arrow-alt-right fa-2x text-light"></i></button></div><div class=" banner-text3b ">Earn your own Bitcoin!</div>
+  -->
     <div class="d-flex justify-content-between">
       <div class="mt-3"><span v-html="latestOffers" class="mr-2"></span> <span class="badge badge-dark">{{resultSize}}</span></div>
       <div class="col-8 text-right">

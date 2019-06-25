@@ -47,19 +47,20 @@
     </div>
   </div>
 
-  <div class="d-none d-sm-block" style="background-color: #37474f;">
+  <div class="d-none d-sm-block py-2" style="background-color: #37474f;">
     <div class="row">
       <div class="col-sm-6 text-center">
-        <button class="btn btn-rounded banner-text3"><span class="mr-3 banner-text3a"><a href="/sell">Get Started</a></span> <i class="fas fa-long-arrow-alt-right fa-2x text-light"></i></button>
+        <!-- <button class="btn btn-rounded banner-text3"><span class="mr-3 banner-text3a"><a href="/sell">Get Started</a></span> <i class="fas fa-long-arrow-alt-right fa-2x text-light"></i></button> -->
+        <a href="https://www.producthunt.com/posts/dbid-2?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-dbid-2" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=159460&theme=light" alt="dBid - Turn unused stuff into Bitcoin | Product Hunt Embed" style="width: 250px; height: 54px;" width="250px" height="54px" /></a>
       </div>
       <div class="col-sm-6 text-center">
         <div class="d-flex banner-text3b ">Earn your own Bitcoin!</div>
       </div>
     </div>
   </div>
-  <div class="d-block d-sm-none" style="background-color: #37474f;">
+  <div class="d-block d-sm-none py-2" style="background-color: #37474f;">
     <div class="text-center">
-      <button class="btn btn-rounded banner-text3"><span class="mr-3 banner-text3a"><a href="/sell">Start Now</a></span> <i class="fas fa-long-arrow-alt-right fa-2x text-light"></i></button>
+      <a href="https://www.producthunt.com/posts/dbid-2?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-dbid-2" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=159460&theme=dark" alt="dBid - Turn unused stuff into Bitcoin | Product Hunt Embed" style="width: 250px; height: 54px;" width="250px" height="54px" /></a>
     </div>
     <div class="text-center banner-text3b ">Earn your own Bitcoin!</div>
   </div>
@@ -223,5 +224,9 @@ import { mdbMultiCarousel, mdbCarouselItem, mdbContainer, mdbRow, mdbCol, mdbCar
   color: #fdd835;
   font-size: 2.1rem;
   font-weight: 900;
+}
+.prodhunt {
+  width: 250px;
+  height: 54px;
 }
 </style>
