@@ -1,13 +1,17 @@
 <template>
-  <div id="app" class="container-fluid m-0 p-0">
-    <div id="fb-root"></div>
-    <notifications position="bottom left" style="width: 600px;"/>
-    <router-view name="header"/>
-    <main class="main py-0">
-      <router-view/>
-    </main>
-    <router-view name="footer"/>
-  </div>
+<div class="d-flex  justify-content-center align-items-center main" v-if="loading">
+  <div class="mb-auto">&nbsp;</div>
+  <div class="my-auto"><img :src="holding" style="img-fluid"/></div>
+</div>
+<div id="app" class="container-fluid m-0 p-0" v-else>
+  <div id="fb-root"></div>
+  <notifications position="bottom left" style="width: 600px;"/>
+  <router-view name="header"/>
+  <main class="main py-0">
+    <router-view/>
+  </main>
+  <router-view name="footer"/>
+</div>
 </template>
 
 <script>
@@ -16,15 +20,17 @@
     bodyClass: "index-page",
     data() {
       return {
-        showLeafs: true
+        loading: true,
+        holding: require("@/assets/img/preloader2.apng.png"),
       };
     },
     mounted() {
       let routeName = this.$route.name;
-      if (routeName === "brightBlock" || routeName === "profile") {
-        this.showLeafs = true;
-      }
       document.dispatchEvent(new Event('custom-render-trigger'));
+      let $self = this;
+      setTimeout(function() {
+        $self.loading = false
+      }, 4000);
     }
   };
 </script>

@@ -11,11 +11,13 @@
           <mdb-dropdown-item><a @click.prevent="toggleNetwork('opennode', $event)">Opennode</a></mdb-dropdown-item>
         </mdb-dropdown-menu>
       </mdb-dropdown>
+      <div class="bg-warning text-white py-1 px-2">Valid for: {{validForCalc}}</div>
+    </div>
+    <div class="d-flex justify-content-center">
       <div>
         <span class="">{{network}}</span> -
         <span class="text-danger">{{bitcoinConfig.chain}}</span> net
       </div>
-      <div class="bg-warning text-white py-1 px-2">Valid for: {{validForCalc}}</div>
     </div>
     <div class="d-flex justify-content-center">
       <p class="text-muted text-center p-0 m-0">{{amountBtc}}</p>
@@ -33,6 +35,11 @@
       <a :href="paymentUri" class="btn btn-primary mr-3">Open in wallet <i class="fas fa-external-link-alt"></i></a>
       <a class="btn btn-primary ml-3" @click.prevent="copyAddress">Copy <i class="fas fa-clone ml-4"></i></a>
     </div>
+
+    <div class="d-flex justify-content-end">
+      <a class="text-danger" @click.prevent="cancelOrder(asset.assetHash)"><small>cancel order</small></a>
+    </div>
+
   </div>
   <div class="d-flex p-2 justify-content-center" style="background-color: #d7ccc8;">
     <input class="" id="payment-address-btc" type="text" :value="paymentUri" style="background-color: #d7ccc8; color: #d7ccc8; border: none;"/>

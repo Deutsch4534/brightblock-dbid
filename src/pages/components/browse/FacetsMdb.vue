@@ -1,14 +1,12 @@
 <template>
 <div class="container mb-5">
     <div class="d-flex justify-content-between">
-      <button type="button" class="btn btn-primary btn-sm">
-        <span v-html="latestOffers" class="mr-3"></span> <span class="badge badge-light">{{resultSize}}</span>
-      </button>
+      <div class="mt-3"><span v-html="latestOffers" class="mr-2"></span> <span class="badge badge-dark">{{resultSize}}</span></div>
       <div class="col-8 text-right">
         <div class="d-flex justify-content-end">
         <div class="input-group md-form form-sm form-1 pl-0 my-2">
           <div class="input-group-prepend">
-            <a class="input-group-text purple lighten-3" id="basic-text1" @click="findBySearchTerm">
+            <a class="input-group-text lighten-3" id="basic-text1" @click="findBySearchTerm">
               <i class="fas fa-search"></i>
             </a>
           </div>
@@ -165,15 +163,15 @@ export default {
 }
 </script>
 <style>
-.active-cyan-2 input[type=text]:focus:not([readonly]) {
+.active-purple-2 input[type=text]:focus:not([readonly]) {
     border-bottom: 1px solid #4dd0e1;
     box-shadow: 0 1px 0 0 #4dd0e1;
 }
-.active-cyan input[type=text] {
+.active-purple input[type=text] {
     border-bottom: 1px solid #4dd0e1;
     box-shadow: 0 1px 0 0 #4dd0e1;
 }
-.active-cyan .fa, .active-cyan-2 .fa {
+.active-purple .fa, .active-purple-2 .fa {
     color: #4dd0e1;
 }
 .input-group {

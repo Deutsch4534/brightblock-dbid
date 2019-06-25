@@ -1,6 +1,6 @@
 <template>
-<mdb-container fluid>
-<mdb-container id="ContactSection" class="py-5 contact-section">
+<mdb-container>
+<mdb-container id="ContactSection" class="py-2 contact-section">
   <confirmation-modal class="text-dark" v-if="showModal" :modal="showModal" :title="modalTitle" :content="modalContent" @closeModal="closeModal"/>
     <section class="px-0">
       <mdb-row>
@@ -45,11 +45,6 @@
                 <button class="submit bg-transparent h1-responsive">SEND</button>
             </div>
             </form>
-          </mdb-col>
-        </mdb-row>
-        <mdb-row>
-          <mdb-col col="12 mt-5">
-
           </mdb-col>
         </mdb-row>
         </mdb-col>
@@ -99,34 +94,14 @@ export default {
   },
   methods: {
     upload() {
-      let data = {
+      let email = {
         text: this.message,
         subject: this.subject,
         originatorEmail: this.email,
         originatorName: this.name,
       };
-      let callInfo = {
-        method: "post",
-        url: this.$store.state.constants.ethGatewayUrl + "/api/sendEmail",
-        headers: {
-          "Content-Type": "application/json"
-        }
-      };
+      this.$store.dispatch("contentStore/sendContactEmail", email);
       this.showModal = true;
-      return new Promise((resolve, reject) => {
-        axios
-          .post(callInfo.url, data)
-          .then(response => {
-            if (response.failed) {
-              reject(new Error(response.message));
-            }
-            resolve(response.data.details);
-            this.showModal = true;
-          })
-          .catch(e => {
-            reject(new Error(e.message));
-          });
-      });
     },
     checkForm(event) {
       if (event) {

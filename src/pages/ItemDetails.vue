@@ -1,8 +1,6 @@
 <template>
-<div id="my-app-element" class="container bg-card p-5 text-center mt-5" role="status" v-if="loading">
-  <div class="container spinner-border text-center" role="status">
-    <span class="sr-only">Loading...</span>
-  </div>
+<div id="my-app-element" class="d-flex justify-content-center container bg-card p-5 text-center mt-5" v-if="loading">
+  <mdb-spinner big multicolor />
 </div>
 <div class="container pt-5" v-else>
   <div class="row" v-if="!item">
@@ -27,10 +25,11 @@
     <div class="col-md-8 col-xs-12 offset-md-2">
       <div class=""><h3 class="mb-2">Purchase Order: {{item.title}}</h3></div>
       <div class="d-flex justify-content-end text-muted" v-if="addressValid">
-        <a class="mr-3 text-primary" @click.prevent="showAddress = !showAddress"><small>check shipping</small></a>
-        <a class="text-danger" @click.prevent="cancelOrder(asset.assetHash)"><small>cancel order</small></a>
+        <a class="mr-3 text-primary" @click.prevent="toggleShippingAddress"><small>check shipping</small></a>
+        <a class="mr-3 text-primary" @click.prevent="toggleEmailAddress"><small>check email</small></a>
       </div>
-      <address-form v-if="showAddress" :addressBlurb="addressBlurb" :addressTitle="'Check Shipping Address'" :address="myProfile.auxiliaryProfile.shippingAddress" @saveAddress="saveAddress"/>
+      <email-address-entry v-if="showEmailAddress" :addressTitle="'Email Address'" :addressBlurb="addressBlurb" :emailAddress="myProfile.auxiliaryProfile.emailAddress" @saveEmail="saveEmail"/>
+      <address-form v-else-if="showAddress" :addressTitle="'Shipping Address'" :addressBlurb="''" :address="myProfile.auxiliaryProfile.shippingAddress" @saveAddress="saveAddress"/>
       <item-order-form v-else :item="item" :asset="asset" :myProfile="myProfile" @cancelOrder="cancelOrder"/>
     </div>
   </div>
@@ -45,23 +44,27 @@ import ItemImageListView from "@/pages/components/myItem/ItemImageListView";
 import BuyersInformationItemDetails from "@/pages/components/selling/BuyersInformationItemDetails";
 import ItemOrderForm from "@/pages/components/orders/ItemOrderForm";
 import AddressForm from "@/pages/components/user-settings/AddressForm";
+import EmailAddressEntry from "@/pages/components/user-settings/EmailAddressEntry";
+import { mdbSpinner } from 'mdbvue';
 
 // noinspection JSUnusedGlobalSymbols
 export default {
   name: "ItemDetails",
   components: {
-    AddressForm, DescriptionContainer, ItemImageListView, BuyersInformationItemDetails, ItemOrderForm
+    mdbSpinner, AddressForm, EmailAddressEntry, DescriptionContainer, ItemImageListView, BuyersInformationItemDetails, ItemOrderForm
   },
   props: {
   },
   data() {
     return {
       loading: true,
-      addressBlurb: "No one (including us) but the seller can see your address.",
+      addressBlurb: "",
       myProfile: null,
       asset: null,
       addressValid: false,
+      emailValid: false,
       showAddress: true,
+      showEmailAddress: true,
       item: {
         type: Object,
         default() {
@@ -72,16 +75,19 @@ export default {
   },
   mounted() {
     let itemId = Number(this.$route.params.itemId);
-    this.$store.dispatch("itemSearchStore/fetchItem", itemId).then((item) => {
-      if (item) {
-        this.item = item;
-        this.$store.dispatch("myAccountStore/fetchMyAccount").then((myProfile) => {
-          this.myProfile = myProfile;
+    this.$store.dispatch("myAccountStore/fetchMyAccount").then((myProfile) => {
+      this.myProfile = myProfile;
+      this.$store.dispatch("itemSearchStore/fetchItem", itemId).then((item) => {
+        if (item) {
+          this.item = item;
           this.addressValid = this.isAddressValid();
           if (this.addressValid) {
             this.showAddress = false;
           } else {
             myProfile.auxiliaryProfile.shippingAddress = {};
+          }
+          if (this.isEmailValid()) {
+            this.showEmailAddress = false;
           }
           let assetHash = utils.buildBitcoinHash(item);
           this.$store.dispatch("assetStore/lookupAssetByHash", assetHash).then(asset => {
@@ -95,39 +101,73 @@ export default {
               });
             }
           });
-        });
-      } else {
-        this.loading = false;
-      }
+        } else {
+          this.loading = false;
+        }
+      });
     });
   },
   methods: {
     startPayment: function(asset) {
       this.asset = asset;
     },
-    saveAddress: function(address) {
-      this.myProfile.auxiliaryProfile.shippingAddress = address;
+    upload: function() {
+      let $self = this;
       this.$store.dispatch("myAccountStore/updateAuxiliaryProfile", this.myProfile.auxiliaryProfile)
         .then(auxiliaryProfile => {
           this.addressValid = true;
           this.showAddress = false;
+          this.showEmailAddress = false;
           this.$notify({type: 'success', title: 'Address', text: 'Saved address.'});
         })
         .catch(() => {
-          this.$notify({type: 'warning', title: 'Address', text: 'Unable to update your address at present.'});
+          this.$notify({type: 'warning', title: 'Settings', text: 'Unable to update your settings at present.'});
         });
+    },
+    saveEmail: function(emailAddress) {
+      this.myProfile.auxiliaryProfile.emailAddress = emailAddress;
+      this.upload();
+    },
+    saveAddress: function(address) {
+      if (!address) {
+        address = {};
+      }
+      this.myProfile.auxiliaryProfile.shippingAddress = address;
+      this.upload();
     },
     cancelOrder(assetHash) {
       this.$store.dispatch("assetStore/cancelPurchase", assetHash).then((asset) => {
         this.asset = asset;
       });
     },
+    toggleShippingAddress() {
+      this.showAddress = !this.showAddress;
+      this.showEmailAddress = false;
+    },
+    toggleEmailAddress() {
+      this.showEmailAddress = !this.showEmailAddress;
+      this.showAddress = false;
+    },
+    isEmailValid() {
+      if (!this.myProfile.auxiliaryProfile.emailAddress) {
+        this.myProfile.auxiliaryProfile.emailAddress = {
+          email: null,
+          verified: false
+        };
+      }
+      let ea = this.myProfile.auxiliaryProfile.emailAddress;
+      if (!ea || !ea.email || !ea.verified) {
+        return false;
+      }
+      return true;
+    },
     isAddressValid() {
       let address = this.myProfile.auxiliaryProfile.shippingAddress;
       if (!address) {
         return false;
       }
-      let valid = address && address.line1 && address.line1.length > 0;
+      let valid = true;
+      valid = valid && address && address.line1 && address.line1.length > 0;
       valid = valid && address.city && address.city.length > 0;
       valid = valid && address.region && address.region.length > 0;
       valid = valid && address.postcode && address.postcode.length > 0;
@@ -144,10 +184,6 @@ export default {
     orderStarted() {
       return this.asset.status > 0;
     },
-    ownerProfile() {
-      let myProfile = this.$store.getters["userProfilesStore/getProfile"](this.item.owner);
-      return myProfile ? myProfile : {};
-    }
   }
 };
 </script>

@@ -38,7 +38,7 @@ import myAccountService from "@/services/myAccountService";
 import TrustedUsersSection from "../utils/TrustedUsersSection";
 import BlockstackSection from "../utils/BlockstackSection";
 import BitcoinAddressEntry from "../utils/BitcoinAddressEntry";
-import EmailAddressEntry from "../utils/EmailAddressEntry";
+import EmailAddressEntry from "@/pages/components/user-settings/EmailAddressEntry";
 import AddressForm from "@/pages/components/user-settings/AddressForm";
 import GalleryDetails from "./GalleryDetails";
 import _ from "lodash";

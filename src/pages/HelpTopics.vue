@@ -1,9 +1,7 @@
 <template>
 <div id="my-app-element" class="bg-main container-fluid pt-5">
-  <div class="container bg-card p-5 text-center" role="status" v-if="loading">
-    <div class="container spinner-border text-center" role="status">
-      <span class="sr-only">Loading...</span>
-    </div>
+  <div class="d-flex justify-content-center" v-if="loading">
+    <mdb-spinner big multicolor />
   </div>
   <div v-else>
     <!--
@@ -20,6 +18,7 @@
 
 <script>
   import { mdbContainer, mdbRow, mdbCol } from 'mdbvue';
+  import { mdbSpinner } from 'mdbvue';
   import HelpArticle from "./components/help/HelpArticle";
   import HelpFaq from "./components/help/HelpFaq";
   import AboutSection from "./components/help/AboutSection";
@@ -33,7 +32,7 @@
       HelpFaq,
       mdbContainer,
       mdbRow,
-      mdbCol
+      mdbCol, mdbSpinner
     },
     name: "HelpTopics",
     data () {

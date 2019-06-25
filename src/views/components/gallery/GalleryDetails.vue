@@ -81,7 +81,7 @@ import { mdbBtn, mdbBtnGroup, mdbContainer, mdbRow, mdbCol, mdbAlert } from 'mdb
 import { Datetime } from 'vue-datetime'
 import MediaFilesUpload from "../utils/MediaFilesUpload";
 import BitcoinAddressEntry from "../utils/BitcoinAddressEntry";
-import EmailAddressEntry from "../utils/EmailAddressEntry";
+import EmailAddressEntry from "@/pages/components/user-settings/EmailAddressEntry";
 import AddressForm from "@/pages/components/user-settings/AddressForm";
 
 // noinspection JSUnusedGlobalSymbols

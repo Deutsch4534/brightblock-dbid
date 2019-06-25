@@ -1,9 +1,7 @@
 <template>
 <div id="my-app-element" class="container pt-5">
-  <div class="container bg-card p-5 text-center" role="status" v-if="loading">
-    <div class="container spinner-border text-center" role="status">
-      <span class="sr-only">Loading...</span>
-    </div>
+  <div class="d-flex justify-content-center bg-card" v-if="loading">
+    <mdb-spinner big multicolor />
   </div>
   <div class="container" v-else>
     <auxiliary-profile-form :formTitle="'RA Profile'" :mode="'update'" :profile="profile" v-if="loggedIn"/>
@@ -15,13 +13,14 @@
 <script>
 import AuxiliaryProfileForm from "./components/user-settings/AuxiliaryProfileForm";
 import { mdbContainer } from "mdbvue";
+import { mdbSpinner } from 'mdbvue';
 
 // noinspection JSUnusedGlobalSymbols
 export default {
   name: "UserSettings",
   bodyClass: "index-page",
   components: {
-    AuxiliaryProfileForm, mdbContainer
+    mdbSpinner, AuxiliaryProfileForm, mdbContainer
   },
   data() {
     return {

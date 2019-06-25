@@ -1,8 +1,6 @@
 <template>
-<div class="container bg-card p-5 text-center" role="status" v-if="loading">
-  <div class="container spinner-border text-center" role="status">
-    <span class="sr-only">Loading...</span>
-  </div>
+<div class="d-flex justify-content-center" v-if="loading">
+  <mdb-spinner big multicolor />
 </div>
 <div class="p-5" v-else-if="noitems && !loading">
   <h4>No items found.</h4>
@@ -42,13 +40,14 @@
 
 <script>
 import MyItemsList from "./MyItemsList";
+import { mdbSpinner } from 'mdbvue';
 
 // noinspection JSUnusedGlobalSymbols
 export default {
   name: "MyItems",
   bodyClass: "index-page",
   components: {
-    MyItemsList,
+    MyItemsList, mdbSpinner
   },
   props: ["myProfile"],
   data() {

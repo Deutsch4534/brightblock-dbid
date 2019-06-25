@@ -1,5 +1,5 @@
 <template>
-<div id="my-app-element" class="bg-main container-fluid pt-5" v-if="loaded">
+<div id="my-app-element" class="bg-main container-fluid pt-5 mb-5" v-if="loaded">
   <contact-section class="bg-card"/>
 </div>
 </template>

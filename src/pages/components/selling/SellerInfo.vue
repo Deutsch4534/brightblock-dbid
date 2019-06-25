@@ -83,7 +83,11 @@ export default {
       }
     },
     saveEmail: function(email) {
-      this.myProfile.auxiliaryProfile.emailAddress = email;
+      this.myProfile.auxiliaryProfile.emailAddress = {
+        email: email,
+        verified: false,
+      };
+      
       this.upload();
     },
     saveAddress: function(address) {

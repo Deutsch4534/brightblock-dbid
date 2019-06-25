@@ -1,5 +1,5 @@
 <template>
-<div id="my-app-element" class="mt-1" v-if="loaded">
+<div id="my-app-element" class="mt-1" v-if="!loading">
   <banner v-if="showBanner" class="mx-0 mt-1 px-0 "/>
   <div class="container main pt-5">
     <latest-offers :myProfile="myProfile"/>
@@ -18,7 +18,7 @@ export default {
   name: "index",
   data() {
     return {
-      loaded: false,
+      loading: true,
       content: null,
       showBanner: false,
     };
@@ -33,10 +33,10 @@ export default {
     this.$store.dispatch("myAccountStore/fetchMyAccount").then((myProfile) => {
       this.myProfile = myProfile;
       this.setView();
-      this.loaded = true;
 
       this.$prismic.client.getSingle("main-content").then(document => {
         this.$store.commit("contentStore/mainContent", document.data);
+        this.loading = false;
       });
     });
   },

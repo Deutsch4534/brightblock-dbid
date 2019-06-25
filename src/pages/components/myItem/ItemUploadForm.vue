@@ -1,14 +1,12 @@
 <template>
 <div>
-  <div class="container bg-card p-5 text-center" role="status" v-if="loading">
-    <div class="container spinner-border text-center" role="status">
-      <span class="sr-only">Loading...</span>
-    </div>
+  <div class="d-flex justify-content-center" v-if="loading">
+    <mdb-spinner big multicolor />
   </div>
   <div v-else>
     <!-- Supported elements -->
     <confirmation-modal :modal="showModal" :title="modalTitle" :content="modalContent" @closeModal="closeModal"/>
-    <form class="text-dark bg-card p-5 text-white needs-validation form-transparent" novalidate v-on:submit.prevent="checkForm" id="itemForm">
+    <form class="text-dark bg-card pt-5 text-white needs-validation form-transparent" novalidate v-on:submit.prevent="checkForm" id="itemForm">
       <!-- item type -->
       <div class="row">
         <div class="col-12 mb-4">
@@ -83,6 +81,7 @@
 
 <script>
 import { mdbIcon, mdbPopover, mdbCol, mdbRow, mdbContainer, mdbBtn } from "mdbvue";
+import { mdbSpinner } from 'mdbvue';
 import moment from "moment";
 import ConfirmationModal from "@/pages/components/utils/ConfirmationModal";
 import Taxonomy from "@/pages/components/utils/Taxonomy";
@@ -95,12 +94,13 @@ import MediaFilesUpload from "@/pages/components/utils/MediaFilesUpload";
       ConfirmationModal,
       Taxonomy,
       MediaFilesUpload,
+      mdbSpinner,
       mdbContainer,
       mdbIcon,
       mdbPopover,
       mdbCol,
       mdbRow,
-      mdbBtn
+      mdbBtn, mdbSpinner
     },
     props: ["itemId", "mode", "formTitle", "myProfile"],
     data() {

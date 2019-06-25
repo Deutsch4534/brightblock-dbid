@@ -5,7 +5,8 @@
       <p class="text-muted"><span class="text-success">{{bitcoinConfig.chain}}</span> network</p>
       <p class="text-muted text-nowrap" style="width: 0.7rem;"><small>
       For lightning payments please open a channel from your lightning wallet to radpay lightning node:
-      <br/><span id="payment-address" class="text-success">{{lightningPeer}}</span><a href="#" @click.prevent="copyAddress"><i class="fas fa-clone ml-4"></i></a>
+      <br/>
+      <span id="payment-address" class="text-success">{{lightningPeer}}</span><a href="#" @click.prevent="copyAddress"><i class="fas fa-clone ml-4"></i></a>
       </small>
       </p>
       <order-details :purchaseCycle="purchaseCycle"/>

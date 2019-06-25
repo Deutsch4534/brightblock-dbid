@@ -3,9 +3,9 @@
   <div class="col-lg-5 col-xl-4 mb-4" v-if="showImage">
     <item-image-list-view :item="item"/>
   </div>
-  <div class="col-sm-10 offset-md-1 my-4">
-    <item-action-links class="mx-5 px-5" :item="item" :itemAction="'update'" :asset="asset" :buttonMode="false"/>
-    <div class="d-flex justify-content-center bg-card">
+  <div class="col-sm-7 offset-md-1">
+    <item-action-links class="" :item="item" :itemAction="'update'" :asset="asset" :buttonMode="false"/>
+    <div class="d-flex justify-content-start bg-card">
       <item-upload-form :formTitle="'Update Listing'" :itemId="item.id" :mode="'update'" :myProfile="myProfile"/>
     </div>
   </div>
@@ -50,7 +50,7 @@ export default {
   },
   data() {
     return {
-      showImage: false,
+      showImage: true,
     };
   },
   mounted() {

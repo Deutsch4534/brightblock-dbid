@@ -1,5 +1,5 @@
 import xhrService from "@/services/xhrService";
-import taxonomyService from "@/services/taxonomyService";
+import tradingService from "brightblock-lib/src/services/tradingService";
 
 const contentStore = {
   namespaced: true,
@@ -26,6 +26,9 @@ const contentStore = {
     getContent: state => pageId => {
       let matches = state.content.filter(content => content.pages.id === pageId);
       return matches;
+    },
+    getMainContent: state => {
+      return state.content["main-content"];
     },
     getAnswers: state => questionId => {
       let matches = state.content["answers"];
@@ -61,13 +64,34 @@ const contentStore = {
         });
       });
     },
+    sendCheckEmailCode: function({ commit }, email) {
+      return new Promise(resolve => {
+        tradingService.sendCheckEmailCode(email).then(response => {
+          resolve(response);
+        });
+      });
+    },
+    sendVerifyEmail: function({ commit }, email) {
+      return new Promise(resolve => {
+        tradingService.sendVerifyEmail(email).then(response => {
+          resolve(response);
+        });
+      });
+    },
+    sendContactEmail: function({ commit }, email) {
+      return new Promise(resolve => {
+        tradingService.sendContactEmail(email).then(response => {
+          resolve(response);
+        });
+      });
+    },
     fetchTaxonomy: function({ state, commit }) {
       return new Promise(resolve => {
         let taxonomy = state.taxonomy;
         if (taxonomy && taxonomy.length > 0) {
           resolve(taxonomy);
         } else {
-          taxonomyService.getTaxonomy().then(taxonomy => {
+          tradingService.getTaxonomy().then(taxonomy => {
             commit("addTaxonomy", taxonomy);
             resolve(taxonomy);
           });
@@ -80,7 +104,7 @@ const contentStore = {
         if (cat) {
           resolve(cat);
         } else {
-          taxonomyService.addCategory(category).then(category => {
+          tradingService.addCategory(category).then(category => {
             commit("addCategory", category);
             resolve(category);
           });

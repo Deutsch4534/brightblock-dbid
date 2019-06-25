@@ -1,9 +1,7 @@
 <template>
 <div id="my-app-element" class="bg-main container-fluid pt-5">
-  <div class="container bg-card p-5 text-center" role="status" v-if="loading">
-    <div class="container spinner-border text-center" role="status">
-      <span class="sr-only">Loading...</span>
-    </div>
+  <div class="d-flex justify-content-center" v-if="loading">
+    <mdb-spinner big multicolor />
   </div>
   <div class="container" v-else>
     <div class="d-flex justify-content-end">
@@ -26,6 +24,7 @@
 
 <script>
   import { mdbContainer, mdbRow, mdbCol, mdbView, mdbMask, mdbBtn } from 'mdbvue';
+  import { mdbSpinner } from 'mdbvue';
   import SingleTopic from '@/pages/components/help/SingleTopic';
   import AboutSection from "@/pages/components/help/AboutSection";
 
@@ -46,7 +45,7 @@
       mdbCol,
       mdbView,
       mdbMask,
-      mdbBtn,
+      mdbBtn, mdbSpinner
     },
     mounted() {
       let slug = this.$route.params.topicId;

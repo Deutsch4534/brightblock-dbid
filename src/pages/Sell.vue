@@ -1,9 +1,7 @@
 <template>
 <div id="my-app-element" class="container my-5">
-  <div class="container bg-card p-5 text-center" role="status" v-if="loading">
-    <div class="container spinner-border text-center" role="status">
-      <span class="sr-only">Loading...</span>
-    </div>
+  <div class="d-flex justify-content-center container bg-card p-5 text-center" v-if="loading">
+    <mdb-spinner big multicolor />
   </div>
   <div class="container my-5" v-else>
     <div v-if="loggedIn">
@@ -47,13 +45,14 @@ import SellerInfo from "./components/selling/SellerInfo";
 import ItemUploadForm from "./components/myItem/ItemUploadForm";
 import MyItems from "./components/myItem/MyItems";
 import MyItem from "./components/myItem/MyItem";
+import { mdbSpinner } from 'mdbvue';
 
 // noinspection JSUnusedGlobalSymbols
 export default {
   name: "Sell",
   bodyClass: "index-page",
   components: {
-    SellerInfo, ItemUploadForm, MyItems, MyItem
+    mdbSpinner, SellerInfo, ItemUploadForm, MyItems, MyItem
   },
   data() {
     return {

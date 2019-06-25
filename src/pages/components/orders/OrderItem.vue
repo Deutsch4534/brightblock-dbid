@@ -1,8 +1,6 @@
 <template>
-<div class="container bg-card p-3 text-center" role="status" v-if="loading">
-  <div class="container spinner-border text-center" role="status">
-    <span class="sr-only">Loading...</span>
-  </div>
+<div class="d-flex justify-content-center" v-if="loading">
+  <mdb-spinner big multicolor />
 </div>
 <div class="row" v-else>
   <div class="col-12" v-if="asset.status === 3">
@@ -10,7 +8,7 @@
       <payment-details :eternal="eternal" :asset="asset" :validFor="validFor"/>
     </div>
     <div v-else>
-      <payment-expired :assetHash="assetHash" :itemId="itemId"/>
+      <payment-expired :assetHash="assetHash" :itemId="itemId" @cancelOrder="cancelOrder"/>
     </div>
   </div>
   <div class="col-12" v-else-if="asset.status > 3">
@@ -29,6 +27,7 @@
 
 <script>
 import { mdbBtn } from "mdbvue";
+import { mdbSpinner } from 'mdbvue';
 import PaymentDetails from "./PaymentDetails";
 import PaymentExpired from "./PaymentExpired";
 import ConfirmationDetails from "./ConfirmationDetails";
@@ -40,7 +39,7 @@ import utils from "@/services/utils";
 export default {
   name: "OrderItem",
   components: {
-    mdbBtn,
+    mdbBtn, mdbSpinner,
     OrderDetails,
     ConfirmationDetails,
     PaymentDetails, PaymentExpired
@@ -121,6 +120,9 @@ export default {
           }
         }
       }, 1000);
+    },
+    cancelOrder() {
+      this.$emit("cancelOrder", this.assetHash);
     },
     paymentExpired(purchaseCycle) {
       let now = moment({}).valueOf();

@@ -1,9 +1,8 @@
 <template>
 <div class="bg-light p-5">
   <div class="d-flex p-2 justify-content-center">
-    <div>
-      <span class="">Payment made on: {{network}}</span> -
-      <span class="text-danger">{{bitcoinConfig.chain}}</span> net
+    <div class="d-flex justify-content-center">
+      {{network}}&nbsp;<span class="text-danger">{{bitcoinConfig.chain}}</span>&nbsp;network
     </div>
   </div>
   <div class="d-flex justify-content-center">
@@ -13,6 +12,7 @@
     <p class="text-muted text-center p-0 m-0 mb-3">{{amountFiat}}</p>
   </div>
 
+  <!--
   <div class="mb-4">
     <div class="row">
       <div class="col-3">Network</div>
@@ -31,19 +31,19 @@
       <div class="col-6"><a :href="sellerBlockchainUrl()" target="_blank">Settlement</a></div>
     </div>
   </div>
-
-  <div class="mt-4 pt-2"><h6>Order</h6></div>
+  -->
   <div>Created: {{timeReceived}}</div>
   <div v-if="unpaid">Payment not yet received</div>
   <div v-else-if="confirmingBtc"><a :href="buyerBlockchainUrl()" target="_blank">Payment received</a><br/>(confirming - {{buyerConfirmations}} / 6)</div>
   <div v-else-if="confirmingLnd"><a href="https://lightning.chaintools.io/" target="_blank">Payment received</a><br/>(invoice - unfulfilled)</div>
-  <div v-else-if="confirmedBtc">
-    <a :href="buyerBlockchainUrl()" target="_blank">Payment has been confirmed</a><br/>(with {{buyerConfirmations}} confirmations)
-    <div><mdb-btn @click="paySeller" rounded color="white" size="sm" class="mx-0 waves-light">pay seller</mdb-btn></div>
-  </div>
-  <div v-else-if="confirmedLnd">
-    <a href="https://lightning.chaintools.io/" target="_blank">Invoice settled</a>
-    <div><mdb-btn @click="paySeller" rounded color="white" size="sm" class="mx-0 waves-light">pay seller</mdb-btn></div>
+  <div v-else-if="confirmedBtc || confirmedLnd">
+    <div class="d-flex justify-content-start" v-if="confirmedBtc">
+      <a :href="buyerBlockchainUrl()" target="_blank">Payment confirmed</a>
+    </div>
+    <div class="d-flex justify-content-start" v-else-if="confirmedLnd">
+      <a href="https://lightning.chaintools.io/" target="_blank">Invoice settled</a>
+    </div>
+    <div class="d-flex justify-content-center"><mdb-btn @click="paySeller" rounded color="white" size="sm" class="mx-0 waves-light">pay seller</mdb-btn></div>
   </div>
   <div v-else-if="settling">Transferring <a :href="sellerBlockchainUrl()" target="_blank">{{sellerConfirmations}} / 6 confirmations</a></div>
   <div v-else-if="settled">Transferred <a :href="sellerBlockchainUrl()" target="_blank">{{sellerConfirmations}} confirmations</a></div>
@@ -62,6 +62,7 @@ import moment from "moment";
 export default {
   name: "ConfirmationDetails",
   components: {
+    mdbBtn
   },
   props: {
     assetHash: null,
@@ -86,6 +87,22 @@ export default {
     asset() {
       let asset = this.$store.getters["assetStore/getAssetByHash"](this.assetHash);
       return asset;
+    },
+    amountBtc() {
+      let purchaseCycle = this.$store.getters["assetStore/getCurrentPurchaseCycleByHash"](this.assetHash);
+      try {
+        return purchaseCycle.buyer.amountBitcoin + " BTC";
+      } catch (err) {
+        return 0;
+      }
+    },
+    amountFiat() {
+      let purchaseCycle = this.$store.getters["assetStore/getCurrentPurchaseCycleByHash"](this.assetHash);
+      try {
+        return purchaseCycle.buyer.amountFiat + " " + purchaseCycle.currency;
+      } catch (err) {
+        return 0;
+      }
     },
     sellerConfirmations() {
       let purchaseCycle = this.$store.getters["assetStore/getCurrentPurchaseCycleByHash"](this.assetHash);

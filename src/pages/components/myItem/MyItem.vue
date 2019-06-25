@@ -1,9 +1,7 @@
 <template>
 <div class="container-fluid flex-1">
-  <div class="container bg-card p-5 text-center" role="status" v-if="loading">
-    <div class="container spinner-border text-center" role="status">
-      <span class="sr-only">Loading...</span>
-    </div>
+  <div class="d-flex justify-content-center" v-if="loading">
+    <mdb-spinner big multicolor />
   </div>
   <div v-else>
     <div class="bg-card p-3" v-if="!item">
@@ -27,6 +25,7 @@ import MyItemManage from "./MyItemManage";
 import MyItemCoa from "./MyItemCoa";
 import MyItemSetPrice from "./MyItemSetPrice";
 import { mdbContainer, mdbRow,  mdbCard, mdbCardBody, mdbCardTitle, mdbCardText, mdbCardImage, mdbMask, mdbIcon, mdbView, mdbBtn } from 'mdbvue';
+import { mdbSpinner } from 'mdbvue';
 import utils from "@/services/utils";
 
 // noinspection JSUnusedGlobalSymbols
@@ -45,7 +44,7 @@ export default {
     mdbMask,
     mdbIcon,
     mdbView,
-    mdbBtn
+    mdbBtn, mdbSpinner
   },
   props: ["itemAction", "myProfile"],
   data() {

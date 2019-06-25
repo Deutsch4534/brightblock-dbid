@@ -2,7 +2,6 @@
 <div class="container-fluid bg-light" v-if="!loading">
   <div>
     <div class="d-flex flex-fill justify-content-between banner1">
-
       <div class="text-muted" :style="banner1Style">
         <mdb-multi-carousel :interval="5000" hideIndicators slide>
           <template>
@@ -85,7 +84,6 @@ import { mdbMultiCarousel, mdbCarouselItem, mdbContainer, mdbRow, mdbCol, mdbCar
         banner2: require("@/assets/img/banner/banner_bottom_right.png"),
         banner3: require("@/assets/img/banner/flatened_banner.jpg"),
         loading: true,
-        content: null,
       };
     },
     components: {
@@ -96,80 +94,90 @@ import { mdbMultiCarousel, mdbCarouselItem, mdbContainer, mdbRow, mdbCol, mdbCar
       if (!content) {
         this.$prismic.client.getSingle("main-content").then(document => {
           this.$store.commit("contentStore/mainContent", document.data);
-          this.content = this.$store.state.contentStore.content["main-content"];
           this.loading = false;
         });
       } else {
-        this.content = this.$store.state.contentStore.content["main-content"];
         this.loading = false;
       }
     },
     computed: {
       banner1Style() {
-        let content = this.$store.state.contentStore.content["main-content"];
-        if (content) {
-          return {
-            "margin-top": "0px",
-            "background-repeat": "no-repeat",
-            "background-size": "225px",
-            "background-image": `url(${content["banner-part1"].url})`,
-            "background-position": "top left",
-          };
+        let content = this.$store.getters["contentStore/getMainContent"];
+        if (!content) {
+          return;
         }
+        let imageUrl = content["banner-part1"].url;
+        return {
+          "margin-top": "0px",
+          "background-repeat": "no-repeat",
+          "background-size": "225px",
+          "background-image": `url(${imageUrl})`,
+          "background-position": "top left",
+        };
       },
       banner2Style() {
-        let content = this.$store.state.contentStore.content["main-content"];
-        if (content) {
-          return {
-            "margin-top": "0px",
-            "height": "auto",
-            "min-width": "195px;",
-            "background-repeat": "no-repeat",
-            "background-image": `url(${content["banner-part2"].url})`,
-            "background-position": "bottom right",
-          };
+        let content = this.$store.getters["contentStore/getMainContent"];
+        if (!content) {
+          return;
         }
+        let imageUrl = content["banner-part2"].url;
+        return {
+          "margin-top": "0px",
+          "height": "auto",
+          "min-width": "195px;",
+          "background-repeat": "no-repeat",
+          "background-image": `url(${imageUrl})`,
+          "background-position": "bottom right",
+        };
       },
       bannerScroll1() {
-        let content = this.$store.state.contentStore.content["main-content"];
+        let content = this.$store.getters["contentStore/getMainContent"];
         if (content) {
           return content["banner-scroll-text1"][0].text;
         }
       },
       bannerScroll2() {
-        let content = this.$store.state.contentStore.content["main-content"];
+        let content = this.$store.getters["contentStore/getMainContent"];
         if (content) {
           return content["banner-scroll-text2"][0].text;
         }
       },
       bannerScroll3() {
-        let content = this.$store.state.contentStore.content["main-content"];
+        let content = this.$store.getters["contentStore/getMainContent"];
         if (content) {
           return content["banner-scroll-text3"][0].text;
         }
       },
       bannerPart1() {
-        let content = this.$store.state.contentStore.content["main-content"];
+        let content = this.$store.getters["contentStore/getMainContent"];
         if (content) {
           return content["banner-text-part1"][0].text;
+        } else {
+          return "Lorum ipsum";
         }
       },
       bannerPart2() {
-        let content = this.$store.state.contentStore.content["main-content"];
+        let content = this.$store.getters["contentStore/getMainContent"];
         if (content) {
           return content["banner-text-part2"][0].text;
+        } else {
+          return "Lorum ipsum";
         }
       },
       bannerPart3() {
-        let content = this.$store.state.contentStore.content["main-content"];
+        let content = this.$store.getters["contentStore/getMainContent"];
         if (content) {
           return content["banner-text-part3"][0].text;
+        } else {
+          return "Lorum ipsum";
         }
       },
       bannerPart4() {
-        let content = this.$store.state.contentStore.content["main-content"];
+        let content = this.$store.getters["contentStore/getMainContent"];
         if (content) {
           return content["banner-text-part4"][0].text;
+        } else {
+          return "Lorum ipsum";
         }
       },
     },
