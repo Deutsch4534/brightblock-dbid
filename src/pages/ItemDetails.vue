@@ -1,5 +1,5 @@
 <template>
-<div id="my-app-element" class="d-flex justify-content-center container bg-card p-5 text-center mt-5" v-if="loading">
+<div id="my-app-element" class="d-flex justify-content-center container mt-5 bg-spinner" v-if="loading">
   <mdb-spinner big multicolor />
 </div>
 <div class="container pt-5" v-else>
@@ -25,11 +25,12 @@
     <div class="col-md-8 col-xs-12 offset-md-2">
       <div class=""><h3 class="mb-2">Purchase Order: {{item.title}}</h3></div>
       <div class="d-flex justify-content-end text-muted" v-if="addressValid">
-        <a class="mr-3 text-primary" @click.prevent="toggleShippingAddress"><small>check shipping</small></a>
-        <a class="mr-3 text-primary" @click.prevent="toggleEmailAddress"><small>check email</small></a>
+        <a class="text-primary" @click.prevent="toggleShippingAddress"><small>check address info</small></a>
+        <a v-if="asset.status === 3" class="ml-3 text-danger" @click.prevent="cancelOrder(asset.assetHash)"><small>cancel order</small></a>
       </div>
-      <email-address-entry v-if="showEmailAddress" :addressTitle="'Email Address'" :addressBlurb="addressBlurb" :emailAddress="myProfile.auxiliaryProfile.emailAddress" @saveEmail="saveEmail"/>
-      <address-form v-else-if="showAddress" :addressTitle="'Shipping Address'" :addressBlurb="''" :address="myProfile.auxiliaryProfile.shippingAddress" @saveAddress="saveAddress"/>
+
+      <!-- <email-address-entry v-if="showEmailAddress" :addressTitle="'Email Address'" :addressBlurb="addressBlurb" :emailAddress="myProfile.auxiliaryProfile.emailAddress" @saveEmail="saveEmail"/> -->
+      <address-form class="mt-5" v-if="showAddress" :address="myProfile.auxiliaryProfile.shippingAddress" :emailAddress="myProfile.auxiliaryProfile.emailAddress" @saveEmail="saveEmail" @saveAddress="saveAddress" @cancelAddress="cancelAddress"/>
       <item-order-form v-else :item="item" :asset="asset" :myProfile="myProfile" @cancelOrder="cancelOrder"/>
     </div>
   </div>
@@ -58,13 +59,12 @@ export default {
   data() {
     return {
       loading: true,
-      addressBlurb: "",
+      addressBlurb: "Needed to complete the sale - not shown to anyone else - including us!",
       myProfile: null,
       asset: null,
       addressValid: false,
       emailValid: false,
       showAddress: true,
-      showEmailAddress: true,
       item: {
         type: Object,
         default() {
@@ -80,14 +80,13 @@ export default {
       this.$store.dispatch("itemSearchStore/fetchItem", itemId).then((item) => {
         if (item) {
           this.item = item;
-          this.addressValid = this.isAddressValid();
-          if (this.addressValid) {
-            this.showAddress = false;
-          } else {
+          if (!myProfile.auxiliaryProfile.shippingAddress) {
             myProfile.auxiliaryProfile.shippingAddress = {};
           }
-          if (this.isEmailValid()) {
-            this.showEmailAddress = false;
+          this.addressValid = this.isAddressValid();
+          this.emailValid = this.isEmailValid();
+          if (this.addressValid && this.emailValid) {
+            this.showAddress = false;
           }
           let assetHash = utils.buildBitcoinHash(item);
           this.$store.dispatch("assetStore/lookupAssetByHash", assetHash).then(asset => {
@@ -109,7 +108,13 @@ export default {
   },
   methods: {
     startPayment: function(asset) {
-      this.asset = asset;
+      let addressValid = this.isAddressValid();
+      let emailValid = this.isEmailValid();
+      if (!addressValid || !emailValid) {
+        this.showAddress = true;
+      } else {
+        this.asset = asset;
+      }
     },
     upload: function() {
       let $self = this;
@@ -117,7 +122,6 @@ export default {
         .then(auxiliaryProfile => {
           this.addressValid = true;
           this.showAddress = false;
-          this.showEmailAddress = false;
           this.$notify({type: 'success', title: 'Address', text: 'Saved address.'});
         })
         .catch(() => {
@@ -125,6 +129,9 @@ export default {
         });
     },
     saveEmail: function(emailAddress) {
+      if (emailAddress === "cancel") {
+        return;
+      }
       this.myProfile.auxiliaryProfile.emailAddress = emailAddress;
       this.upload();
     },
@@ -135,6 +142,9 @@ export default {
       this.myProfile.auxiliaryProfile.shippingAddress = address;
       this.upload();
     },
+    cancelAddress: function() {
+      this.showAddress = false;
+    },
     cancelOrder(assetHash) {
       this.$store.dispatch("assetStore/cancelPurchase", assetHash).then((asset) => {
         this.asset = asset;
@@ -142,11 +152,6 @@ export default {
     },
     toggleShippingAddress() {
       this.showAddress = !this.showAddress;
-      this.showEmailAddress = false;
-    },
-    toggleEmailAddress() {
-      this.showEmailAddress = !this.showEmailAddress;
-      this.showAddress = false;
     },
     isEmailValid() {
       if (!this.myProfile.auxiliaryProfile.emailAddress) {

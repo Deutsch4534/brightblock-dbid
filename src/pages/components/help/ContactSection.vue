@@ -84,7 +84,7 @@ export default {
       description: "Please get in touch with any questions you have about the platform.",
       fields: [],
       buttonText: null,
-      logo: require("@/assets/img/logo/logo-black-256x256.png"),
+      logo: require("@/assets/img/logo/dB_256x256_light_transparent.png"),
       showModal: false,
       modalTitle: "Sent Message",
       modalContent: "<p>Thanks for your interest - your message has been sent.</p>",

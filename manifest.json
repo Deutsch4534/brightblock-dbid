@@ -1,5 +1,5 @@
 {
-  "name": "dBidio",
+  "name": "dBid",
   "short_name": "dBid",
   "description": "A peer to peer marketplace and bidding platform",
   "start_url": "/gallery",
@@ -12,7 +12,7 @@
     "sizes": "512x512",
     "type": "image/png"
   }],
-  "background_color": "#5400E8",
+  "background_color": "#333",
   "display": "standalone",
-  "theme_color": "#5400E8"
+  "theme_color": "#333"
 }

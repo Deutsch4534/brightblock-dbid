@@ -26,11 +26,13 @@
     },
     mounted() {
       let routeName = this.$route.name;
-      document.dispatchEvent(new Event('custom-render-trigger'));
-      let $self = this;
-      setTimeout(function() {
-        $self.loading = false
-      }, 4000);
+      if (routeName === "index") {
+        let $self = this;
+        //setTimeout(function() {
+        //  $self.loading = false;
+        //}, 4000);
+      }
+      // document.dispatchEvent(new Event('custom-render-trigger'));
     }
   };
 </script>

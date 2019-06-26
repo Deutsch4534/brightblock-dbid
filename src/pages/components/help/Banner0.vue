@@ -1,16 +1,48 @@
 <template>
 <div class="" v-if="!loading">
   <div>
-    <div class="d-flex flex-fill justify-content-between banner1" :style="bannerBgStyle">
+    <div class="d-flex flex-fill justify-content-between banner1">
       <div class="text-muted" :style="banner1Style">
-        <div class="d-block d-sm-block mt-2  ml-4" style="font-size: 2.0rem; font-weight: 400;" v-html="bannerScroll1"></div>
-        <div class="d-block d-sm-block mt-0  ml-4" style="font-size: 2.0rem; font-weight: 400;" v-html="bannerScroll3"></div>
-        <!--
-        <div class="d-none d-sm-block mt-2  ml-4" style="font-size: 2.0rem; font-weight: 400;" v-html="bannerScroll2"></div>
-        -->
+        <mdb-multi-carousel :interval="5000" hideIndicators slide>
+          <template>
+            <mdb-carousel-item>
+              <mdb-row class="carousel__item">
+                <div class="d-none d-sm-block mt-2  ml-5" style="font-size: 2.0rem; font-weight: 900; min-height: 150px; position:relative; left: 0px;" v-html="bannerScroll1"></div>
+              </mdb-row>
+            </mdb-carousel-item>
+            <mdb-carousel-item>
+              <mdb-row class="carousel__item">
+                <div class="d-none d-sm-block mt-2  ml-5" style="font-size: 2.0rem; font-weight: 900; min-height: 150px; position:relative; left: 0px;" v-html="bannerScroll2"></div>
+              </mdb-row>
+            </mdb-carousel-item>
+            <mdb-carousel-item>
+              <mdb-row class="carousel__item">
+                <div class="d-none d-sm-block mt-2  ml-5" style="font-size: 2.0rem; font-weight: 900; min-height: 150px; position:relative; left: 0px;" v-html="bannerScroll3"></div>
+              </mdb-row>
+            </mdb-carousel-item>
+          </template>
+          <template v-slot:mobile>
+            <mdb-carousel-item>
+              <mdb-row class="carousel__item">
+                <div class="mt-2  ml-3" v-html="bannerScroll1"></div>
+              </mdb-row>
+            </mdb-carousel-item>
+            <mdb-carousel-item>
+              <mdb-row class="carousel__item">
+                <div class="mt-2  ml-3" v-html="bannerScroll2"></div>
+              </mdb-row>
+            </mdb-carousel-item>
+            <mdb-carousel-item>
+              <mdb-row class="carousel__item">
+                <div class="mt-2  ml-3" v-html="bannerScroll3"></div>
+              </mdb-row>
+            </mdb-carousel-item>
+          </template>
+        </mdb-multi-carousel>
       </div>
-      <div class="d-none d-sm-block" :style="banner2Style" style="min-width: 160px; position:relative; right: 0px; bottom: 0px;">
-        <div class=""></div>
+      <div class="" :style="banner2Style" style="position:relative; right: 0px; bottom: 0px;">
+        <div class="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        </div>
       </div>
     </div>
   </div>
@@ -70,20 +102,6 @@ import { mdbMultiCarousel, mdbCarouselItem, mdbContainer, mdbRow, mdbCol, mdbCar
       }
     },
     computed: {
-      bannerBgStyle() {
-        let content = this.$store.getters["contentStore/getMainContent"];
-        if (!content) {
-          return;
-        }
-        let imageUrl = content["banner-bg-img"].url;
-        return {
-          "margin-top": "0px",
-          "background-repeat": "no-repeat",
-          "background-size": "135px",
-          "background-image": `url(${imageUrl})`,
-          "background-position": "center center",
-        };
-      },
       banner1Style() {
         let content = this.$store.getters["contentStore/getMainContent"];
         if (!content) {
@@ -93,7 +111,7 @@ import { mdbMultiCarousel, mdbCarouselItem, mdbContainer, mdbRow, mdbCol, mdbCar
         return {
           "margin-top": "0px",
           "background-repeat": "no-repeat",
-          "background-size": "195px",
+          "background-size": "225px",
           "background-image": `url(${imageUrl})`,
           "background-position": "top left",
         };
@@ -107,7 +125,7 @@ import { mdbMultiCarousel, mdbCarouselItem, mdbContainer, mdbRow, mdbCol, mdbCar
         return {
           "margin-top": "0px",
           "height": "auto",
-          "background-size": "265px;",
+          "min-width": "195px;",
           "background-repeat": "no-repeat",
           "background-image": `url(${imageUrl})`,
           "background-position": "bottom right",
@@ -172,10 +190,8 @@ import { mdbMultiCarousel, mdbCarouselItem, mdbContainer, mdbRow, mdbCol, mdbCar
   }
 </script>
 <style>
-.warning {
-  background-color: #ff6e40;
-}
 .banner-scroll-header {
+  margin-top: 10px;
 }
 .banner-scroll-text {
 

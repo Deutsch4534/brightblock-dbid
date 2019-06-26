@@ -36,9 +36,6 @@
       <a class="btn btn-primary ml-3" @click.prevent="copyAddress">Copy <i class="fas fa-clone ml-4"></i></a>
     </div>
 
-    <div class="d-flex justify-content-end">
-      <a class="text-danger" @click.prevent="cancelOrder(asset.assetHash)"><small>cancel order</small></a>
-    </div>
 
   </div>
   <div class="d-flex p-2 justify-content-center" style="background-color: #d7ccc8;">
@@ -128,6 +125,9 @@ export default {
     }
   },
   methods: {
+    cancelOrder() {
+      this.$emit("cancelOrder", this.asset.assetHash);
+    },
     addQrCode(qrc, paymentUri) {
       let $qrCode = document.getElementById(qrc);
       let $self = this;

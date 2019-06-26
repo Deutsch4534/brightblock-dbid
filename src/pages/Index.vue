@@ -1,7 +1,7 @@
 <template>
 <div id="my-app-element" class="mt-1" v-if="!loading">
-  <banner v-if="showBanner" class="mx-0 mt-1 px-0 "/>
-  <div class="container main pt-5">
+  <banner v-if="showBanner" class="container mt-4 px-0 bg-light"/>
+  <div class="container main pt-2">
     <latest-offers :myProfile="myProfile"/>
   </div>
 </div>

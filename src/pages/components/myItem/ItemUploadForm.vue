@@ -1,12 +1,12 @@
 <template>
 <div>
-  <div class="d-flex justify-content-center" v-if="loading">
+  <div class="d-flex justify-content-center bg-spinner" v-if="loading">
     <mdb-spinner big multicolor />
   </div>
   <div v-else>
     <!-- Supported elements -->
     <confirmation-modal :modal="showModal" :title="modalTitle" :content="modalContent" @closeModal="closeModal"/>
-    <form class="text-dark bg-card pt-5 text-white needs-validation form-transparent" novalidate v-on:submit.prevent="checkForm" id="itemForm">
+    <form class="text-dark bg-card text-white needs-validation form-transparent" novalidate v-on:submit.prevent="checkForm" id="itemForm">
       <!-- item type -->
       <div class="row">
         <div class="col-12 mb-4">

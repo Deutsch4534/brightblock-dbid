@@ -1,12 +1,12 @@
 <template>
-<div class="d-flex justify-content-center" v-if="loading">
+<div class="d-flex justify-content-center bg-spinner" v-if="loading">
   <mdb-spinner big multicolor />
 </div>
-<div class="p-5" v-else-if="noitems && !loading">
+<div class="" v-else-if="noitems && !loading">
   <h4>No items found.</h4>
   <p><router-link to="/my-item/upload" class="btn btn-white btn-sm btn-rounded ripple-parent">Upload Item</router-link> to get started...</p>
 </div>
-<div class="p-5" v-else>
+<div class="" v-else>
   <div v-if="showNav === 1">
     <my-items-list :items="unsold" :myProfile="myProfile"/>
   </div>

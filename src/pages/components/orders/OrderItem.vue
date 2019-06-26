@@ -1,11 +1,11 @@
 <template>
-<div class="d-flex justify-content-center" v-if="loading">
+<div class="d-flex justify-content-center bg-spinner" v-if="loading">
   <mdb-spinner big multicolor />
 </div>
 <div class="row" v-else>
   <div class="col-12" v-if="asset.status === 3">
     <div v-if="eternal || !purchaseExpired">
-      <payment-details :eternal="eternal" :asset="asset" :validFor="validFor"/>
+      <payment-details :eternal="eternal" :asset="asset" :validFor="validFor" @cancelOrder="cancelOrder"/>
     </div>
     <div v-else>
       <payment-expired :assetHash="assetHash" :itemId="itemId" @cancelOrder="cancelOrder"/>

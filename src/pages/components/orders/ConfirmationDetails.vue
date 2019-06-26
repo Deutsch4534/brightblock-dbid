@@ -1,5 +1,5 @@
 <template>
-<div class="bg-light p-5">
+<div class="bg-light p-5 mb-5">
   <div class="d-flex p-2 justify-content-center">
     <div class="d-flex justify-content-center">
       {{network}}&nbsp;<span class="text-danger">{{bitcoinConfig.chain}}</span>&nbsp;network
@@ -11,44 +11,39 @@
   <div class="d-flex justify-content-center">
     <p class="text-muted text-center p-0 m-0 mb-3">{{amountFiat}}</p>
   </div>
+  <div class="d-flex justify-content-start" v-if="asset.status === 4">Confirming payment.</div>
+  <div class="d-flex justify-content-center" v-else-if="asset.status === 5">
+    <div><mdb-btn @click="paySeller" rounded color="white" size="sm" class="mx-0 waves-light">confirm shipped</mdb-btn></div>
+  </div>
+  <div class="d-flex justify-content-start" v-else-if="asset.status === 6">
+    <div>Paying Seller - waiting for confirmations.</div>
+  </div>
+  <div class="d-flex justify-content-start" v-else-if="asset.status === 7">
+    <div>Transferred item to your storage.</div>
+  </div>
 
-  <!--
-  <div class="mb-4">
-    <div class="row">
-      <div class="col-3">Network</div>
-      <div class="col-6">{{bitcoinConfig.chain}}</div>
-    </div>
-    <div class="row">
-      <div class="col-3">Transactions</div>
-      <div class="col-6"><a :href="registerBlockchainUrl()" target="_blank">Provenance</a></div>
-    </div>
-    <div class="row" v-if="purchaseCycle.buyer.chainData.txid">
-      <div class="col-3"></div>
-      <div class="col-6"><a :href="buyerBlockchainUrl()" target="_blank">Payment</a></div>
-    </div>
-    <div class="row" v-if="purchaseCycle.seller.chainData.txid">
-      <div class="col-3"></div>
-      <div class="col-6"><a :href="sellerBlockchainUrl()" target="_blank">Settlement</a></div>
-    </div>
+  <div class="d-flex justify-content-end">
+    <p class="text-muted p-0 m-0 mb-3"><small><a @click.prevent="showDetails = !showDetails">details</a></small></p>
   </div>
-  -->
-  <div>Created: {{timeReceived}}</div>
-  <div v-if="unpaid">Payment not yet received</div>
-  <div v-else-if="confirmingBtc"><a :href="buyerBlockchainUrl()" target="_blank">Payment received</a><br/>(confirming - {{buyerConfirmations}} / 6)</div>
-  <div v-else-if="confirmingLnd"><a href="https://lightning.chaintools.io/" target="_blank">Payment received</a><br/>(invoice - unfulfilled)</div>
-  <div v-else-if="confirmedBtc || confirmedLnd">
-    <div class="d-flex justify-content-start" v-if="confirmedBtc">
-      <a :href="buyerBlockchainUrl()" target="_blank">Payment confirmed</a>
+
+  <div v-if="showDetails">
+    <div>Created: {{timeReceived}}</div>
+    <div v-if="unpaid">Payment not yet received</div>
+    <div v-else-if="confirmingBtc"><a :href="buyerBlockchainUrl()" target="_blank">Payment received</a><br/>(confirming - {{buyerConfirmations}} / 6)</div>
+    <div v-else-if="confirmingLnd"><a href="https://lightning.chaintools.io/" target="_blank">Payment received</a><br/>(invoice - unfulfilled)</div>
+    <div v-else-if="confirmedBtc || confirmedLnd">
+      <div class="d-flex justify-content-start" v-if="confirmedBtc">
+        <a :href="buyerBlockchainUrl()" target="_blank">Payment confirmed</a>
+      </div>
+      <div class="d-flex justify-content-start" v-else-if="confirmedLnd">
+        <a href="https://lightning.chaintools.io/" target="_blank">Invoice settled</a>
+      </div>
     </div>
-    <div class="d-flex justify-content-start" v-else-if="confirmedLnd">
-      <a href="https://lightning.chaintools.io/" target="_blank">Invoice settled</a>
+    <div v-else-if="settling">Transferring <a :href="sellerBlockchainUrl()" target="_blank">{{sellerConfirmations}} / 6 confirmations</a></div>
+    <div v-else-if="settled">Transferred <a :href="sellerBlockchainUrl()" target="_blank">{{sellerConfirmations}} confirmations</a></div>
+    <div v-else>
+      <div>status in between</div>
     </div>
-    <div class="d-flex justify-content-center"><mdb-btn @click="paySeller" rounded color="white" size="sm" class="mx-0 waves-light">pay seller</mdb-btn></div>
-  </div>
-  <div v-else-if="settling">Transferring <a :href="sellerBlockchainUrl()" target="_blank">{{sellerConfirmations}} / 6 confirmations</a></div>
-  <div v-else-if="settled">Transferred <a :href="sellerBlockchainUrl()" target="_blank">{{sellerConfirmations}} confirmations</a></div>
-  <div v-else>
-    <div>status in between</div>
   </div>
 </div>
 </template>
@@ -71,6 +66,7 @@ export default {
   },
   data() {
     return {
+      showDetails: false,
       showBlockchainInfo: false,
       showInstructions: false,
       showPaymentDetails: false,
@@ -119,6 +115,11 @@ export default {
     settling() {
       let asset = this.$store.getters["assetStore/getAssetByHash"](this.assetHash);
       return asset.status === 6;
+    },
+    confirming() {
+      let purchaseCycle = this.$store.getters["assetStore/getCurrentPurchaseCycleByHash"](this.assetHash);
+      let asset = this.$store.getters["assetStore/getAssetByHash"](this.assetHash);
+      return asset.status === 4;
     },
     confirmingBtc() {
       let purchaseCycle = this.$store.getters["assetStore/getCurrentPurchaseCycleByHash"](this.assetHash);

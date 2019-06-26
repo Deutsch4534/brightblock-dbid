@@ -1,13 +1,13 @@
 <template>
 <div class="container-fluid flex-1">
-  <div class="d-flex justify-content-center" v-if="loading">
+  <div class="d-flex justify-content-center bg-spinner" v-if="loading">
     <mdb-spinner big multicolor />
   </div>
   <div v-else>
-    <div class="bg-card p-3" v-if="!item">
+    <div class="bg-card" v-if="!item">
       <div>404 - item not found</div>
     </div>
-    <div class="bg-card p-3" v-else>
+    <div class="bg-card" v-else>
       <my-item-manage v-if="itemAction === 'manage'" :item="item" :asset="asset" :myProfile="myProfile"/>
       <my-item-update v-else-if="itemAction === 'update'" :formTitle="'New Item'" :item="item" :mode="'upload'" :asset="asset" :myProfile="myProfile"/>
       <my-item-register v-else-if="itemAction === 'register'" :itemId="item.id" :asset="asset" :myProfile="myProfile"/>

@@ -1,7 +1,7 @@
 <template>
 <div class="">
   <confirmation-modal :modal="modal" :title="modalTitle" :content="modalContent" @closeModal="closeModal"/>
-  <div class="row my-5">
+  <div class="row">
     <div class="col-12">
       <bitcoin-address :allowDelete="true" @bitcoinAddressUpdate="updateBitcoinAddress"/>
     </div>
@@ -87,7 +87,7 @@ export default {
         email: email,
         verified: false,
       };
-      
+
       this.upload();
     },
     saveAddress: function(address) {

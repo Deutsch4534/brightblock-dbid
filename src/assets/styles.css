@@ -89,9 +89,11 @@ a {
 .bg-main {
   /** background-color: #5400E8; **/
 }
-.bg-card {
+.bg-spinner {
   background-color: #eceff1;
   border-radius: 10px;
+  padding-top: 20px;
+  padding-bottom: 20px;
 }
 
 .border-shadow::after {

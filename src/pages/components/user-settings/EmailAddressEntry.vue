@@ -9,26 +9,21 @@
     </div>
   </div>
   <div v-if="showCode">
-    <div class="row my-4">
-      <div class="col-md-6 m-0">
-        <input type="text" class="m-0 form-control" id="vc-code" placeholder="enter code" v-model="code"  v-on:keyup.13="checkCode($event)">
-      </div>
-    </div>
-    <div class="row mb-4">
-      <div class="col-md-6">
-        <mdb-btn size="sm" type="submit" class="btn btn-light lighten-1"><a @click="checkCode($event)">Verify Code</a></mdb-btn>
+    <div class="row">
+      <div class="col-md-12">
+        <form v-on:submit.prevent="" class="form-inline">
+          <input type="text" class="m-0 form-control" style="min-width: 150px;" id="vc-code" placeholder="enter code" v-model="code"  v-on:keyup.13="checkCode($event)">
+          <a class="btn btn-default btn-sm text-white" @click.prevent="checkCode($event)">Verify Code</a>
+        </form>
       </div>
     </div>
   </div>
-  <form v-on:submit.prevent="checkForm" class="needs-validation py-1" novalidate>
-    <div class="row my-4">
-      <div class="col-md-6 m-0">
-        <input type="email" class="m-0 form-control" id="vc-email" placeholder="email address" v-model="newEmail" required>
-      </div>
-    </div>
-    <div class="row mb-4">
-      <div class="col-md-6">
-        <mdb-btn size="sm" type="submit" class="btn btn-light lighten-1"><a @click="checkForm($event)">Send Code</a></mdb-btn>
+  <form v-on:submit.prevent="" class="form-inline needs-validation" novalidate>
+    <div class="row">
+      <div class="col-md-12">
+        <input type="email" style="min-width: 400px;" class="m-0 form-control" id="vc-email" placeholder="email address" v-model="newEmail" required>
+        <button class="btn btn-default btn-sm"><a @click="checkEmailForm($event)">Send Code</a></button>
+        <a class="btn btn-default btn-sm text-white" @click.prevent="cancel">Back</a>
       </div>
     </div>
   </form>
@@ -87,18 +82,25 @@ export default {
         }
       });
     },
+    cancel: function() {
+      this.$emit("cancelEmail");
+    },
     sendCode: function() {
+      if (this.newEmail === this.oldEmailAddress.email && this.oldEmailAddress.verified) {
+        this.$notify({type: 'warn', title: 'Email Update', text: 'Email address has not changed.'});
+        return;
+      }
       let email = {
         email: this.newEmail,
         code: null,
         verified: false,
       };
       this.$store.dispatch("contentStore/sendVerifyEmail", email).then((response) => {
-        this.$notify({type: 'info', title: 'Code Sent', text: 'Please check your email.'});
+        this.$notify({type: 'info', title: 'Email Update', text: 'Code sent - please check your email.'});
         this.showCode = true;
       });
     },
-    checkForm(event) {
+    checkEmailForm(event) {
       if (event) {
         event.preventDefault;
         event.target.classList.add('was-validated');

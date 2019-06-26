@@ -1,6 +1,6 @@
 <template>
 <div id="my-app-element" class="bg-main container-fluid pt-5">
-  <div class="d-flex justify-content-center" v-if="loading">
+  <div class="d-flex justify-content-center bg-spinner" v-if="loading">
     <mdb-spinner big multicolor />
   </div>
   <div class="container" v-else>

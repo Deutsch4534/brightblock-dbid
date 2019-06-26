@@ -14,8 +14,8 @@
         <router-link class="dropdown-item" to="/user/settings"><a @click="closeMenu">Settings</a></router-link>
       </mdb-dropdown-item>
 
-      <mdb-dropdown-item>
-        <router-link class="dropdown-item" to="/admin/settings" v-if="showAdmin"><a @click="closeMenu">Admin</a></router-link>
+      <mdb-dropdown-item v-if="showAdmin">
+        <router-link class="dropdown-item" to="/admin/settings"><a @click="closeMenu">Admin</a></router-link>
       </mdb-dropdown-item>
       <div class="dropdown-divider"></div>
       <mdb-dropdown-item>

@@ -1,11 +1,11 @@
 <template>
-<div id="my-app-element" class="container my-5">
-  <div class="d-flex justify-content-center container bg-card p-5 text-center" v-if="loading">
-    <mdb-spinner big multicolor />
-  </div>
-  <div class="container my-5" v-else>
+<div class="d-flex justify-content-center container mt-5 bg-spinner" v-if="loading">
+  <mdb-spinner big multicolor />
+</div>
+<div id="my-app-element" class="container bg-spinner my-5" v-else>
+  <div class="container my-1">
     <div v-if="loggedIn">
-      <div class="d-flex text-primary text-white border-bottom mb-5">
+      <div class="d-flex text-primary text-white border-bottom mb-4">
         <div class="p-2 px-4 border-right" :class="activeTab === 1 ? 'text-secondary' : 'text-primary'" v-if="sellerInfoNeeded"><router-link to="/seller-info">Seller Info - Required</router-link></div>
         <div class="p-2 px-4 border-right" :class="activeTab === 1 ? 'text-secondary' : 'text-primary'" v-else><router-link to="/seller-info">Seller Info</router-link></div>
         <div class="py-2 px-4 border-right" :class="activeTab === 2 ? 'text-secondary' : 'text-primary'"><router-link to="/my-item/upload">New Listing</router-link></div>
@@ -13,22 +13,22 @@
         <div v-if="activeTab === 4" class="py-2 px-4 border-right" :class="activeTab === 4 ? 'text-secondary' : 'text-primary'"><router-link :to="myItemUrl">{{listingLabel}}</router-link></div>
       </div>
       <div v-if="activeTab === 1">
-        <div class="d-flex justify-content-center bg-card">
+        <div class="d-flex justify-content-start bg-card ml-4">
           <seller-info :formTitle="'Update Seller Info'" :myProfile="myProfile" @sellerInfoUpdated="updateSellerState"/>
         </div>
       </div>
       <div v-if="activeTab === 2">
-        <div class="d-flex justify-content-center bg-card">
+        <div class="d-flex justify-content-start bg-card ml-4">
           <item-upload-form :formTitle="'New Item'" :itemId="itemId" :mode="'upload'" :myProfile="myProfile"/>
         </div>
       </div>
       <div v-if="activeTab === 3">
-        <div class="d-flex justify-content-start bg-card">
+        <div class="d-flex justify-content-start bg-card ml-4">
           <my-items :formTitle="'Listings'" :myProfile="myProfile"/>
         </div>
       </div>
       <div v-if="activeTab === 4">
-        <div class="d-flex justify-content-start mb-5">
+        <div class="d-flex justify-content-start bg-card ml-4">
           <my-item :itemId="itemId" :myProfile="myProfile" :itemAction="itemAction"/>
         </div>
       </div>
