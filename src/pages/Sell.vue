@@ -1,6 +1,8 @@
 <template>
-<div class="d-flex justify-content-center container mt-5 bg-spinner" v-if="loading">
-  <mdb-spinner big multicolor />
+<div class="d-flex justify-content-center" role="status" v-if="loading">
+  <div class="spinner-border" role="status">
+    <span class="sr-only">Loading...</span>
+  </div>
 </div>
 <div id="my-app-element" class="container bg-spinner my-5" v-else>
   <div class="container my-1">
@@ -13,22 +15,22 @@
         <div v-if="activeTab === 4" class="py-2 px-4 border-right" :class="activeTab === 4 ? 'text-secondary' : 'text-primary'"><router-link :to="myItemUrl">{{listingLabel}}</router-link></div>
       </div>
       <div v-if="activeTab === 1">
-        <div class="d-flex justify-content-start bg-card ml-4">
+        <div class="d-flex justify-content-start bg-card" style="min-height: 50vh;">
           <seller-info :formTitle="'Update Seller Info'" :myProfile="myProfile" @sellerInfoUpdated="updateSellerState"/>
         </div>
       </div>
       <div v-if="activeTab === 2">
-        <div class="d-flex justify-content-start bg-card ml-4">
+        <div class="bg-card">
           <item-upload-form :formTitle="'New Item'" :itemId="itemId" :mode="'upload'" :myProfile="myProfile"/>
         </div>
       </div>
       <div v-if="activeTab === 3">
-        <div class="d-flex justify-content-start bg-card ml-4">
+        <div class="d-flex justify-content-start bg-card">
           <my-items :formTitle="'Listings'" :myProfile="myProfile"/>
         </div>
       </div>
       <div v-if="activeTab === 4">
-        <div class="d-flex justify-content-start bg-card ml-4">
+        <div class="bg-card">
           <my-item :itemId="itemId" :myProfile="myProfile" :itemAction="itemAction"/>
         </div>
       </div>
@@ -78,8 +80,9 @@ export default {
       if (routeName === "seller-info") {
         this.setView();
       } else {
-        if (myProfile.publicKeyData.bitcoinAddress) {
-          this.$store.dispatch("bitcoinStore/checkAddress", myProfile.publicKeyData.bitcoinAddress).then((result) => {
+        let btcaddr = myProfile.publicKeyData.rxAddressList[0].address;
+        if (btcaddr) {
+          this.$store.dispatch("bitcoinStore/checkAddress", btcaddr).then((result) => {
             if (!result) {
               this.$router.push({ path: "/seller-info" });
             } else {
@@ -95,6 +98,10 @@ export default {
   },
   methods: {
     updateSellerState: function() {
+      this.activeTab = 2;
+
+    },
+    isSellerInfoComplete: function() {
       this.activeTab = 2;
     },
     setView: function() {

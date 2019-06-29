@@ -1,7 +1,9 @@
 <template>
 <div id="my-app-element" class="container pt-5">
-  <div class="d-flex justify-content-center bg-spinner" v-if="loading">
-    <mdb-spinner big multicolor />
+  <div class="d-flex justify-content-center" role="status" v-if="loading">
+    <div class="spinner-border" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
   </div>
   <div class="container" v-else>
     <auxiliary-profile-form :formTitle="'RA Profile'" :mode="'update'" :profile="profile" v-if="loggedIn"/>

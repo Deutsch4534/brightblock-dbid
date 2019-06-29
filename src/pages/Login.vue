@@ -5,7 +5,7 @@
     <mdb-modal-header class="text-center">
       <mdb-modal-title tag="h4" bold class="w-100">Login</mdb-modal-title>
     </mdb-modal-header>
-    <mdb-modal-body class="mx-3 grey-text text-center">
+    <mdb-modal-body class="mx-3 text-center">
       <mdb-btn><button class="btn btn-light btn-block" v-on:click="loginMultiPlayer">Login with Blockstack</button></mdb-btn>
     </mdb-modal-body>
     <mdb-modal-footer>
@@ -70,6 +70,7 @@ export default {
     },
     closeModal: function() {
       this.showModal = false;
+      this.$router.push({ path: "/" });
     },
     closeLogin: function () {
       this.$router.push({ path: "/" });

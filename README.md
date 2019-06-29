@@ -1,10 +1,10 @@
-# [Radicle](https://radicle.art)
+# [dBid](https://dbid.io)
 
 - [Purpose](#purpose)
 
 ## Introduction
 
-A decentralised platform for buying and selling and auctioning art.
+A decentralised platform for buying, selling and bidding.
 
 ## Build Setup
 
@@ -21,6 +21,4 @@ npm run build
 
 ## Purpose
 
-A market place for art where artists and art lovers can trade directly in a middle man free environment and in a community that supports artists and creators. We are a decentralised marketplace application built on top of the blockstack eco system.
-
-We establish provenance of artwork using the most secure and robust public blockchain available - Bitcoin. Certificates of authenticity are then be generated using intuitive tools and display the artwork, the bitcoin registration transaction and the artists public key for donations. Our focus is on making the online art world fairer for artists and art lovers. One way in which we intend to do this is to use the provenance chain we set up to facilitate residual payments to artists on secondary sales of their artwork.
+A peer to peer bitcoin and lightning enabled market place with self owned user identity and decentralised user storage.

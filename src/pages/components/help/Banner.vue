@@ -49,9 +49,6 @@ import { mdbMultiCarousel, mdbCarouselItem, mdbContainer, mdbRow, mdbCol, mdbCar
     props: ["answers"],
     data() {
       return {
-        banner1: require("@/assets/img/banner/banner_top_left.png"),
-        banner2: require("@/assets/img/banner/banner_bottom_right.png"),
-        banner3: require("@/assets/img/banner/flatened_banner.jpg"),
         loading: true,
       };
     },

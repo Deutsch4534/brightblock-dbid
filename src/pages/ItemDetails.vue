@@ -1,6 +1,8 @@
 <template>
-<div id="my-app-element" class="d-flex justify-content-center container mt-5 bg-spinner" v-if="loading">
-  <mdb-spinner big multicolor />
+<div class="d-flex justify-content-center" role="status" v-if="loading">
+  <div class="spinner-border" role="status">
+    <span class="sr-only">Loading...</span>
+  </div>
 </div>
 <div class="container pt-5" v-else>
   <div class="row" v-if="!item">
@@ -21,16 +23,15 @@
       <buyers-information-item-details :item="item" :asset="asset" action="buy" :myProfile="myProfile" @startPayment="startPayment"/>
     </div>
   </div>
-  <div class="row mx-5" v-else>
+  <div class="row" v-else>
     <div class="col-md-8 col-xs-12 offset-md-2">
       <div class=""><h3 class="mb-2">Purchase Order: {{item.title}}</h3></div>
-      <div class="d-flex justify-content-end text-muted" v-if="addressValid">
-        <a class="text-primary" @click.prevent="toggleShippingAddress"><small>check address info</small></a>
+      <div class="d-flex justify-content-end text-muted">
+        <a class="text-primary" @click.prevent="toggleShippingAddress"><small>check buyer info</small></a>
         <a v-if="asset.status === 3" class="ml-3 text-danger" @click.prevent="cancelOrder(asset.assetHash)"><small>cancel order</small></a>
       </div>
 
-      <!-- <email-address-entry v-if="showEmailAddress" :addressTitle="'Email Address'" :addressBlurb="addressBlurb" :emailAddress="myProfile.auxiliaryProfile.emailAddress" @saveEmail="saveEmail"/> -->
-      <address-form class="mt-5" v-if="showAddress" :address="myProfile.auxiliaryProfile.shippingAddress" :emailAddress="myProfile.auxiliaryProfile.emailAddress" @saveEmail="saveEmail" @saveAddress="saveAddress" @cancelAddress="cancelAddress"/>
+      <crypto-address-tabs v-if="showAddress" :buyer="true" :myProfile="myProfile" @saveEmail="saveEmail" @saveAddress="saveAddress"/>
       <item-order-form v-else :item="item" :asset="asset" :myProfile="myProfile" @cancelOrder="cancelOrder"/>
     </div>
   </div>
@@ -44,15 +45,14 @@ import DescriptionContainer from "@/pages/components/utils/DescriptionContainer"
 import ItemImageListView from "@/pages/components/myItem/ItemImageListView";
 import BuyersInformationItemDetails from "@/pages/components/selling/BuyersInformationItemDetails";
 import ItemOrderForm from "@/pages/components/orders/ItemOrderForm";
-import AddressForm from "@/pages/components/user-settings/AddressForm";
-import EmailAddressEntry from "@/pages/components/user-settings/EmailAddressEntry";
+import CryptoAddressTabs from "@/pages/components/user-settings/CryptoAddressTabs";
 import { mdbSpinner } from 'mdbvue';
 
 // noinspection JSUnusedGlobalSymbols
 export default {
   name: "ItemDetails",
   components: {
-    mdbSpinner, AddressForm, EmailAddressEntry, DescriptionContainer, ItemImageListView, BuyersInformationItemDetails, ItemOrderForm
+    mdbSpinner, CryptoAddressTabs, DescriptionContainer, ItemImageListView, BuyersInformationItemDetails, ItemOrderForm
   },
   props: {
   },
@@ -64,7 +64,7 @@ export default {
       asset: null,
       addressValid: false,
       emailValid: false,
-      showAddress: true,
+      showAddress: false,
       item: {
         type: Object,
         default() {
@@ -80,13 +80,9 @@ export default {
       this.$store.dispatch("itemSearchStore/fetchItem", itemId).then((item) => {
         if (item) {
           this.item = item;
-          if (!myProfile.auxiliaryProfile.shippingAddress) {
-            myProfile.auxiliaryProfile.shippingAddress = {};
-          }
-          this.addressValid = this.isAddressValid();
-          this.emailValid = this.isEmailValid();
-          if (this.addressValid && this.emailValid) {
-            this.showAddress = false;
+          let validity = this.$store.getters["myAccountStore/getProfileValidity"];
+          if (!validity.emailValid || !validity.shippingValid || !validity.bitcoinValid) {
+            this.showAddress = true;
           }
           let assetHash = utils.buildBitcoinHash(item);
           this.$store.dispatch("assetStore/lookupAssetByHash", assetHash).then(asset => {
@@ -108,39 +104,18 @@ export default {
   },
   methods: {
     startPayment: function(asset) {
-      let addressValid = this.isAddressValid();
-      let emailValid = this.isEmailValid();
-      if (!addressValid || !emailValid) {
-        this.showAddress = true;
-      } else {
+      let validity = this.$store.getters["myAccountStore/getProfileValidity"];
+      if (validity.emailValid && validity.shippingValid && validity.bitcoinValid) {
         this.asset = asset;
+      } else {
+        this.showAddress = true;
       }
     },
-    upload: function() {
-      let $self = this;
-      this.$store.dispatch("myAccountStore/updateAuxiliaryProfile", this.myProfile.auxiliaryProfile)
-        .then(auxiliaryProfile => {
-          this.addressValid = true;
-          this.showAddress = false;
-          this.$notify({type: 'success', title: 'Address', text: 'Saved address.'});
-        })
-        .catch(() => {
-          this.$notify({type: 'warning', title: 'Settings', text: 'Unable to update your settings at present.'});
-        });
-    },
-    saveEmail: function(emailAddress) {
-      if (emailAddress === "cancel") {
-        return;
-      }
-      this.myProfile.auxiliaryProfile.emailAddress = emailAddress;
-      this.upload();
+    saveEmail: function(email) {
+      this.$notify({type: 'success', title: 'Address Info', text: 'Address updated.'});
     },
     saveAddress: function(address) {
-      if (!address) {
-        address = {};
-      }
-      this.myProfile.auxiliaryProfile.shippingAddress = address;
-      this.upload();
+      this.$notify({type: 'success', title: 'Address Info', text: 'Address updated.'});
     },
     cancelAddress: function() {
       this.showAddress = false;
@@ -153,31 +128,6 @@ export default {
     toggleShippingAddress() {
       this.showAddress = !this.showAddress;
     },
-    isEmailValid() {
-      if (!this.myProfile.auxiliaryProfile.emailAddress) {
-        this.myProfile.auxiliaryProfile.emailAddress = {
-          email: null,
-          verified: false
-        };
-      }
-      let ea = this.myProfile.auxiliaryProfile.emailAddress;
-      if (!ea || !ea.email || !ea.verified) {
-        return false;
-      }
-      return true;
-    },
-    isAddressValid() {
-      let address = this.myProfile.auxiliaryProfile.shippingAddress;
-      if (!address) {
-        return false;
-      }
-      let valid = true;
-      valid = valid && address && address.line1 && address.line1.length > 0;
-      valid = valid && address.city && address.city.length > 0;
-      valid = valid && address.region && address.region.length > 0;
-      valid = valid && address.postcode && address.postcode.length > 0;
-      return valid;
-    }
   },
   computed: {
     created() {
@@ -185,6 +135,10 @@ export default {
         return moment(this.item.created).format("YYYY-MM-DD HH:mm (Z)");
       }
       return;
+    },
+    validAddressInfo() {
+      let validity = this.$store.getters["myAccountStore/getProfileValidity"];
+      return validity.emailValid && validity.shippingValid;
     },
     orderStarted() {
       return this.asset.status > 0;

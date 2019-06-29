@@ -24,15 +24,32 @@
         holding: require("@/assets/img/preloader2.apng.png"),
       };
     },
+    watch: {
+      loading: function (val) {
+        this.doMount();
+      },
+    },
     mounted() {
       let routeName = this.$route.name;
+      /**
       if (routeName === "index") {
-        let $self = this;
-        //setTimeout(function() {
-        //  $self.loading = false;
-        //}, 4000);
       }
+      this.$prismic.client.getSingle("main-content").then(document => {
+        this.$store.commit("contentStore/mainContent", document.data);
+        this.loading = false;
+      });
+      **/
+      this.loading = true;
+      let $self = this;
+      setTimeout(function() {
+        $self.doMount();
+      }, 3000);
       // document.dispatchEvent(new Event('custom-render-trigger'));
+    },
+    methods: {
+      doMount() {
+        this.loading = false;
+      }
     }
   };
 </script>

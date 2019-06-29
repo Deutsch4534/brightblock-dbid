@@ -14,12 +14,12 @@
         <div class="input-group md-form form-sm form-1 pl-0 my-2">
           <div class="input-group-prepend">
             <a class="input-group-text lighten-3" id="basic-text1" @click="findBySearchTerm">
-              <i class="fas fa-search"></i>
+              <i class="fas fa-search elements"></i>
             </a>
           </div>
-          <input class="form-control my-0 py-1" type="text"  v-on:keyup.13.prevent="findBySearchTerm" v-model="query" placeholder="Search" aria-label="Search">
-          <a class="ml-2 text-light" @click.prevent="showCategories = !showCategories" title="toggle categories" style="position:relative; top:4px"><i class="fas fa-caret-square-down fa-2x"></i></a>
-          <a class="ml-2 text-light" @click.prevent="clearSearch" title="clear search" style="position:relative; top:4px"><i class="fas fa-times fa-2x"></i></a>
+          <input class="form-control my-0 py-1 search-input" type="text"  v-on:keyup.13.prevent="findBySearchTerm" v-model="query" placeholder="Search" aria-label="Search">
+          <a class="ml-2 text-light elements" @click.prevent="showCategories = !showCategories" title="toggle categories" style="position:relative; top:4px"><i class="fas fa-caret-square-down fa-2x elements"></i></a>
+          <a class="ml-2 text-light elements" @click.prevent="clearSearch" title="clear search" style="position:relative; top:4px"><i class="fas fa-times fa-2x"></i></a>
         </div>
       </div>
     </div>
@@ -204,6 +204,16 @@ export default {
     border: 1px solid #ffca28;
 }
 
+.elements {
+  color: #78909c;
+}
+.magglass {
+  color: #37474f;
+}
+.search-input {
+  background-color: #eceff1;
+  color: #37474f;
+}
 .keyword {
   text-transform: lowercase;
 }

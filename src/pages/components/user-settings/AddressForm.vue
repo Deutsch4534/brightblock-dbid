@@ -1,5 +1,5 @@
 <template>
-<div>
+<div v-if="!loading">
   <!-- email address -->
   <div class="row mt-3">
     <div class="col-md-12">
@@ -12,8 +12,8 @@
   <div v-if="showCode">
     <div class="row">
       <div class="col-md-12">
-        <form v-on:submit.prevent="" class="form-inline">
-          <input type="text" class="m-0 form-control" style="min-width: 150px;" id="vc-code" placeholder="enter code" v-model="code" required v-on:keyup.13="checkCode($event)">
+        <form v-on:submit.prevent="" class="">
+          <input type="text" class="m-0 form-control" id="vc-code" placeholder="enter code" v-model="code" required v-on:keyup.13="checkCode($event)">
           <a class="btn btn-primary btn-sm text-white" @click.prevent="checkCode($event)">Verify Code</a>
         </form>
       </div>
@@ -21,13 +21,13 @@
   </div>
   <div class="row mt-3">
     <div class="col-md-12">
-      <h6>Email Address</h6>
+      <h6>Email Address <i class="fas fa-check text-success ml-2" v-if="validEmailInfo"></i></h6>
     </div>
   </div>
-  <form v-on:submit.prevent="" class="form-inline needs-validation" novalidate>
+  <form v-on:submit.prevent="" class="needs-validation" novalidate>
     <div class="row">
       <div class="col-md-12">
-        <input type="email" style="min-width: 400px;" class="m-0 form-control" id="vc-email" placeholder="email address" v-model="newEmail" required>
+        <input type="email" class="m-0 form-control" id="vc-email" placeholder="email address" v-model="newEmail" required>
         <button class="btn btn-primary btn-sm"><a @click="checkEmailForm($event)">Send Code</a></button>
       </div>
     </div>
@@ -36,7 +36,7 @@
   <!-- shipping address -->
   <div class="row mt-3">
     <div class="col-md-12">
-      <h6>Shipping Address</h6>
+      <h6>Shipping Address <i class="fas fa-check text-success ml-2" v-if="validShippingInfo"></i></h6>
     </div>
   </div>
   <form v-on:submit.prevent="checkForm" class="needs-validation py-1" novalidate>
@@ -89,24 +89,37 @@ export default {
     mdbBtn
   },
   props: {
-    emailAddress: null,
-    address: null,
   },
   data() {
     return {
+      auxiliaryProfile: null,
       errors: [],
       enterCodeMessage: "We just sent a 6 digit code to this address please copy it into the filed below when it arrives.",
       showCode: false,
       code: null,
       oldEmailAddress: null,
-      newEmail: null
+      newEmail: null,
+      address: null,
+      loading: true
     };
   },
   mounted() {
-    this.oldEmailAddress = this.emailAddress;
-    this.newEmail = this.emailAddress.email;
+    let myProfile = this.$store.getters["myAccountStore/getMyProfile"];
+    this.auxiliaryProfile = myProfile.auxiliaryProfile;
+    this.oldEmailAddress = this.auxiliaryProfile.emailAddress;
+    this.newEmail = this.auxiliaryProfile.emailAddress.email;
+    this.address = this.auxiliaryProfile.shippingAddress;
+    this.loading = false;
   },
   computed: {
+    validEmailInfo() {
+      let validity = this.$store.getters["myAccountStore/getProfileValidity"];
+      return validity.emailValid;
+    },
+    validShippingInfo() {
+      let validity = this.$store.getters["myAccountStore/getProfileValidity"];
+      return validity.shippingValid;
+    },
   },
   methods: {
     addressChange: function() {
@@ -115,18 +128,39 @@ export default {
     cancel: function() {
       this.$emit("cancelAddress");
     },
+    upload: function(type, data) {
+      let myProfile = this.$store.getters["myAccountStore/getMyProfile"];
+      if (type === "email-address") {
+        myProfile.auxiliaryProfile.emailAddress = data;
+      } else if (type === "shipping-address") {
+        myProfile.auxiliaryProfile.shippingAddress = data;
+      }
+      this.$store.dispatch("myAccountStore/updateAuxiliaryProfile", myProfile.auxiliaryProfile)
+        .then(auxiliaryProfile => {
+          this.$emit("sellerInfoUpdated");
+          if (type === "email-address") {
+            this.$notify({type: 'success', title: 'Email Address', text: 'Email address verified.'});
+            this.showCode = false;
+            this.$emit("saveEmail", auxiliaryProfile.emailAddress);
+          } else if (type === "shipping-address") {
+            this.$emit("saveAddress", auxiliaryProfile.shippingAddress);
+            this.$notify({type: 'success', title: 'Shipping Address', text: 'Shipping address saved.'});
+          }
+        })
+        .catch(() => {
+          this.$notify({type: 'success', title: 'Address Information', text: 'Error updating seller information.'});
+        });
+    },
     checkCode: function() {
-      let email = {
+      let emailAddress = {
         email: this.newEmail,
         code: this.code,
         verified: false,
       };
-      this.$store.dispatch("contentStore/sendCheckEmailCode", email).then((response) => {
+      this.$store.dispatch("contentStore/sendCheckEmailCode", emailAddress).then((response) => {
         if (response) {
-          this.$emit("saveEmail", {
-            email: this.newEmail,
-            verified: true,
-          });
+          emailAddress.verified = true;
+          this.upload("email-address", emailAddress);
         } else {
           this.$notify({type: 'error', title: 'Incorrect Code', text: 'Please check your email for the right code.'});
         }
@@ -143,6 +177,7 @@ export default {
         verified: false,
       };
       this.$notify({type: 'info', title: 'Email Update', text: 'Code sent - please check your email.'});
+      this.showCode = true;
       this.$store.dispatch("contentStore/sendVerifyEmail", email).then((response) => {
         this.showCode = true;
       });
@@ -181,7 +216,7 @@ export default {
       if (this.errors.length > 0) {
         return false;
       } else {
-        this.$emit("saveAddress", this.address);
+        this.upload("shipping-address", this.address);
       }
     }
   }

@@ -1,7 +1,6 @@
 // myArtworksStore.js
 import artworkSearchService from "@/services/artworkSearchService";
 import myArtworksService from "@/services/myArtworksService";
-import myAccountService from "@/services/myAccountService";
 import moneyUtils from "@/services/moneyUtils";
 import settings from "@/services/settings";
 import _ from "lodash";
@@ -63,7 +62,7 @@ const myArtworksStore = {
       let userProfile = store.getters["myAccountStore/getMyProfile"];
       return userProfile.username === artwork.owner;
     },
-    myArtworkOrDefault: (state, getters) => id => {
+    myArtworkOrDefault: (state, getters) => id => username => {
       let artwork = getters.myArtwork(id);
       if (!artwork) {
         artwork = {
@@ -81,11 +80,10 @@ const myArtworksStore = {
           supportingDocuments: [],
           artwork: []
         };
-        let user = myAccountService.myProfile();
-        if (user) {
-          artwork.uploader = user.username;
-          artwork.owner = user.username;
-          artwork.artist = user.username;
+        if (username) {
+          artwork.uploader = username;
+          artwork.owner = username;
+          artwork.artist = username;
         }
       }
       return artwork;

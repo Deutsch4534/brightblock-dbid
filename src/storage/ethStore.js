@@ -116,6 +116,7 @@ const ethStore = {
         const SERVER_URL = store.state.constants.ethGatewayUrl;
         let socket = new SockJS(SERVER_URL + "/exchanges");
         let stompClient = Stomp.over(socket);
+        stompClient.debug = null;
         stompClient.connect(
           {},
           function(o) {

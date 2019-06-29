@@ -265,6 +265,10 @@ export default {
     loadContract() {
       ethereumService.loadContract(this.contractAddress);
       location.reload();
+    },
+    clearContract() {
+      ethereumService.loadContract(this.contractAddress);
+      this.$notify({type: 'success', title: 'Admin', text: 'Cleared profile of current user.'});
     }
   },
   computed: {

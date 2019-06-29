@@ -1,7 +1,9 @@
 <template>
 <div class="container-fluid flex-1">
-  <div class="d-flex justify-content-center bg-spinner" v-if="loading">
-    <mdb-spinner big multicolor />
+  <div class="d-flex justify-content-center" role="status" v-if="loading">
+    <div class="spinner-border" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
   </div>
   <div v-else>
     <div class="bg-card" v-if="!item">
@@ -59,20 +61,17 @@ export default {
     this.$store.dispatch("myItemStore/fetchMyItem", itemId).then((item) => {
       if (item) {
         this.item = item;
-        this.$store.dispatch("myAccountStore/fetchMyAccount").then(myProfile => {
-          this.myProfile = myProfile;
-          let assetHash = utils.buildBitcoinHash(item);
-          this.$store.dispatch("assetStore/lookupAssetByHash", assetHash).then(asset => {
-            if (asset) {
+        let assetHash = utils.buildBitcoinHash(item);
+        this.$store.dispatch("assetStore/lookupAssetByHash", assetHash).then(asset => {
+          if (asset) {
+            this.asset = asset;
+            this.loading = false;
+          } else {
+            this.$store.dispatch("assetStore/initialiseAsset", item).then(asset => {
               this.asset = asset;
               this.loading = false;
-            } else {
-              this.$store.dispatch("assetStore/initialiseAsset", item).then(asset => {
-                this.asset = asset;
-                this.loading = false;
-              });
-            }
-          });
+            });
+          }
         });
       } else {
         this.loading = false;

@@ -1,5 +1,5 @@
 {
-  "name": "RadicleArt",
+  "name": "dBid",
   "version": "0.1.0",
   "description": "Radicle Art Auctions",
   "author": "M. J. Cohen <mjoecohen@gmail.com>",
@@ -25,7 +25,7 @@
     "bitcoinjs-message": "^2.1.0",
     "blockstack": "^18.3.0",
     "bootstrap-css-only": "^4.2.1",
-    "brightblock-lib": "^1.0.12",
+    "brightblock-lib": "^1.0.15",
     "crypto-js": "^3.1.9-1",
     "dotenv": "^6.2.0",
     "fs": "0.0.1-security",
@@ -50,7 +50,7 @@
     "vue-router": "^3.0.2",
     "vuex": "^3.1.0",
     "vuex-router-sync": "^5.0.0",
-    "web3": "0.19.0",
+    "web3": "^0.20.7",
     "weekstart": "^1.0.0"
   },
   "devDependencies": {

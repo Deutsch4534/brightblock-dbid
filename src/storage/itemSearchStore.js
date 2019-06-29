@@ -133,7 +133,7 @@ const itemSearchStore = {
       }
     },
     clearSearchResults(state) {
-      state.searchResults = [];
+      // state.searchResults = [];
     }
   },
   actions: {

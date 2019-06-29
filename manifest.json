@@ -1,7 +1,7 @@
 {
   "name": "dBid",
   "short_name": "dBid",
-  "description": "A peer to peer marketplace and bidding platform",
+  "description": "Turn old stuff into Bitcoin",
   "start_url": "/gallery",
   "icons": [{
     "src": "https://dbid.io/static/dB_256x256_dark.png",
@@ -12,7 +12,7 @@
     "sizes": "512x512",
     "type": "image/png"
   }],
-  "background_color": "#333",
+  "background_color": "#333333",
   "display": "standalone",
-  "theme_color": "#333"
+  "theme_color": "#333333"
 }

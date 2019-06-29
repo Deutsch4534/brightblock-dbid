@@ -6,8 +6,7 @@ import myAccountService from "./myAccountService";
 
 const collaborationService = {
   sendMessage: function(data, success, failure) {
-    let profile = myAccountService.myProfile();
-    data.sender = profile.username;
+    data.sender = myAccountService.myBlockstackId();
     data.type = "artwork";
     data.domain = location.hostname;
     let endPoint = settings.commsUrl + "/send-to";
@@ -18,6 +17,7 @@ const collaborationService = {
   subscribeCollaborationNews: function() {
     let socket = new SockJS(settings.commsUrl + "/collab");
     let stompClient = Stomp.over(socket);
+    stompClient.debug = null;
     let connectSuccess = function() {
       stompClient.subscribe("/topic/collab", function(response) {
         collaborationService.fiatRates = JSON.parse(response.body);

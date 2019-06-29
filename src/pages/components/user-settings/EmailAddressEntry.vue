@@ -13,7 +13,7 @@
       <div class="col-md-12">
         <form v-on:submit.prevent="" class="form-inline">
           <input type="text" class="m-0 form-control" style="min-width: 150px;" id="vc-code" placeholder="enter code" v-model="code"  v-on:keyup.13="checkCode($event)">
-          <a class="btn btn-default btn-sm text-white" @click.prevent="checkCode($event)">Verify Code</a>
+          <a class="btn btn-primary btn-sm text-white" @click.prevent="checkCode($event)">Verify Code</a>
         </form>
       </div>
     </div>
@@ -22,8 +22,8 @@
     <div class="row">
       <div class="col-md-12">
         <input type="email" style="min-width: 400px;" class="m-0 form-control" id="vc-email" placeholder="email address" v-model="newEmail" required>
-        <button class="btn btn-default btn-sm"><a @click="checkEmailForm($event)">Send Code</a></button>
-        <a class="btn btn-default btn-sm text-white" @click.prevent="cancel">Back</a>
+        <button class="btn btn-primary btn-sm"><a @click="checkEmailForm($event)">Send Code</a></button>
+        <a class="btn btn-primary btn-sm text-white" @click.prevent="cancel">Back</a>
       </div>
     </div>
   </form>

@@ -79,11 +79,6 @@ export default {
     deletable() {
       return this.$store.getters["myItemStore/editable"](this.item.id);
     },
-    bitcoinAddress() {
-      if (this.myProfile.publicKeyData) {
-        return this.myProfile.publicKeyData.bitcoinAddress;
-      }
-    },
     created() {
       if (this.item.created) {
         return moment(this.item.created).format("YYYY-MM-DD");

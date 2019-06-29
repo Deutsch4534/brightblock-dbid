@@ -13,6 +13,49 @@ const myAccountStore = {
   getters: {
     getMyProfile: state => {
       return state.myProfile;
+    },
+    getPaymentNetwork: state => {
+      let profile = state.myProfile;
+      let network = profile.publicKeyData.paymentNetwork;
+      let address;
+      if (network === 'bitcoin') {
+        address = profile.publicKeyData.rxAddressList[0].address;
+      } else if (network === 'lightning') {
+        address = profile.publicKeyData.rxAddressList[1].address;
+      } else if (network === 'stacks') {
+        address = profile.publicKeyData.rxAddressList[2].address;
+      }
+      if (address && address.length > 15) {
+        return network;
+      }
+      return null;
+    },
+    getProfileValidity: state => {
+      let profile = state.myProfile;
+      let emailValid = false;
+      let au = profile.auxiliaryProfile;
+      if (au && au.emailAddress && au.emailAddress.email && au.emailAddress.verified) {
+        emailValid = true;
+      }
+
+      let address = profile.auxiliaryProfile.shippingAddress;
+      let shippingValid = true;
+      shippingValid = shippingValid && address && address.line1 && address.line1.length > 0;
+      shippingValid = shippingValid && address.city && address.city.length > 0;
+      shippingValid = shippingValid && address.region && address.region.length > 0;
+      shippingValid = shippingValid && address.postcode && address.postcode.length > 0;
+
+      let rxAddressList = profile.publicKeyData.rxAddressList;
+      let bitcoinValid = false;
+      if (rxAddressList[0] && rxAddressList[0].type === "bitcoin" && rxAddressList[0].address && rxAddressList[0].address.length > 10) {
+        bitcoinValid = true;
+      }
+
+      return {
+        emailValid: emailValid,
+        shippingValid: shippingValid,
+        bitcoinValid: bitcoinValid
+      };
     }
   },
   mutations: {
@@ -21,7 +64,7 @@ const myAccountStore = {
     }
   },
   actions: {
-    fetchMyAccount({ state, commit }) {
+    fetchMyAccount({ state, commit, getters }) {
       return new Promise(resolve => {
         let myProfile = state.myProfile;
         if (!myProfile.loggedIn) {
@@ -30,48 +73,43 @@ const myAccountStore = {
             if (loggedInState === 2) {
               myAccountService.doPendingSignin(function(res) {
                 myProfile = myAccountService.myProfile();
-                if (!myProfile.auxiliaryProfile) {
-                  myProfile.auxiliaryProfile = {
-                    shippingAddress: {}
-                  };
-                }
-                if (!myProfile.auxiliaryProfile.shippingAddress) {
-                  myProfile.auxiliaryProfile.shippingAddress = {};
-                }
-                commit("myProfile", myAccountService.myProfile());
-                store.dispatch("myAccountStore/fetchMyAccount");
-                resolve(myProfile);
+                store.dispatch("myAccountStore/fetchFullProfile", myProfile).then(myProfile => {
+                  commit("myProfile", myProfile);
+                  resolve(myProfile);
+                });
               });
             } else {
               myProfile = myAccountService.myProfile();
-              if (!myProfile.auxiliaryProfile) {
-                myProfile.auxiliaryProfile = {
-                  shippingAddress: {}
-                };
-              }
-              if (!myProfile.auxiliaryProfile.shippingAddress) {
-                myProfile.auxiliaryProfile.shippingAddress = {};
-              }
-              commit("myProfile", myProfile);
-              resolve(myProfile);
+              store.dispatch("myAccountStore/fetchFullProfile", myProfile).then(myProfile => {
+                commit("myProfile", myProfile);
+                resolve(myProfile);
+              });
             }
           } else {
-            myProfile = {
-              loggedIn: false,
-              auxiliaryProfile: {
-                shippingAddress: {}
-              }
-            };
+            myProfile = myAccountService.myProfile();
+            commit("myProfile", myProfile);
             resolve(myProfile);
-            return;
+          }
+        } else {
+          myProfile = myAccountService.myProfile();
+          let validity = getters.getProfileValidity;
+          if (validity.emailValid || validity.shippingValid || validity.bitcoinValid) {
+            resolve(myProfile);
+          } else {
+            store.dispatch("myAccountStore/fetchFullProfile", myProfile).then(myProfile => {
+              commit("myProfile", myProfile);
+              resolve(myProfile);
+            });
           }
         }
+      });
+    },
+    fetchFullProfile({ state, commit }, myProfile) {
+      return new Promise(resolve => {
         myAccountService.getAuxiliaryProfile(function(auxiliaryProfile) {
           myProfile.auxiliaryProfile = auxiliaryProfile;
-          commit("myProfile", myProfile);
-          myAccountService.getPublicKeyData(myProfile, function(publicKeyData) {
+          myAccountService.getPublicKeyData(function(publicKeyData) {
             myProfile.publicKeyData = publicKeyData;
-            commit("myProfile", myProfile);
             resolve(myProfile);
           }, function(err) {
             console.log(err);
@@ -116,10 +154,64 @@ const myAccountStore = {
         );
       });
     },
+    updatePaymentNetwork({ state, commit }, network) {
+      return new Promise(resolve => {
+        let myProfile = state.myProfile;
+        if (!network || (network !== 'bitcoin' && network !== 'lightning' && network !== 'stacks')) {
+          throw new Error("invalid network: " + network);
+        }
+        myProfile.publicKeyData.paymentNetwork = network;
+        myAccountService.updatePublicKeyData(myProfile, myProfile.publicKeyData,
+          function(publicKeyData) {
+            myProfile.publicKeyData = publicKeyData;
+            commit("myProfile", myProfile);
+            resolve(myProfile);
+          },
+          function(error) {
+            console.log("Error updating profile: ", error);
+            resolve(error);
+          }
+        );
+      });
+    },
     updateBitcoinAddress({ state, commit }, bitcoinAddress) {
       return new Promise(resolve => {
         let myProfile = state.myProfile;
-        myProfile.publicKeyData.bitcoinAddress = bitcoinAddress;
+        myProfile.publicKeyData.rxAddressList[0].address = bitcoinAddress;
+        myAccountService.updatePublicKeyData(myProfile, myProfile.publicKeyData,
+          function(publicKeyData) {
+            myProfile.publicKeyData = publicKeyData;
+            commit("myProfile", myProfile);
+            resolve(myProfile);
+          },
+          function(error) {
+            console.log("Error updating profile: ", error);
+            resolve(error);
+          }
+        );
+      });
+    },
+    updateLightningAddress({ state, commit }, lightningAddress) {
+      return new Promise(resolve => {
+        let myProfile = state.myProfile;
+        myProfile.publicKeyData.rxAddressList[1].address = lightningAddress;
+        myAccountService.updatePublicKeyData(myProfile, myProfile.publicKeyData,
+          function(publicKeyData) {
+            myProfile.publicKeyData = publicKeyData;
+            commit("myProfile", myProfile);
+            resolve(myProfile);
+          },
+          function(error) {
+            console.log("Error updating profile: ", error);
+            resolve(error);
+          }
+        );
+      });
+    },
+    updateStacksAddress({ state, commit }, stacksAddress) {
+      return new Promise(resolve => {
+        let myProfile = state.myProfile;
+        myProfile.publicKeyData.rxAddressList[2].address = stacksAddress;
         myAccountService.updatePublicKeyData(myProfile, myProfile.publicKeyData,
           function(publicKeyData) {
             myProfile.publicKeyData = publicKeyData;

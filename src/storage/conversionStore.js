@@ -55,9 +55,15 @@ const conversionStore = {
             commit("setFiatRates", data.rates);
             resolve(data.rates);
           } else {
-            resolve();
+            commit("setFiatRates", []);
+            resolve([]);
           }
-        });
+        })
+          .catch(err => {
+            console.log(err);
+            commit("setFiatRates", []);
+            resolve([]);
+          });
       });
     },
     fetchShapeShiftCryptoRate: function({ commit }, pair) {

@@ -9,13 +9,13 @@ import Contact from "./pages/Contact.vue";
 import UserSettings from "./pages/UserSettings.vue";
 import Login from "./pages/Login.vue";
 
-import Admin from "./views/Admin.vue";
-import AdminSettings from "./views/components/admin/AdminSettings";
-import AdminBitcoin from "./views/components/admin/AdminBitcoin";
-import AdminLightning from "./views/components/admin/AdminLightning";
-import AdminRegistrations from "./views/components/admin/AdminRegistrations";
-import AdminBuildIndex from "./views/components/admin/AdminBuildIndex";
-import AdminQueryIndex from "./views/components/admin/AdminQueryIndex";
+import Admin from "./pages/Admin.vue";
+import AdminSettings from "./pages/components/admin/AdminSettings";
+import AdminBitcoin from "./pages/components/admin/AdminBitcoin";
+import AdminLightning from "./pages/components/admin/AdminLightning";
+import AdminRegistrations from "./pages/components/admin/AdminRegistrations";
+import AdminBuildIndex from "./pages/components/admin/AdminBuildIndex";
+import AdminQueryIndex from "./pages/components/admin/AdminQueryIndex";
 
 import NewsSignup from "./views/NewsSignup.vue";
 import Landing from "./views/Landing.vue";
@@ -59,7 +59,7 @@ const router = new Router({
   routes: [
     {
       path: "/index",
-      name: "index",
+      name: "index1",
       components: {
         default: Index,
         header: Navbar,
@@ -252,6 +252,44 @@ const router = new Router({
         footer: Footer
       },
       meta: { requiresAuth: false }
+    },
+    {
+      path: "/admin",
+      name: "admin",
+      meta: { requiresAuth: true },
+      components: { default: Admin, header: Navbar, footer: Footer },
+      children: [
+        {
+          path: "/admin/build-index",
+          name: "adminBuildIndex",
+          component: AdminBuildIndex
+        },
+        {
+          path: "/admin/query-index",
+          name: "adminQueryIndex",
+          component: AdminQueryIndex
+        },
+        {
+          path: "/admin/settings",
+          name: "adminSettings",
+          component: AdminSettings
+        },
+        {
+          path: "/admin/bitcoin",
+          name: "adminBitcoin",
+          component: AdminBitcoin
+        },
+        {
+          path: "/admin/lightning",
+          name: "adminLightning",
+          component: AdminLightning
+        },
+        {
+          path: "/admin/registrations",
+          name: "adminRegistrations",
+          component: AdminRegistrations
+        }
+      ]
     },
 
     {
@@ -519,44 +557,6 @@ const router = new Router({
       },
       meta: { requiresAuth: true }
     },
-    {
-      path: "/admin",
-      name: "admin",
-      meta: { requiresAuth: true },
-      components: { default: Admin, header: Navbar, footer: Footer },
-      children: [
-        {
-          path: "/admin/build-index",
-          name: "adminBuildIndex",
-          component: AdminBuildIndex
-        },
-        {
-          path: "/admin/query-index",
-          name: "adminQueryIndex",
-          component: AdminQueryIndex
-        },
-        {
-          path: "/admin/settings",
-          name: "adminSettings",
-          component: AdminSettings
-        },
-        {
-          path: "/admin/bitcoin",
-          name: "adminBitcoin",
-          component: AdminBitcoin
-        },
-        {
-          path: "/admin/lightning",
-          name: "adminLightning",
-          component: AdminLightning
-        },
-        {
-          path: "/admin/registrations",
-          name: "adminRegistrations",
-          component: AdminRegistrations
-        }
-      ]
-    },
   ],
   scrollBehavior (to, from, savedPosition) {
     return {x: 0, y: 0};
@@ -567,7 +567,7 @@ router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
     // this route requires auth, check if logged in
     // if not, redirect to login page.
-    if (myAccountService.myProfile() && myAccountService.myProfile().loggedIn) {
+    if (myAccountService.isLoggedIn()) {
       return next();
     } else {
       return next({

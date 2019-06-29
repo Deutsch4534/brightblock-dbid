@@ -5,7 +5,7 @@
   </div>
   <div class="col-lg-7 col-xl-7 ml-xl-4 mb-4">
     <item-action-links class="" :item="item" :itemAction="'update'" :asset="asset" :buttonMode="false"/>
-    <div class="d-flex justify-content-start bg-card">
+    <div class="d-flex justify-content-start">
       <item-upload-form :formTitle="'Update Listing'" :itemId="item.id" :mode="'update'" :myProfile="myProfile"/>
     </div>
   </div>

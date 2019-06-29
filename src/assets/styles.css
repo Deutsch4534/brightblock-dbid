@@ -90,12 +90,18 @@ a {
   /** background-color: #5400E8; **/
 }
 .bg-spinner {
-  background-color: #eceff1;
   border-radius: 10px;
   padding-top: 20px;
   padding-bottom: 20px;
 }
-
+.bg-card {
+  background-color: #EFF1F2 !important;
+  border-radius: 10px;
+  padding: 40px;
+}
+.spinner-border {
+  margin-top: 40px;
+}
 .border-shadow::after {
   content: '';
   position: absolute;

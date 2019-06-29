@@ -8,7 +8,8 @@ const lightningStore = {
     peerInfo: [],
     walletBalances: [],
     pubkeys: [],
-    invoice: null
+    invoice: null,
+    decodedInvoice: null
   },
   getters: {
     getLightningState: state => {
@@ -24,6 +25,9 @@ const lightningStore = {
     },
     nodeInfo(state, data) {
       state.nodeInfo[data.nodeName] = data.nodeInfo;
+    },
+    decodedInvoice(state, decodedInvoice) {
+      state.decodedInvoice = decodedInvoice;
     },
     walletBalances(state, walletBalances) {
       state.walletBalances = walletBalances;
@@ -123,6 +127,18 @@ const lightningStore = {
         lightningService.getPeerInfo(command).then(peerInfo => {
           commit("peerInfo", peerInfo);
           resolve(peerInfo);
+        })
+          .catch(error => {
+            resolve(error);
+          });
+      });
+    },
+    fetchDecodedInvoice({ commit, state }, data) {
+      return new Promise(resolve => {
+        // info: listPeers walletBalance  pendingChannels listChannels closedChannels listInvoices
+        lightningService.decodeInvoice("alice", data).then(decodedInvoice => {
+          commit("decodedInvoice", decodedInvoice);
+          resolve(decodedInvoice);
         })
           .catch(error => {
             resolve(error);

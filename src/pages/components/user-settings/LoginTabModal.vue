@@ -5,7 +5,7 @@
   </mdb-modal-header>
   <mdb-modal-body v-html="content"></mdb-modal-body>
   <mdb-modal-footer>
-    <mdb-btn class="btn btn-teal text-white" @click.native="reloadMe">Reload</mdb-btn>
+    <mdb-btn class="btn btn-primary text-white" @click.native="reloadMe">Reload</mdb-btn>
   </mdb-modal-footer>
 </mdb-modal>
 </template>

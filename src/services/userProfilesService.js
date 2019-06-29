@@ -1,7 +1,8 @@
 import {
   getFile, lookupProfile
 } from "blockstack";
-import settings from "./settings";
+
+const publicKeyDataRootFileName = "public_key_data_v03.json";
 
 const userProfilesService = {
   fetchUserProfile: function(username, success, failure) {
@@ -25,7 +26,6 @@ const userProfilesService = {
               userProfile.gaiaUrl = userProfile.apps[key];
             }
           }
-          let publicKeyDataRootFileName = settings.publicKeyDataRootFileName;
           getFile(publicKeyDataRootFileName, {username: username, decrypt: false}).then(function(file) {
             if (file) {
               userProfile.publicKeyData = JSON.parse(file);

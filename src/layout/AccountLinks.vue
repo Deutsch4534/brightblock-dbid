@@ -61,7 +61,7 @@ export default {
   },
   computed: {
     showAdmin() {
-      return this.$store.state.myAccountStore.myProfile.showAdmin;
+      return this.$store.getters["myAccountStore/getMyProfile"].showAdmin;
     },
     hasGalleries() {
       let galleries = this.$store.getters["galleryStore/getMyGalleries"];

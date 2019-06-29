@@ -25,7 +25,6 @@
 <script>
 import xhrService from "@/services/xhrService";
 import { mdbPopover, mdbIcon, mdbCardBody, mdbCardTitle, mdbCardText, mdbBtn } from "mdbvue";
-import BitcoinAddress from "../user-settings/BitcoinAddress";
 import ItemImageListView from "./ItemImageListView";
 import ItemActionLinks from "./ItemActionLinks";
 
@@ -33,7 +32,7 @@ import ItemActionLinks from "./ItemActionLinks";
 export default {
   name: "MyItemCoa",
   components: {
-    BitcoinAddress, ItemImageListView, ItemActionLinks,
+    ItemImageListView, ItemActionLinks,
     mdbCardBody,
     mdbPopover,
     mdbIcon,
@@ -65,18 +64,13 @@ export default {
     return {
       result: null,
       downloadLink: null,
-      showBitcoinAddress: false,
       validBitcoinAdress: false,
       message: null,
     };
   },
   mounted() {
-    this.showBitcoinAddress = true;
   },
   computed: {
-    hasBitcoinAddress() {
-      return this.myProfile.publicKeyData.bitcoinAddress;
-    },
     myItemUrl() {
       return `/my-items/${this.item.id}`;
     },
@@ -89,20 +83,6 @@ export default {
         .then((item) => {
           this.$emit("reload");
         });
-    },
-    updateBitcoinAddress(bitcoinAddress) {
-      this.validBitcoinAdress = bitcoinAddress;
-      this.$store.dispatch("myAccountStore/updateBitcoinAddress", bitcoinAddress);
-      this.modal = true;
-    },
-    blockchainInfoUrl() {
-      let item = this.item;
-      let state = this.$store.getters["assetStore/getBitcoinConfig"];
-      if (state.chain === "test") {
-        // return `https://testnet.blockexplorer.com/tx/${item.bitcoinTx}`;
-        return `https://testnet.smartbit.com.au/tx/${item.bitcoinTx}`;
-      }
-      return `https://www.blockchain.com/btc/tx/${item.bitcoinTx}`;
     },
     generateCoa: function() {
       let canvas, qrCodeDataUrl;

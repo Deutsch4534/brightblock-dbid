@@ -6,6 +6,7 @@ const conversionService = {
   subscribeExchangeRateNews: function() {
     let socket = new SockJS(settings.ethGatewayUrl + "/exchanges");
     let stompClient = Stomp.over(socket);
+    stompClient.debug = null;
     let connectSuccess = function() {
       stompClient.subscribe("/topic/exchanges", function(response) {
         conversionService.fiatRates = JSON.parse(response.body);

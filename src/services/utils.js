@@ -63,44 +63,49 @@ const utils = {
     let amounts = utils.getAmounts(otherData.fiatRate, invoiceRates, item.saleData, item.gallerist, item.artist !== item.owner);
     let residuals = [];
     let objectIdent = "item_::_" + item.id;
+    let btcaddr;
     if (otherData.gallerist) {
+      btcaddr = (otherData.gallerist.publicKeyData) ? otherData.gallerist.publicKeyData.rxAddressList[0].address : null;
       residuals.splice(0, 0, {
         label: objectIdent + "_::_gallerist",
         did: otherData.gallerist.username,
         rate: invoiceRates.galleryResidualFee,
         chainData: {
-          bitcoinAddress: (otherData.gallerist.publicKeyData) ? otherData.gallerist.publicKeyData.bitcoinAddress : null
+          bitcoinAddress: btcaddr
         },
         amountFiat: amounts.fiatGalleryAmount,
         amountBitcoin: amounts.bitcoinGalleryAmount
       });
     }
     if (otherData.creator) {
+      btcaddr = (otherData.creator.publicKeyData) ? otherData.creator.publicKeyData.rxAddressList[0].address : null;
       residuals.splice(0, 0, {
         label: objectIdent + "_::_creator",
         did: otherData.creator.username,
         rate: invoiceRates.artistResidualFee,
         chainData: {
-          bitcoinAddress: (otherData.creator.publicKeyData) ? otherData.creator.publicKeyData.bitcoinAddress : null
+          bitcoinAddress: btcaddr
         },
         amountFiat: amounts.fiatArtistAmount,
         amountBitcoin: amounts.bitcoinArtistAmount
       });
     }
+    btcaddr = (otherData.seller.publicKeyData) ? otherData.seller.publicKeyData.rxAddressList[0].address : null;
     let seller = {
       label: objectIdent + "_::_seller",
       did: otherData.seller.username,
       chainData: {
-        bitcoinAddress: (otherData.seller.publicKeyData) ? otherData.seller.publicKeyData.bitcoinAddress : null
+        bitcoinAddress: btcaddr
       },
       amountFiat: amounts.fiatAmount,
       amountBitcoin: amounts.bitcoinAmount
     };
+    btcaddr = (otherData.buyer.publicKeyData) ? otherData.buyer.publicKeyData.rxAddressList[0].address : null;
     let buyer = {
       label: objectIdent + "_::_buyer",
       did: otherData.buyer.username,
       chainData: {
-        bitcoinAddress: (otherData.buyer.publicKeyData) ? otherData.buyer.publicKeyData.bitcoinAddress : null
+        bitcoinAddress: btcaddr
       },
       amountFiat: amounts.totalFiat,
       amountBitcoin: amounts.totalBitcoin

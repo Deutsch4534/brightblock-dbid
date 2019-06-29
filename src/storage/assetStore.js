@@ -16,7 +16,10 @@ const assetStore = {
   },
   getters: {
     getBitcoinConfig: state => {
-      return state.bitcoinConfig;
+      if (state.bitcoinConfig) {
+        return state.bitcoinConfig;
+      }
+      return {};
     },
     getLightningConfig: state => {
       return state.lightningConfig;

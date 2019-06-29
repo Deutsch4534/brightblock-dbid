@@ -1,7 +1,6 @@
 // myItemStore.js
 import itemSearchService from "@/services/itemSearchService";
 import myItemService from "@/services/myItemService";
-import myAccountService from "@/services/myAccountService";
 import moneyUtils from "@/services/moneyUtils";
 import { CONSTANTS } from "@/storage/constants";
 import _ from "lodash";
@@ -76,10 +75,6 @@ const myItemStore = {
           created: moment({}),
           supportingDocuments: []
         };
-        let user = myAccountService.myProfile();
-        if (user) {
-          item.owner = user.username;
-        }
       }
       return item;
     },

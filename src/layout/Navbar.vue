@@ -2,16 +2,16 @@
 <header class="" style="height: 70px;">
 <login-tab-modal v-if="showModal" :modal="showModal" @closeModal="closeModal"/>
 <div class="d-flex justify-content-between blue-grey lighten-1 pb-0" style="position: relative; top: 0px;height: 69px;">
-  <div class="p-0 d-none d-sm-block"><router-link to="/index" class="nav-link navbar-link"><img :src="logo" width="100px" alt="main logo"></router-link></div>
-  <div class="pt-2 d-xs-block d-none text-danger" style="font-size: 1.8rem; position: relative; top: 2px;"><router-link to="/" class="nav-link navbar-link">dB</router-link></div>
+  <div class="p-0 d-none d-sm-block"><router-link to="/" class="nav-link navbar-link"><img :src="logo" width="100px" alt="main logo"></router-link></div>
+  <div class="pt-0 d-sm-none d-block text-danger" style="font-size: 1.8rem; position: relative; top: 2px;"><router-link to="/" class="nav-link navbar-link"><img :src="logoSm" width="50px" alt="main logo"></router-link></div>
   <!-- #33b5e5 #ffea00 #ff8800 #64dd17 #ab47bc -->
   <div class="d-sm-none d-xs-block text-center pt-4 " style="position: relative; top: -2px;">
-    <router-link class="d-inline btn btn-sm bg-success text-white" style="font-weight: 600; font-weight: 600;" to="/buy"><small>BUY <i class="fas fa-angle-down text-dark ml-3 fa-1x"></i></small></router-link>
-    <router-link class="d-inline btn btn-sm bg-danger text-white my-auto " style="font-weight: 600;" to="/sell"><small>SELL <i class="fas fa-angle-up text-dark ml-3 fa-2x"></i></small></router-link>
+    <router-link class="d-inline btn btn-sm bg-success text-white px-2" style="font-weight: 600; font-weight: 600;" to="/buy"><small>BUY <i class="fas fa-angle-down text-dark ml-1 fa-1x"></i></small></router-link>
+    <router-link class="d-inline btn btn-sm bg-danger text-white my-auto px-2" style="font-weight: 600;" to="/sell"><small>SELL <i class="fas fa-angle-up text-dark ml-1 fa-1x"></i></small></router-link>
   </div>
   <div class="d-none d-sm-block pt-4 mr-5" style="position: relative; top: -2px;">
-    <router-link class="d-inline btn btn-sm bg-success text-white" style="font-weight: 600;" to="/buy">BUY <i class="fas fa-angle-down text-dark ml-3 fa-1x"></i></router-link>
-    <router-link class="d-inline btn btn-sm bg-danger text-white" style="font-weight: 600;" to="/sell">SELL <i class="fas fa-angle-up text-dark ml-3 fa-1x"></i></router-link>
+    <router-link class="d-inline btn btn-sm bg-success text-white" style="font-weight: 600;" to="/buy">BUY <i class="fas fa-angle-down text-dark ml-2 fa-1x"></i></router-link>
+    <router-link class="d-inline btn btn-sm bg-danger text-white" style="font-weight: 600;" to="/sell">SELL <i class="fas fa-angle-up text-dark ml-2 fa-1x"></i></router-link>
   </div>
 
   <div class="pt-2" style="position: relative; top: 2px;" v-if="!loggedIn"><a v-on:click.prevent="loginMultiPlayer" class="nav-link navbar-link">Login <i class="fas fa-sign-in-alt"></i></a></div>
@@ -49,7 +49,8 @@ export default {
       taglink2: '',
       toggleClass: '',
       showModal: false,
-      logo: require("@/assets/img/logo/dB_short_433x200_dark.png")
+      logo: require("@/assets/img/logo/dB_short_433x200_dark.png"),
+      logoSm: require("@/assets/img/logo/dB_Blockstack_dark_transparent.png")
     };
   },
   components: {

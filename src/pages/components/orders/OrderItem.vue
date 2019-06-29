@@ -1,6 +1,8 @@
 <template>
-<div class="d-flex justify-content-center bg-spinner" v-if="loading">
-  <mdb-spinner big multicolor />
+<div class="d-flex justify-content-center" role="status" v-if="loading">
+  <div class="spinner-border" role="status">
+    <span class="sr-only">Loading...</span>
+  </div>
 </div>
 <div class="row" v-else>
   <div class="col-12" v-if="asset.status === 3">
