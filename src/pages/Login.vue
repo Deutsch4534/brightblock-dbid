@@ -2,20 +2,17 @@
 <mdb-container>
   <login-tab-modal v-if="showModal" :modal="showModal" @closeModal="closeModal"/>
   <mdb-modal v-if="login" @close="closeLogin">
-    <mdb-modal-header class="text-center">
-      <mdb-modal-title tag="h4" bold class="w-100">Login</mdb-modal-title>
+    <mdb-modal-header class="">
+      <mdb-modal-title tag="h4" bold>Login</mdb-modal-title>
     </mdb-modal-header>
-    <mdb-modal-body class="mx-3 text-center">
-      <mdb-btn><button class="btn btn-light btn-block" v-on:click="loginMultiPlayer">Login with Blockstack</button></mdb-btn>
+    <mdb-modal-body>
+      <button class="btn btn-primary btn-block" v-on:click="loginMultiPlayer">Login with Blockstack</button>
     </mdb-modal-body>
     <mdb-modal-footer>
-      <div class="row">
-        <div class="col-12 text-right">
-          <small class="text-muted"><a @click.prevent="showBrowser = !showBrowser">whats this?</a></small>
-        </div>
-        <div class="col-12 text-right" v-if="showBrowser">
-          <small class="text-muted"><a href="https://blockstack.org/install/" target="_blank" rel="noreferrer">Install blockstack browser</a> to access the decentralised web 3.0!</small>
-        </div>
+      <div><small class="text-muted"><a @click.prevent="showBrowser = !showBrowser">Sign Up</a></small></div>
+      <div class="text-center" v-if="showBrowser">
+        <div class="mt-3">To access the decentralised web...</div>
+        <div class="mt-3">Create your own online identity <a class="text-primary" href="https://blockstack.org/install/" target="_blank" rel="noreferrer"><i class="fas fa-angle-right mr-2"></i><u>Install Blockstack</u></a></div>
       </div>
     </mdb-modal-footer>
   </mdb-modal>

@@ -60,7 +60,8 @@ const utils = {
 
   initialisePurchaseCycle: function(item, otherData) {
     let invoiceRates = settings.invoiceRates;
-    let amounts = utils.getAmounts(otherData.fiatRate, invoiceRates, item.saleData, item.gallerist, item.artist !== item.owner);
+    let includeArtist = item.artist && item.artist !== item.owner;
+    let amounts = utils.getAmounts(otherData.fiatRate, invoiceRates, item.saleData, item.gallerist, includeArtist);
     let residuals = [];
     let objectIdent = "item_::_" + item.id;
     let btcaddr;

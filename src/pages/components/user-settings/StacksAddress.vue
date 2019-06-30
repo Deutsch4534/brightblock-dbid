@@ -117,16 +117,19 @@ export default {
       this.updateStacksAddress(null);
     },
     checkStacksAddress(stacksAddress, emit) {
-        if (stacksAddress && stacksAddress.length > 20 && (stacksAddress.indexOf("SM") === 0 || stacksAddress.indexOf("SP") === 0)) {
-          this.removedAddress = false;
-          this.addQrCode(stacksAddress);
-          this.message = null;
-          if (emit) {
-            this.updateStacksAddress(stacksAddress);
-          }
-        } else {
-          this.message = "Invalid address - is it the right key for the current stacks network?";
+      if (stacksAddress && stacksAddress.indexOf(" ") > -1) {
+        stacksAddress = stacksAddress.trim();
+      }
+      if (stacksAddress && stacksAddress.length > 20 && (stacksAddress.indexOf("SM") === 0 || stacksAddress.indexOf("SP") === 0)) {
+        this.removedAddress = false;
+        this.addQrCode(stacksAddress);
+        this.message = null;
+        if (emit) {
+          this.updateStacksAddress(stacksAddress);
         }
+      } else {
+        this.message = "Invalid address - is it the right key for the current stacks network?";
+      }
     },
     updateStacksAddress(stacksAddress) {
       this.$store.dispatch("myAccountStore/updateStacksAddress", stacksAddress).then((prof) => {

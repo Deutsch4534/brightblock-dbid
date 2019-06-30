@@ -153,10 +153,6 @@ export default {
     },
     closeModal: function() {
       this.modal = false;
-      let btcaddr = this.myProfile.publicKeyData.rxAddressList[0].address;
-      if (this.fromPage === "upload-artwork" && btcaddr) {
-        this.$router.push("/my-item/upload");
-      }
     },
     updateBitcoinAddress(bitcoinAddress) {
       this.$store.dispatch("myAccountStore/updateBitcoinAddress", bitcoinAddress).then(() => {

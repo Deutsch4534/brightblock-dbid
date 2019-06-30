@@ -61,28 +61,44 @@ const contentStore = {
         const url = "https://medium.com/@radicleart/latest?format=json";
         xhrService.makeDirectCall(url).then(function(articles) {
           resolve(articles);
-        });
+        })
+          .catch(error => {
+            console.log(error);
+            resolve();
+          });
       });
     },
     sendCheckEmailCode: function({ commit }, email) {
       return new Promise(resolve => {
         tradingService.sendCheckEmailCode(email).then(response => {
           resolve(response);
-        });
+        })
+          .catch(error => {
+            console.log(error);
+            resolve();
+          });
       });
     },
     sendVerifyEmail: function({ commit }, email) {
       return new Promise(resolve => {
         tradingService.sendVerifyEmail(email).then(response => {
           resolve(response);
-        });
+        })
+          .catch(error => {
+            console.log(error);
+            resolve();
+          });
       });
     },
     sendContactEmail: function({ commit }, email) {
       return new Promise(resolve => {
         tradingService.sendContactEmail(email).then(response => {
           resolve(response);
-        });
+        })
+          .catch(error => {
+            console.log(error);
+            resolve();
+          });
       });
     },
     fetchTaxonomy: function({ state, commit }) {
@@ -94,7 +110,11 @@ const contentStore = {
           tradingService.getTaxonomy().then(taxonomy => {
             commit("addTaxonomy", taxonomy);
             resolve(taxonomy);
-          });
+          })
+            .catch(error => {
+              console.log(error);
+              resolve();
+            });
         }
       });
     },
@@ -107,7 +127,11 @@ const contentStore = {
           tradingService.addCategory(category).then(category => {
             commit("addCategory", category);
             resolve(category);
-          });
+          })
+            .catch(error => {
+              console.log(error);
+              resolve();
+            });
         }
       });
     }

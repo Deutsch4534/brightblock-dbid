@@ -65,6 +65,7 @@ export default {
     let blockstackProfile = this.$store.getters["myAccountStore/getMyProfile"];
     let btcaddr = blockstackProfile.publicKeyData.rxAddressList[0].address;
     if (btcaddr) {
+      this.bitcoinAddress = btcaddr;
       let $self = this;
       setTimeout(function() {
         $self.checkBitcoinAddress(btcaddr);
@@ -82,8 +83,11 @@ export default {
     canMakeBitcoinPaymentNetwork: function() {
       let currentNetwork = this.$store.getters["myAccountStore/getPaymentNetwork"];
       let myProfile = this.$store.getters["myAccountStore/getMyProfile"];
-      let currentAddress = myProfile.publicKeyData.rxAddressList[0].address;
-      return currentNetwork !== "bitcoin" && currentAddress && currentAddress.length > 15;
+      if (myProfile.publicKeyData && myProfile.publicKeyData.rxAddressList) {
+        let currentAddress = myProfile.publicKeyData.rxAddressList[0].address;
+        return currentNetwork !== "bitcoin" && currentAddress && currentAddress.length > 15;
+      }
+      return false;
     },
     btcaddr() {
       let blockstackProfile = this.$store.getters["myAccountStore/getMyProfile"];
@@ -116,6 +120,9 @@ export default {
       this.updateBitcoinAddress(null);
     },
     checkBitcoinAddress(bitcoinAddress, emit) {
+      if (bitcoinAddress && bitcoinAddress.indexOf(" ") > -1) {
+        bitcoinAddress = bitcoinAddress.trim();
+      }
       this.$store.dispatch("bitcoinStore/checkAddress", bitcoinAddress).then((result) => {
         if (result) {
           this.removedAddress = false;

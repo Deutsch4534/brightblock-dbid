@@ -29,7 +29,7 @@ export const settings = {
   },
   invoiceRates: {
     platformAddress: (dev) ? "2Mxyetr5jqQdE6WDtS9x9re43F9JTCxdeJK" : "2N3rYRQu4h29JreiM8kF6KGKVoLkgVj2pTc",
-    platformFee: 4.2,
+    platformFee: 2.0,
     artistResidualFee: 3.0,
     galleryResidualFee: 1.5,
   },

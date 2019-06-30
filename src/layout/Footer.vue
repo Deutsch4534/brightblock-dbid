@@ -6,11 +6,11 @@
       <span class="mr-3"><router-link to="/help/topics">ABOUT</router-link></span>
     </div>
     <div>
-      <span class="copyright d-none d-sm-block">© 2018 DBID.IO</span>
+      <span class="copyright d-none d-sm-block">© 2019 DBID.IO</span>
     </div>
     <div>
       <span class="mr-3"><a href="https://medium.com/@radicleart" target="_blank" rel="noreferrer"><i class="fab fa-medium"></i></a></span>
-      <span class="mr-3"><a href="https://twitter.com/radicleart" target="_blank" rel="noreferrer"><i class="fab fa-twitter"></i></a></span>
+      <span class="mr-3"><a href="https://twitter.com/radiclesociety" target="_blank" rel="noreferrer"><i class="fab fa-twitter"></i></a></span>
       <span class="mr-3"><a href="https://github.com/radicleart/brightblock-oam" target="_blank" rel="noreferrer"><i class="fab fa-github"></i></a></span>
     </div>
   </div>

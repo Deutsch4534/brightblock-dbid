@@ -1,45 +1,30 @@
 <template>
 <div>
-<!--
-<ul class="d-block d-sm-none md-tabs text-dark bg-light" id="myTabMD" role="tablist" style="list-style-type: none;"">
-<li class="nav-item">
-  <a class="nav-link active" id="general-tab-md" data-toggle="tab" @click.prevent="showTab('general')" href="#general-md" role="tab" aria-controls="general-md"
-    aria-selected="true">General<i class="fas fa-check text-success ml-2" v-if="validAddressInfo"></i><i class="fas fa-times text-danger ml-2" v-else></i></a>
-</li>
-<li class="nav-item">
-  <a class="nav-link" id="bitcoin-tab-md" data-toggle="tab" @click.prevent="showTab('bitcoin')" href="#bitcoin-md" role="tab" aria-controls="bitcoin-md" aria-selected="true">
-    Bitcoin<i class="fas fa-check text-success ml-2" v-if="paymentAddress('bitcoin')"></i><i class="fas fa-times text-danger ml-2" v-else></i>
-  </a>
-</li>
-<li class="nav-item" v-if="!buyer">
-  <a class="nav-link" id="lightning-tab-md" data-toggle="tab" @click.prevent="showTab('lightning')" href="#lightning-md" role="tab" aria-controls="lightning-md"
-    aria-selected="false">Lightning<i class="fas fa-check text-success ml-2" v-if="paymentAddress('lightning')"></i></a>
-</li>
-<li class="nav-item" v-if="!buyer">
-  <a class="nav-link" id="stacks-tab-md" data-toggle="tab" @click.prevent="showTab('stacks')" href="#stacks-md" role="tab" aria-controls="stacks-md"
-    aria-selected="false">Stacks<i class="fas fa-check text-success ml-2" v-if="paymentAddress('stacks')"></i></a>
-</li>
-</ul>
--->
-<ul class="nav nav-tabs md-tabs text-dark bg-light" id="myTabMD" role="tablist">
-  <li class="nav-item">
-    <a class="nav-link active" id="general-tab-md" data-toggle="tab" @click.prevent="showTab('general')" href="#general-md" role="tab" aria-controls="general-md"
-      aria-selected="true">General<i class="fas fa-check text-success ml-2" v-if="validAddressInfo"></i><i class="fas fa-times text-danger ml-2" v-else></i></a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link" id="bitcoin-tab-md" data-toggle="tab" @click.prevent="showTab('bitcoin')" href="#bitcoin-md" role="tab" aria-controls="bitcoin-md" aria-selected="true">
-      Bitcoin<i class="fas fa-check text-success ml-2" v-if="paymentAddress('bitcoin')"></i><i class="fas fa-times text-danger ml-2" v-else></i>
-    </a>
-  </li>
-  <li class="nav-item" v-if="!buyer">
-    <a class="nav-link" id="lightning-tab-md" data-toggle="tab" @click.prevent="showTab('lightning')" href="#lightning-md" role="tab" aria-controls="lightning-md"
-      aria-selected="false">Lightning<i class="fas fa-check text-success ml-2" v-if="paymentAddress('lightning')"></i></a>
-  </li>
-  <li class="nav-item" v-if="!buyer">
-    <a class="nav-link" id="stacks-tab-md" data-toggle="tab" @click.prevent="showTab('stacks')" href="#stacks-md" role="tab" aria-controls="stacks-md"
-      aria-selected="false">Stacks<i class="fas fa-check text-success ml-2" v-if="paymentAddress('stacks')"></i></a>
-  </li>
-</ul>
+<mdb-navbar color="primary" dark>
+  <mdb-navbar-brand href="https://mdbootstrap.com/">
+    Seller Info
+  </mdb-navbar-brand>
+  <mdb-navbar-toggler>
+    <mdb-navbar-nav class="text-light">
+      <mdb-nav-item href="#" active>
+        <a class="nav-link active" id="general-tab-md" data-toggle="tab" @click.prevent="showTab('general')" href="#general-md" role="tab" aria-controls="general-md"
+          aria-selected="true">General<i class="fas fa-check text-success ml-2" v-if="validAddressInfo"></i><i class="fas fa-times text-danger ml-2" v-else></i></a>
+      </mdb-nav-item>
+      <mdb-nav-item href="#">
+        <a class="nav-link" id="bitcoin-tab-md" data-toggle="tab" @click.prevent="showTab('bitcoin')" href="#bitcoin-md" role="tab" aria-controls="bitcoin-md" aria-selected="true">
+          Bitcoin<i class="fas fa-check text-success ml-2" v-if="paymentAddress('bitcoin')"></i><i class="fas fa-times text-danger ml-2" v-else></i></a>
+      </mdb-nav-item>
+      <mdb-nav-item href="#">
+        <a class="nav-link" id="lightning-tab-md" data-toggle="tab" @click.prevent="showTab('lightning')" href="#lightning-md" role="tab" aria-controls="lightning-md"
+          aria-selected="false">Lightning<i class="fas fa-check text-success ml-2" v-if="paymentAddress('lightning')"></i></a>
+      </mdb-nav-item>
+      <mdb-nav-item href="#">
+        <a class="nav-link" id="stacks-tab-md" data-toggle="tab" @click.prevent="showTab('stacks')" href="#stacks-md" role="tab" aria-controls="stacks-md"
+          aria-selected="false">Stacks<i class="fas fa-check text-success ml-2" v-if="paymentAddress('stacks')"></i></a>
+      </mdb-nav-item>
+    </mdb-navbar-nav>
+  </mdb-navbar-toggler>
+</mdb-navbar>
 <div class="tab-content card pt-5" id="myTabContentMD">
   <div class="tab-pane fade show active" id="general-md" role="tabpanel" aria-labelledby="general-tab-md">
     <mdb-container fluid class="">
@@ -70,14 +55,14 @@ import AddressForm from "./AddressForm";
 import BitcoinAddress from "./BitcoinAddress";
 import LightningAddress from "./LightningAddress";
 import StacksAddress from "./StacksAddress";
-import { mdbContainer, mdbCol, mdbRow, mdbIcon, mdbTabs, mdbJumbotron, mdbView, mdbMask, mdbBtn, mdbTextarea, mdbInput, mdbCarousel, mdbCarouselItem } from 'mdbvue';
+import { mdbContainer, mdbNavbar, mdbNavbarBrand, mdbNavbarToggler, mdbNavbarNav, mdbNavItem, mdbDropdown, mdbDropdownMenu, mdbDropdownToggle, mdbInput, mdbDropdownItem } from 'mdbvue';
 
 // noinspection JSUnusedGlobalSymbols
 export default {
   name: "CryptoAddressTabs",
   components: {
     BitcoinAddress, LightningAddress, StacksAddress, AddressForm,
-    mdbContainer, mdbCol, mdbRow, mdbIcon, mdbTabs, mdbJumbotron, mdbView, mdbMask, mdbBtn, mdbTextarea, mdbInput, mdbCarousel, mdbCarouselItem
+    mdbContainer, mdbNavbar, mdbNavbarBrand, mdbNavbarToggler, mdbNavbarNav, mdbNavItem, mdbDropdown, mdbDropdownMenu, mdbDropdownToggle, mdbInput, mdbDropdownItem
   },
   props: {
     buyer: false,

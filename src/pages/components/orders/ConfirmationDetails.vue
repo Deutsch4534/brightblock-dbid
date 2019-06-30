@@ -1,49 +1,42 @@
 <template>
-<div class="bg-light p-5 mb-5">
-  <div class="d-flex p-2 justify-content-center">
+<div class="bg-light mb-5">
+  <div class="d-flex justify-content-center">
     <div class="d-flex justify-content-center">
-      {{network}}&nbsp;<span class="text-danger">{{bitcoinConfig.chain}}</span>&nbsp;network
+      <h4>{{network}}&nbsp;<span class="text-danger">{{bitcoinConfig.chain}}</span>&nbsp;network</h4>
     </div>
   </div>
   <div class="d-flex justify-content-center">
-    <p class="text-muted text-center p-0 m-0">{{amountBtc}}</p>
+    <div class="text-muted text-center">{{amountBtc}}</div>
   </div>
   <div class="d-flex justify-content-center">
-    <p class="text-muted text-center p-0 m-0 mb-3">{{amountFiat}}</p>
+    <div class="text-muted text-center mb-3">{{amountFiat}}</div>
   </div>
-  <div class="d-flex justify-content-start" v-if="asset.status === 4">Confirming payment.</div>
-  <div class="d-flex justify-content-center" v-else-if="asset.status === 5">
-    <div><mdb-btn @click="paySeller" rounded color="white" size="sm" class="mx-0 waves-light">confirm shipped</mdb-btn></div>
+  <div class="" v-if="asset.status > 3">
+    <div class="d-flex justify-content-start mb-3">Paid: <span class="ml-4 text-muted">{{timeReceived}}</span></div>
+  </div>
+  <div class="" v-if="asset.status === 4">
+    <div class="d-flex justify-content-between" v-if="asset.status === 4">
+      <div>Confirmations {{buyerConfirmations}} / 6 (apprx 1 hour)</div>
+      <div class="text-muted"><a :href="buyerBlockchainUrl()" target="_blank">Check chain <i class="fas fa-external-link-alt"></i></a></div>
+    </div>
+  </div>
+  <div class="" v-else-if="asset.status === 5">
+    <div class="d-flex justify-content-end mb-3" v-if="confirmedBtc">
+      <div class="text-muted"><a :href="buyerBlockchainUrl()" target="_blank">Check chain <i class="fas fa-external-link-alt"></i></a></div>
+    </div>
+    <div class="d-flex justify-content-between mb-3" v-else-if="confirmedLnd">
+      <div>Invoice settled</div>
+      <div class="text-muted"><a href="https://lightning.chaintools.io" target="_blank">Check chain <i class="fas fa-external-link-alt"></i></a></div>
+    </div>
+    <div class="row mb-3">
+      <div><mdb-btn @click="paySeller" rounded color="white" size="sm" class="mx-0 waves-light">confirm shipping completed</mdb-btn></div>
+    </div>
   </div>
   <div class="d-flex justify-content-start" v-else-if="asset.status === 6">
-    <div>Paying Seller - waiting for confirmations.</div>
+    <div>Payment to seller is confirming - {{sellerConfirmations}} / 6 confirmations</div>
   </div>
   <div class="d-flex justify-content-start" v-else-if="asset.status === 7">
     <div>Transferred item to your storage.</div>
-  </div>
-
-  <div class="d-flex justify-content-end">
-    <p class="text-muted p-0 m-0 mb-3"><small><a @click.prevent="showDetails = !showDetails">details</a></small></p>
-  </div>
-
-  <div v-if="showDetails">
-    <div>Created: {{timeReceived}}</div>
-    <div v-if="unpaid">Payment not yet received</div>
-    <div v-else-if="confirmingBtc"><a :href="buyerBlockchainUrl()" target="_blank">Payment received</a><br/>(confirming - {{buyerConfirmations}} / 6)</div>
-    <div v-else-if="confirmingLnd"><a href="https://lightning.chaintools.io/" target="_blank">Payment received</a><br/>(invoice - unfulfilled)</div>
-    <div v-else-if="confirmedBtc || confirmedLnd">
-      <div class="d-flex justify-content-start" v-if="confirmedBtc">
-        <a :href="buyerBlockchainUrl()" target="_blank">Payment confirmed</a>
-      </div>
-      <div class="d-flex justify-content-start" v-else-if="confirmedLnd">
-        <a href="https://lightning.chaintools.io/" target="_blank">Invoice settled</a>
-      </div>
-    </div>
-    <div v-else-if="settling">Transferring <a :href="sellerBlockchainUrl()" target="_blank">{{sellerConfirmations}} / 6 confirmations</a></div>
-    <div v-else-if="settled">Transferred <a :href="sellerBlockchainUrl()" target="_blank">{{sellerConfirmations}} confirmations</a></div>
-    <div v-else>
-      <div>status in between</div>
-    </div>
   </div>
 </div>
 </template>
@@ -66,7 +59,6 @@ export default {
   },
   data() {
     return {
-      showDetails: false,
       showBlockchainInfo: false,
       showInstructions: false,
       showPaymentDetails: false,

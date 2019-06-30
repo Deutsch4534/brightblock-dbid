@@ -32,8 +32,6 @@ import Navbar from "./layout/Navbar.vue";
 import Footer from "./layout/Footer.vue";
 
 import Artwork from "./views/Artwork";
-import Orders from "./views/Orders";
-import Order from "./views/Order";
 
 import Search from "./views/Search";
 
@@ -204,6 +202,18 @@ const router = new Router({
         header: Navbar,
         footer: Footer
       },
+      meta: { requiresAuth: true }
+    },
+    {
+      path: "/my-orders",
+      name: "my-orders",
+      components: { default: Sell, header: Navbar, footer: Footer },
+      meta: { requiresAuth: true }
+    },
+    {
+      path: "/my-orders/:assetHash",
+      name: "my-order",
+      components: { default: Sell, header: Navbar, footer: Footer },
       meta: { requiresAuth: true }
     },
 
@@ -418,18 +428,6 @@ const router = new Router({
       }
     },
     {
-      path: "/orders",
-      name: "orders",
-      components: { default: Orders, header: Navbar, footer: Footer },
-      meta: { requiresAuth: true }
-    },
-    {
-      path: "/order/:assetHash",
-      name: "order",
-      components: { default: Order, header: Navbar, footer: Footer },
-      meta: { requiresAuth: true }
-    },
-    {
       path: "/artworks/:artworkId",
       name: "artwork",
       components: { default: Artwork, header: Navbar, footer: Footer },
@@ -567,7 +565,7 @@ router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
     // this route requires auth, check if logged in
     // if not, redirect to login page.
-    if (myAccountService.isLoggedIn()) {
+    if (myAccountService.isLoggedIn() > -1) {
       return next();
     } else {
       return next({

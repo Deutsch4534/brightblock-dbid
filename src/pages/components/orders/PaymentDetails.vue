@@ -28,7 +28,17 @@
     <div class="d-flex justify-content-center" v-if="network === 'opennode'">
       <p class="text-center p-5"><a @click="toggleNetwork('opennode')" href="https://www.opennode.co/" target="_blank">Opennode <i class="fas fa-external-link-alt"></i></a> is a bitcoin and lightning payment provider - integration with opennode is coming soon.</p>
     </div>
-    <div class="d-flex justify-content-center" v-else>
+
+    <div class="col-12" v-if="network === 'lightning'">
+      <p class="text-muted text-nowrap" style="width: 0.7rem;"><small>
+      For lightning payments please open a channel from your lightning wallet to radpay lightning node:
+      <br/>
+      <span id="payment-address" class="text-success">{{lightningPeer}}</span><a href="#" @click.prevent="copyPeerAddress"><i class="fas fa-clone ml-4"></i></a>
+      </small>
+      </p>
+    </div>
+
+    <div class="d-flex justify-content-center" v-if="network !== 'opennode'">
       <img class="mx-auto " :src="qrImage" alt="'scan qr code'" width="auto">
     </div>
     <div class="d-flex p-2 text-light justify-content-center" v-if="network !== 'opennode'">
@@ -38,8 +48,8 @@
 
 
   </div>
-  <div class="d-flex p-2 justify-content-center" style="background-color: #d7ccc8;">
-    <input class="" id="payment-address-btc" type="text" :value="paymentUri" style="background-color: #d7ccc8; color: #d7ccc8; border: none;"/>
+  <div class="d-flex p-2 justify-content-center" style="">
+    <input class="" id="payment-address-btc" type="text" :value="paymentUri" style="background-color: #EFF1F2; color: #EFF1F2; border: none;"/>
     <canvas id="qrcode1"></canvas>
   </div>
 </div>
@@ -64,7 +74,7 @@ export default {
   props: {
     validFor: "",
     eternal: true,
-    asset: null,
+    assetHash: null
   },
   data() {
     return {
@@ -91,16 +101,34 @@ export default {
       }
       return image1;
     },
+    asset() {
+      let asset = this.$store.getters["assetStore/getAssetByHash"](this.assetHash);
+      if (asset) {
+        return asset;
+      }
+      return {};
+    },
     amountFiat() {
-      let purchaseCycle = this.$store.getters["assetStore/getCurrentPurchaseCycleByHash"](this.asset.assetHash);
+      let purchaseCycle = this.$store.getters["assetStore/getCurrentPurchaseCycleByHash"](this.assetHash);
       let amF = purchaseCycle.buyer.amountFiat + " " + purchaseCycle.currency;
       let fiatRate = this.$store.getters["conversionStore/getFiatRate"](purchaseCycle.currency);
       let symbol = fiatRate["symbol"];
       return symbol + " " + amF;
     },
     amountBtc() {
-      let purchaseCycle = this.$store.getters["assetStore/getCurrentPurchaseCycleByHash"](this.asset.assetHash);
+      let purchaseCycle = this.$store.getters["assetStore/getCurrentPurchaseCycleByHash"](this.assetHash);
       return purchaseCycle.buyer.amountBitcoin + " BTC";
+    },
+    lightningConfig() {
+      let lightningConfig = this.$store.getters["assetStore/getLightningConfig"];
+      return lightningConfig;
+    },
+    lightningPeer() {
+      let lightningConfig = this.$store.getters["assetStore/getLightningConfig"];
+      if (lightningConfig) {
+        let alice = lightningConfig["alice"];
+        return alice.pubkey + "@" + alice.nodeUri;
+      }
     },
     bitcoinConfig() {
       let bitcoinConfig = this.$store.getters["assetStore/getBitcoinConfig"];
@@ -126,7 +154,18 @@ export default {
   },
   methods: {
     cancelOrder() {
-      this.$emit("cancelOrder", this.asset.assetHash);
+      this.$emit("cancelOrder", this.assetHash);
+    },
+    copyPeerAddress() {
+      document.execCommand("copy");
+      var copyText = document.getElementById("payment-address");
+      var textArea = document.createElement("textarea");
+      textArea.value = copyText.textContent;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand("Copy");
+      this.$notify({type: 'success', title: 'Copied Address', text: 'Copied the address to clipboard: ' + textArea.value});
+      textArea.remove();
     },
     addQrCode(qrc, paymentUri) {
       let $qrCode = document.getElementById(qrc);

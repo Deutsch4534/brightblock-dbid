@@ -24,6 +24,9 @@ const assetStore = {
     getLightningConfig: state => {
       return state.lightningConfig;
     },
+    getAssetConfig: state => {
+      return state.assetConfig;
+    },
     getBalance: state => {
       return state.balance;
     },
@@ -63,6 +66,18 @@ const assetStore = {
         if (asset.purchaseCycles) {
           let purchaseCycle = asset.purchaseCycles[(asset.purchaseCycles.length - 1)];
           if (purchaseCycle.buyer && purchaseCycle.buyer.did === did) {
+            assets.push(asset);
+          }
+        }
+      });
+      return assets;
+    },
+    getAssetsSelling: state => did => {
+      let assets = [];
+      _.forEach(state.assets, function(asset) {
+        if (asset.purchaseCycles) {
+          let purchaseCycle = asset.purchaseCycles[(asset.purchaseCycles.length - 1)];
+          if (purchaseCycle.buyer && purchaseCycle.seller.did === did) {
             assets.push(asset);
           }
         }

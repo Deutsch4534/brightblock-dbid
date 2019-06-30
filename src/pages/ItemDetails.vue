@@ -5,6 +5,7 @@
   </div>
 </div>
 <div class="container pt-5" v-else>
+
   <div class="row" v-if="!item">
     <div class="col-lg-5 col-xl-4 mb-4">
       Item not found - <router-link to="/">search for items</router-link>
@@ -25,14 +26,17 @@
   </div>
   <div class="row" v-else>
     <div class="col-md-8 col-xs-12 offset-md-2">
-      <div class=""><h3 class="mb-2">Purchase Order: {{item.title}}</h3></div>
+      <div class=""><h5 class="mb-2">Purchase Order: {{item.title}}</h5></div>
       <div class="d-flex justify-content-end text-muted">
-        <a class="text-primary" @click.prevent="toggleShippingAddress"><small>check buyer info</small></a>
-        <a v-if="asset.status === 3" class="ml-3 text-danger" @click.prevent="cancelOrder(asset.assetHash)"><small>cancel order</small></a>
+        <a class="text-primary" @click.prevent="showOrderDetails = !showOrderDetails"><small>order details</small></a>
+        <a class="text-primary ml-3" @click.prevent="toggleShippingAddress"><small>check buyer info</small></a>
+        <a v-if="assetStatus === 3" class="ml-3 text-danger" @click.prevent="cancelOrder(asset.assetHash)"><small>cancel order</small></a>
       </div>
-
       <crypto-address-tabs v-if="showAddress" :buyer="true" :myProfile="myProfile" @saveEmail="saveEmail" @saveAddress="saveAddress"/>
-      <item-order-form v-else :item="item" :asset="asset" :myProfile="myProfile" @cancelOrder="cancelOrder"/>
+      <div v-else>
+        <order-details class="bg-card mb-4" v-if="showOrderDetails" :item="item" :purchaseCycle="purchaseCycle"/>
+        <order-item class="bg-card mb-5" :item="item" :assetHash="asset.assetHash" :myProfile="myProfile" @cancelOrder="cancelOrder"/>
+      </div>
     </div>
   </div>
 </div>
@@ -44,7 +48,8 @@ import utils from "@/services/utils";
 import DescriptionContainer from "@/pages/components/utils/DescriptionContainer";
 import ItemImageListView from "@/pages/components/myItem/ItemImageListView";
 import BuyersInformationItemDetails from "@/pages/components/selling/BuyersInformationItemDetails";
-import ItemOrderForm from "@/pages/components/orders/ItemOrderForm";
+import OrderItem from "@/pages/components/orders/OrderItem";
+import OrderDetails from "@/pages/components/orders/OrderDetails";
 import CryptoAddressTabs from "@/pages/components/user-settings/CryptoAddressTabs";
 import { mdbSpinner } from 'mdbvue';
 
@@ -52,16 +57,18 @@ import { mdbSpinner } from 'mdbvue';
 export default {
   name: "ItemDetails",
   components: {
-    mdbSpinner, CryptoAddressTabs, DescriptionContainer, ItemImageListView, BuyersInformationItemDetails, ItemOrderForm
+    mdbSpinner, CryptoAddressTabs, DescriptionContainer, ItemImageListView, BuyersInformationItemDetails, OrderItem, OrderDetails,
   },
   props: {
   },
   data() {
     return {
       loading: true,
+      showOrderDetails: false,
       addressBlurb: "Needed to complete the sale - not shown to anyone else - including us!",
       myProfile: null,
       asset: null,
+      assetHash: null,
       addressValid: false,
       emailValid: false,
       showAddress: false,
@@ -75,6 +82,7 @@ export default {
   },
   mounted() {
     let itemId = Number(this.$route.params.itemId);
+    this.$store.dispatch("assetStore/subscribeAssetPurchaseNews");
     this.$store.dispatch("myAccountStore/fetchMyAccount").then((myProfile) => {
       this.myProfile = myProfile;
       this.$store.dispatch("itemSearchStore/fetchItem", itemId).then((item) => {
@@ -85,6 +93,7 @@ export default {
             this.showAddress = true;
           }
           let assetHash = utils.buildBitcoinHash(item);
+          this.assetHash = assetHash;
           this.$store.dispatch("assetStore/lookupAssetByHash", assetHash).then(asset => {
             if (asset) {
               this.asset = asset;
@@ -104,18 +113,17 @@ export default {
   },
   methods: {
     startPayment: function(asset) {
+      this.asset = asset;
       let validity = this.$store.getters["myAccountStore/getProfileValidity"];
       if (validity.emailValid && validity.shippingValid && validity.bitcoinValid) {
-        this.asset = asset;
-      } else {
-        this.showAddress = true;
+        this.showAddress = false;
       }
     },
     saveEmail: function(email) {
-      this.$notify({type: 'success', title: 'Address Info', text: 'Address updated.'});
+      // this.$notify({type: 'success', title: 'Address Info', text: 'Address updated.'});
     },
     saveAddress: function(address) {
-      this.$notify({type: 'success', title: 'Address Info', text: 'Address updated.'});
+      // this.$notify({type: 'success', title: 'Address Info', text: 'Address updated.'});
     },
     cancelAddress: function() {
       this.showAddress = false;
@@ -126,7 +134,13 @@ export default {
       });
     },
     toggleShippingAddress() {
-      this.showAddress = !this.showAddress;
+      let validity = this.$store.getters["myAccountStore/getProfileValidity"];
+      if (!validity.emailValid || !validity.shippingValid || !validity.bitcoinValid) {
+        this.showAddress = true;
+        this.$notify({type: 'warning', title: 'Information Needed', text: 'Please enter the info needed to proceed with the buying / selling - this data is completely private and only used as needed to complete a sale.'});
+      } else {
+        this.showAddress = !this.showAddress;
+      }
     },
   },
   computed: {
@@ -135,6 +149,17 @@ export default {
         return moment(this.item.created).format("YYYY-MM-DD HH:mm (Z)");
       }
       return;
+    },
+    purchaseCycle() {
+      let purchaseCycle = this.$store.getters["assetStore/getCurrentPurchaseCycleByHash"](this.asset.assetHash);
+      return purchaseCycle;
+    },
+    assetStatus() {
+      let asset = this.$store.getters["assetStore/getAssetByHash"](this.assetHash);
+      if (asset) {
+        return asset.status;
+      }
+      return -1;
     },
     validAddressInfo() {
       let validity = this.$store.getters["myAccountStore/getProfileValidity"];

@@ -138,6 +138,9 @@ export default {
           return;
         }
       }
+      if (lightningAddress && lightningAddress.indexOf(" ") > -1) {
+        lightningAddress = lightningAddress.trim();
+      }
       this.$store.dispatch("lightningStore/fetchDecodedInvoice", lightningAddress).then((result) => {
         if (result && result.paymentHash) {
           this.lightningAddress = lightningAddress;

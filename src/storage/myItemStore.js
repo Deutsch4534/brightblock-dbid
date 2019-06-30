@@ -254,9 +254,13 @@ const myItemStore = {
         } else {
           myItemService.getMyItem(itemId,
             function(myItem) {
-              commit("addMyItem", myItem);
-              store.dispatch("userProfilesStore/fetchUserProfile", { username: myItem.owner }, { root: true });
-              resolve(myItem);
+              if (myItem) {
+                commit("addMyItem", myItem);
+                store.dispatch("userProfilesStore/fetchUserProfile", { username: myItem.owner }, { root: true });
+                resolve(myItem);
+              } else {
+                resolve();
+              }
             },
             function(error) {
               console.log("Error fetching item: " + itemId, error);

@@ -22,7 +22,7 @@ export default {
     };
   },
   mounted() {
-    this.myProfile = this.$store.getters["myAccountStore/getMyProfile"];
+    // this.myProfile = this.$store.getters["myAccountStore/getMyProfile"];
   },
   computed: {
   },

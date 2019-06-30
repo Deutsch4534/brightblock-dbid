@@ -19,7 +19,7 @@
     <div class="row">
       <div class="col-sm-6 text-center">
         <!-- <button class="btn btn-rounded banner-text3"><span class="mr-3 banner-text3a"><a href="/sell">Get Started</a></span> <i class="fas fa-long-arrow-alt-right fa-2x text-light"></i></button> -->
-        <a href="https://www.producthunt.com/posts/dbid-2?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-dbid-2" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=159460&theme=light" alt="dBid - Turn unused stuff into Bitcoin | Product Hunt Embed" style="width: 250px; height: 54px;" width="250px" height="54px" /></a>
+        <a href="https://www.producthunt.com/posts/dbid?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-dbid" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=159359&theme=light" alt="dBid - Turn unused stuff into Bitcoin | Product Hunt Embed" style="width: 250px; height: 54px;" width="250px" height="54px" /></a>
       </div>
       <div class="col-sm-6 text-center">
         <div class="d-flex banner-text3b ">Earn your own Bitcoin!</div>

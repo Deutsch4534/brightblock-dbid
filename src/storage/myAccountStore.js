@@ -177,7 +177,9 @@ const myAccountStore = {
     updateBitcoinAddress({ state, commit }, bitcoinAddress) {
       return new Promise(resolve => {
         let myProfile = state.myProfile;
-        myProfile.publicKeyData.rxAddressList[0].address = bitcoinAddress;
+        if (myProfile.publicKeyData && myProfile.publicKeyData.rxAddressList) {
+          myProfile.publicKeyData.rxAddressList[0].address = bitcoinAddress;
+        }
         myAccountService.updatePublicKeyData(myProfile, myProfile.publicKeyData,
           function(publicKeyData) {
             myProfile.publicKeyData = publicKeyData;

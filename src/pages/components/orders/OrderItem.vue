@@ -4,10 +4,10 @@
     <span class="sr-only">Loading...</span>
   </div>
 </div>
-<div class="row" v-else>
+<div class="" v-else>
   <div class="col-12" v-if="asset.status === 3">
     <div v-if="eternal || !purchaseExpired">
-      <payment-details :eternal="eternal" :asset="asset" :validFor="validFor" @cancelOrder="cancelOrder"/>
+      <payment-details :eternal="eternal" :assetHash="assetHash" :validFor="validFor" @cancelOrder="cancelOrder"/>
     </div>
     <div v-else>
       <payment-expired :assetHash="assetHash" :itemId="itemId" @cancelOrder="cancelOrder"/>
