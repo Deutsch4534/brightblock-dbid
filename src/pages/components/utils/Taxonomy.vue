@@ -7,10 +7,10 @@
     <a class="btn btn-white btn-sm" style="position: relative; top: -7px;" @click="hitNew">add</a>
     -->
   </div>
-  <div class="my-4">Selected Categories [{{chosen.length}}]</div>
-  <div class="d-flex justify-content-center">
-    <span class="mt-2 mr-3" v-for="keyword in chosen" :key="keyword.name">
-      <a @click.prevent="unchoose(keyword.name)" class="btn btn-white btn-rounded" v-html="keyword.name"></a>
+  <div class="my-2">Selected Categories [{{chosen.length}}]</div>
+  <div class="d-flex justify-content-start">
+    <span class="badge badge-pill badge-dark mr-3" v-for="(keyword, index) in chosen" :key="index">
+      <a @click.prevent="unchoose(keyword)" class="" v-html="keyword"></a>
     </span>
   </div>
 </div>
@@ -41,7 +41,11 @@ export default {
     this.$store.dispatch("contentStore/fetchTaxonomy").then((keywords) => {
       $self.keywords = keywords;
       $self.keywordNames = keywords.map(keyword => keyword.name);
-      if ($self.initKeywords) $self.chosen = $self.initKeywords;
+      if (typeof $self.initKeywords === "string") {
+        $self.chosen = $self.initKeywords.split(",");
+      } else {
+        $self.chosen = $self.initKeywords;
+      }
       $self.loaded = true;
     });
   },
@@ -50,7 +54,7 @@ export default {
   methods: {
     unchoose: function(keywordName) {
       let index = _.findIndex(this.chosen, function(o) {
-        return o.name === keywordName;
+        return o === keywordName;
       });
       if (index > -1) {
         this.chosen.splice(index, 1);
@@ -67,7 +71,7 @@ export default {
     },
     hitOne: function(keywordName) {
       let indexInChosen = _.findIndex(this.chosen, function(o) {
-        return o.name === keywordName;
+        return o === keywordName;
       });
       if (indexInChosen > -1) {
         return;
@@ -76,7 +80,7 @@ export default {
         return o.name === keywordName;
       });
       if (indexInAvailable > -1) {
-        this.chosen.push(this.keywords[indexInAvailable]);
+        this.chosen.push(this.keywords[indexInAvailable].name);
       } else {
         this.chosen.push({name: keywordName});
       }

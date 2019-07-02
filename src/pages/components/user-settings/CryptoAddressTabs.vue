@@ -1,37 +1,22 @@
 <template>
-<div>
-<mdb-navbar color="primary" dark>
-  <mdb-navbar-brand href="https://mdbootstrap.com/">
-    Seller Info
-  </mdb-navbar-brand>
+<div class="">
+<mdb-navbar color="light" class="pt-3">
   <mdb-navbar-toggler>
-    <mdb-navbar-nav class="text-light">
-      <mdb-nav-item href="#" active>
-        <a class="nav-link active" id="general-tab-md" data-toggle="tab" @click.prevent="showTab('general')" href="#general-md" role="tab" aria-controls="general-md"
-          aria-selected="true">General<i class="fas fa-check text-success ml-2" v-if="validAddressInfo"></i><i class="fas fa-times text-danger ml-2" v-else></i></a>
-      </mdb-nav-item>
-      <mdb-nav-item href="#">
-        <a class="nav-link" id="bitcoin-tab-md" data-toggle="tab" @click.prevent="showTab('bitcoin')" href="#bitcoin-md" role="tab" aria-controls="bitcoin-md" aria-selected="true">
+    <mdb-navbar-brand>
+      Payments on dBid
+    </mdb-navbar-brand>
+    <mdb-navbar-nav>
+        <a class="nav-link navbar-link text-nowrap active" id="bitcoin-tab-md" data-toggle="tab" @click.prevent="showTab('bitcoin')" href="#bitcoin-md" role="tab" aria-controls="bitcoin-md" aria-selected="true">
           Bitcoin<i class="fas fa-check text-success ml-2" v-if="paymentAddress('bitcoin')"></i><i class="fas fa-times text-danger ml-2" v-else></i></a>
-      </mdb-nav-item>
-      <mdb-nav-item href="#">
-        <a class="nav-link" id="lightning-tab-md" data-toggle="tab" @click.prevent="showTab('lightning')" href="#lightning-md" role="tab" aria-controls="lightning-md"
+        <a class="nav-link navbar-link text-nowrap" id="lightning-tab-md" data-toggle="tab" @click.prevent="showTab('lightning')" href="#lightning-md" role="tab" aria-controls="lightning-md"
           aria-selected="false">Lightning<i class="fas fa-check text-success ml-2" v-if="paymentAddress('lightning')"></i></a>
-      </mdb-nav-item>
-      <mdb-nav-item href="#">
-        <a class="nav-link" id="stacks-tab-md" data-toggle="tab" @click.prevent="showTab('stacks')" href="#stacks-md" role="tab" aria-controls="stacks-md"
+        <a class="nav-link navbar-link text-nowrap" id="stacks-tab-md" data-toggle="tab" @click.prevent="showTab('stacks')" href="#stacks-md" role="tab" aria-controls="stacks-md"
           aria-selected="false">Stacks<i class="fas fa-check text-success ml-2" v-if="paymentAddress('stacks')"></i></a>
-      </mdb-nav-item>
     </mdb-navbar-nav>
   </mdb-navbar-toggler>
 </mdb-navbar>
-<div class="tab-content card pt-5" id="myTabContentMD">
-  <div class="tab-pane fade show active" id="general-md" role="tabpanel" aria-labelledby="general-tab-md">
-    <mdb-container fluid class="">
-      <address-form :activeTab="activeTab" @saveEmail="saveEmail" @saveAddress="saveAddress"/>
-    </mdb-container>
-  </div>
-  <div class="tab-pane fade" id="bitcoin-md" role="tabpanel" aria-labelledby="bitcoin-tab-md">
+<div class="tab-content card pt-3 m-0" id="myTabContentMD">
+  <div class="tab-pane fade show active" id="bitcoin-md" role="tabpanel" aria-labelledby="bitcoin-tab-md">
     <mdb-container fluid class="">
       <bitcoin-address :buyer="buyer" :activeTab="activeTab" @paymentNetworkUpdate="paymentNetworkUpdate"/>
     </mdb-container>
@@ -51,7 +36,6 @@
 </template>
 
 <script>
-import AddressForm from "./AddressForm";
 import BitcoinAddress from "./BitcoinAddress";
 import LightningAddress from "./LightningAddress";
 import StacksAddress from "./StacksAddress";
@@ -61,7 +45,7 @@ import { mdbContainer, mdbNavbar, mdbNavbarBrand, mdbNavbarToggler, mdbNavbarNav
 export default {
   name: "CryptoAddressTabs",
   components: {
-    BitcoinAddress, LightningAddress, StacksAddress, AddressForm,
+    BitcoinAddress, LightningAddress, StacksAddress,
     mdbContainer, mdbNavbar, mdbNavbarBrand, mdbNavbarToggler, mdbNavbarNav, mdbNavItem, mdbDropdown, mdbDropdownMenu, mdbDropdownToggle, mdbInput, mdbDropdownItem
   },
   props: {
@@ -74,12 +58,16 @@ export default {
     };
   },
   mounted() {
-    this.showTab("general");
+    this.showTab("bitcoin");
   },
   computed: {
     validAddressInfo() {
       let validity = this.$store.getters["myAccountStore/getProfileValidity"];
-      return validity.emailValid && validity.shippingValid;
+      return validity.shippingValid;
+    },
+    validEmailInfo() {
+      let validity = this.$store.getters["myAccountStore/getProfileValidity"];
+      return validity.emailValid;
     },
   },
 
@@ -89,7 +77,6 @@ export default {
       return currentNetwork && network === currentNetwork;
     },
     showTab(tab) {
-
       this.activeTab = tab;
       let $ele = document.getElementById("bitcoin-tab-md");
       $ele.classList.remove('active');
@@ -99,9 +86,6 @@ export default {
         $ele = document.getElementById("stacks-tab-md");
         $ele.classList.remove('active');
       }
-      $ele = document.getElementById("general-tab-md");
-      $ele.classList.remove('active');
-
       $ele = document.getElementById(tab + "-tab-md");
       $ele.classList.add('active');
 
@@ -116,10 +100,6 @@ export default {
       }
 
       $ele = document.getElementById("bitcoin-md");
-      $ele.classList.remove('active');
-      $ele.classList.remove('show');
-
-      $ele = document.getElementById("general-md");
       $ele.classList.remove('active');
       $ele.classList.remove('show');
 
@@ -149,5 +129,8 @@ export default {
 </script>
 <style scoped>
 .container-fluid {
+}
+.navbar {
+  align-items: start;
 }
 </style>

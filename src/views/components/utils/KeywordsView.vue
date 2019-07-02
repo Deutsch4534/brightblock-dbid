@@ -50,7 +50,9 @@ export default {
       let index = _.findIndex(this.chosen, function(o) {
         return o === keyword;
       });
-      this.chosen.splice(index, 1);
+      if (this.chosen) {
+        this.chosen.splice(index, 1);
+      }
     },
     choose: function(keyword) {
       let index = _.findIndex(this.chosen, function(o) {

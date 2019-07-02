@@ -31,7 +31,7 @@ const artworkSearchService = {
         success(artwork);
       }
     }
-    artworkStorage.commit("artworkSearchStore/clearSearchResults");
+    artworkStorage.commit("artworkSearchStore/clearSearchResults", q);
     searchIndexService.searchDappsIndex(location.hostname, "artwork", q.field, q.query).then(searchResults => {
       if (!searchResults || searchResults.error) {
         return;

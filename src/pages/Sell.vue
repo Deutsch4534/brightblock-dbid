@@ -4,34 +4,37 @@
     <span class="sr-only">Loading...</span>
   </div>
 </div>
-<div id="my-app-element" class="container bg-spinner my-5" v-else>
-  <div class=""> 
+<div id="my-app-element" class="container bg-spinner" v-else>
+  <div class="">
     <div v-if="loggedIn">
-      <mdb-navbar color="primary" dark>
+      <mdb-navbar color="warning" dark>
+        <mdb-navbar-brand>
+          Selling on dBid
+        </mdb-navbar-brand>
         <mdb-navbar-toggler>
           <mdb-navbar-nav class="text-light">
-              <router-link class="nav-link navbar-link" to="/seller-info" :class="activeTab === 1 ? 'secondary' : 'primary'" v-if="sellerInfoNeeded">Seller Info <span class="text-danger">*</span></router-link>
-              <router-link class="nav-link navbar-link" to="/seller-info" :class="activeTab === 1 ? 'secondary' : 'primary'" v-else>Seller Info</router-link>
-              <router-link class="nav-link navbar-link" to="/my-item/upload" :class="activeTab === 2 ? 'secondary' : 'primary'">New Listing</router-link>
-              <router-link class="nav-link navbar-link" to="/my-items" :class="activeTab === 3 ? 'secondary' : 'primary'">Listings</router-link>
-              <router-link class="nav-link navbar-link" to="/my-orders" :class="activeTab === 5 ? 'secondary' : 'primary'">Purchases</router-link>
-              <router-link class="nav-link navbar-link" :to="myItemUrl" v-if="activeTab === 4" :class="activeTab === 4 ? 'secondary' : 'primary'">{{listingLabel}}</router-link>
+              <router-link class="nav-link navbar-link" to="/seller-info" :class="activeTab === 1 ? 'text-light font-weight-bolder' : 'text-dark'" v-if="sellerInfoNeeded">Seller Info <span class="text-danger">*</span></router-link>
+              <router-link class="nav-link navbar-link" to="/seller-info" :class="activeTab === 1 ? 'text-light font-weight-bolder' : 'text-dark'" v-else>Seller Info</router-link>
+              <router-link class="nav-link navbar-link" to="/my-item/upload" :class="activeTab === 2 ? 'text-light font-weight-bolder' : 'text-dark'">New Listing</router-link>
+              <router-link class="nav-link navbar-link" to="/my-items" :class="activeTab === 3 ? 'text-light font-weight-bolder' : 'text-dark'">Listings</router-link>
+              <router-link class="nav-link navbar-link" to="/my-orders" :class="activeTab === 5 ? 'text-light font-weight-bolder' : 'text-dark'">Purchases</router-link>
+              <router-link class="nav-link navbar-link" :to="myItemUrl" v-if="activeTab === 4" :class="activeTab === 4 ? 'text-light font-weight-bolder' : 'text-dark'">{{listingLabel}}</router-link>
           </mdb-navbar-nav>
         </mdb-navbar-toggler>
       </mdb-navbar>
 
       <div v-if="activeTab === 1">
-        <div class="d-flex justify-content-start bg-card" style="min-height: 50vh;">
+        <div class="" style="min-height: 50vh;">
           <seller-info :formTitle="'Update Seller Info'" :myProfile="myProfile" @sellerInfoUpdated="updateSellerState"/>
         </div>
       </div>
       <div v-if="activeTab === 2">
-        <div class="bg-card">
+        <div class="bg-card p-4">
           <item-upload-form :formTitle="'New Item'" :itemId="itemId" :mode="'upload'" :myProfile="myProfile"/>
         </div>
       </div>
       <div v-if="activeTab === 3">
-        <div class="d-flex justify-content-start bg-card">
+        <div class="d-flex justify-content-start bg-card p-4">
           <my-items :formTitle="'Listings'" :myProfile="myProfile"/>
         </div>
       </div>
@@ -179,7 +182,7 @@ export default {
   color: white;
 }
 .secodary {
-  color: #EFF1F2;
+  color: #000;
   text-decoration: underline;
   font-size: 3.2rem;
 }

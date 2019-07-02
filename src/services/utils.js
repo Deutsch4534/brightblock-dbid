@@ -132,7 +132,7 @@ const utils = {
   },
   getAmounts: function(fiatRate, invoiceRates, saleData, includeGallery, includeArtist) {
     try {
-      let bitcoinAmount = moneyUtils.valueInBitcoin(saleData.fiatCurrency, saleData.amount, fiatRate);
+      let bitcoinAmount = moneyUtils.valueInBitcoin(saleData.amount, fiatRate);
 
       let fiatPlatformAmount = moneyUtils.rateInFiat(saleData.amount, invoiceRates.platformFee);
       let bitcoinPlatformAmount = moneyUtils.rateInBitcoin(bitcoinAmount, invoiceRates.platformFee);

@@ -1,46 +1,64 @@
 <template>
-<div id="my-app-element" class="container pt-5">
+<div id="my-app-element" class="container pt-3 mb-5">
   <div class="d-flex justify-content-center" role="status" v-if="loading">
     <div class="spinner-border" role="status">
       <span class="sr-only">Loading...</span>
     </div>
   </div>
-  <div class="container" v-else>
-    <auxiliary-profile-form :formTitle="'RA Profile'" :mode="'update'" :profile="profile" v-if="loggedIn"/>
-    <div v-else><router-link to="/login">Please log in</router-link></div>
+  <div class="" v-else>
+    <settings-tabs :tabList="tabList" :myProfile="myProfile"/>
   </div>
 </div>
 </template>
 
 <script>
-import AuxiliaryProfileForm from "./components/user-settings/AuxiliaryProfileForm";
-import { mdbContainer } from "mdbvue";
-import { mdbSpinner } from 'mdbvue';
+import SettingsTabs from "@/pages/components/user-settings/SettingsTabs";
+import { mdbContainer, mdbNavbar, mdbNavbarBrand, mdbNavbarToggler, mdbNavbarNav, mdbNavItem, mdbDropdown, mdbDropdownMenu, mdbDropdownToggle, mdbInput, mdbDropdownItem } from 'mdbvue';
 
 // noinspection JSUnusedGlobalSymbols
 export default {
   name: "UserSettings",
   bodyClass: "index-page",
   components: {
-    mdbSpinner, AuxiliaryProfileForm, mdbContainer
+    SettingsTabs,
+    mdbContainer, mdbNavbar, mdbNavbarBrand, mdbNavbarToggler, mdbNavbarNav, mdbNavItem, mdbDropdown, mdbDropdownMenu, mdbDropdownToggle, mdbInput, mdbDropdownItem
   },
   data() {
     return {
       loading: true,
-      profile: null
+      fromPage: this.$route.query.from,
+      myProfile: null,
+      tabList: ["notifications", "shipping", "payments", "friends", "blockstack"]
     };
   },
   mounted() {
-    this.$store.dispatch("myAccountStore/fetchMyAccount").then((profile) => {
-      this.profile = profile;
+    this.$store.dispatch("myAccountStore/fetchMyAccount").then((myProfile) => {
+      this.myProfile = myProfile;
       this.loading = false;
     });
   },
   computed: {
     loggedIn() {
-      return (this.profile) ? this.profile.loggedIn : false;
+      return (this.profile) ? this.myProfile.loggedIn : false;
     }
   },
-  methods: {}
+  methods: {
+    saveEmail: function(email) {
+      // this.$notify({type: 'success', title: 'Address Info', text: 'Address updated.'});
+    },
+    saveAddress: function(address) {
+      // this.$notify({type: 'success', title: 'Address Info', text: 'Address updated.'});
+    },
+  }
 };
 </script>
+<style scoped>
+.container-fluid {
+}
+.navbar {
+  align-items: start;
+}
+.tab-content {
+  padding-top: 0px;
+}
+</style>

@@ -29,10 +29,10 @@ const itemSearchStore = {
     getSearchResults: state => {
       let registered = state.searchResults;
       registered = registered.sort(function compare(a, b) {
-        if (a.saleData.amount > b.saleData.amount) {
+        if (a.updated > b.updated) {
           return -1;
         }
-        if (a.saleData.amount < b.saleData.amount) {
+        if (a.updated < b.updated) {
           return 1;
         }
         return 0;
@@ -132,8 +132,10 @@ const itemSearchStore = {
         state.searchResults.splice(index, 1, item);
       }
     },
-    clearSearchResults(state) {
-      // state.searchResults = [];
+    clearSearchResults(state, query) {
+      if (query && query.field === "facet" && query.query !== "*") {
+        state.searchResults = [];
+      }
     }
   },
   actions: {

@@ -2,7 +2,7 @@
 <div>
   <help-topic-modal class="text-left" :modal="helpModal" :topic="'bitcoin-address'" @closeModal="helpModalClose"/>
 
-  <div class="d-flex justify-content-between mb-5">
+  <div class="d-flex justify-content-between">
     <h4 class="text-capitalize"><a href="/" @click.prevent="helpModal = !helpModal">Bitcoin Address</a></h4>
     <div class="text-muted text-primary text-nowrap">
       <a class="ml-5 " @click.prevent="toggleAddressInput"><i class="fas fa-pencil-alt"></i></a>

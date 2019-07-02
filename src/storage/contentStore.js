@@ -58,7 +58,7 @@ const contentStore = {
   actions: {
     fetchMediumArticles: function({ commit }, pair) {
       return new Promise(resolve => {
-        const url = "https://medium.com/@radicleart/latest?format=json";
+        const url = "https://medium.com/@radiclesociety/latest?format=json";
         xhrService.makeDirectCall(url).then(function(articles) {
           resolve(articles);
         })

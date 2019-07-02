@@ -7,8 +7,8 @@
   </div>
   <div v-else>
     <!-- Supported elements -->
-    <confirmation-modal :modal="showModal" :title="modalTitle" :content="modalContent" @closeModal="closeModal"/>
-    <form class="text-dark text-white needs-validation p-4" novalidate v-on:submit.prevent="checkForm" id="itemForm">
+    <help-topic-modal class="text-left" :modal="helpModal" :topic="'saving-item'" @closeModal="helpModalClose"/>
+    <form class="text-dark text-white needs-validation" novalidate v-on:submit.prevent="checkForm" id="itemForm">
       <!-- item type -->
       <p v-if="errors.length">
         <b>Please correct the following error(s):</b>
@@ -84,12 +84,14 @@ import moment from "moment";
 import ConfirmationModal from "@/pages/components/utils/ConfirmationModal";
 import Taxonomy from "@/pages/components/utils/Taxonomy";
 import MediaFilesUpload from "@/pages/components/utils/MediaFilesUpload";
+import HelpTopicModal from "@/pages/components/utils/HelpTopicModal";
+import _ from "lodash";
 
   // noinspection JSUnusedGlobalSymbols
   export default {
     name: "ItemUploadForm",
     components: {
-      ConfirmationModal,
+      HelpTopicModal,
       Taxonomy,
       MediaFilesUpload,
       mdbSpinner,
@@ -106,10 +108,8 @@ import MediaFilesUpload from "@/pages/components/utils/MediaFilesUpload";
         errors: [],
         loading: true,
         showMedia: false,
-        showModal: false,
+        helpModal: false,
         showKeywords: false,
-        modalTitle: "Saving Item",
-        modalContent: "<p>Please wait while we update your data.</p>",
         media: this.$store.state.constants.taxonomy.media,
         medium: "physical",
         mediumLocked: false,
@@ -140,12 +140,12 @@ import MediaFilesUpload from "@/pages/components/utils/MediaFilesUpload";
             this.created = moment(this.item.created).format();
             this.item.owner = this.myProfile.username;
           } else {
-            this.modalContent = "File has not been uploaded.";
-            this.showModal = true;
+            this.$notify({type: 'error', title: 'Update Item', text: 'Unable to find this - please check your selling list in case its been sold?'});
           }
           if (item.medium) {
             this.medium = item.medium;
           }
+          this.stripRubbishKeywork(this.item);
           this.showMedia = true;
           this.loading = false;
         })
@@ -166,8 +166,20 @@ import MediaFilesUpload from "@/pages/components/utils/MediaFilesUpload";
       }
     },
     methods: {
-      closeModal: function() {
-        this.showModal = false;
+      helpModalClose: function() {
+        this.helpModal = false;
+      },
+      stripRubbishKeywork(item) {
+        let filtkeys = []
+        _.forEach(item.keywords, function(keyword) {
+          if (keyword && Array.isArray(keyword)) {
+            filtkeys.push(keyword.name);
+          }
+          else if (keyword && keyword.typeof === "string" && keyword.length > 1) {
+            filtkeys.push(keyword);
+          }
+        });
+        this.item.keywords = filtkeys;
       },
       doMedium () {
         this.item.medium = this.medium;
@@ -193,7 +205,7 @@ import MediaFilesUpload from "@/pages/components/utils/MediaFilesUpload";
       upload: function () {
         this.alertMessage =
           "Uploading item to your storage..";
-        this.showModal = true;
+        this.helpModal = true;
         if (this.mode === "update") {
           this.item.updated = moment({}).valueOf();
           this.$store
@@ -201,10 +213,11 @@ import MediaFilesUpload from "@/pages/components/utils/MediaFilesUpload";
             .then(item => {
               if (item) {
                 this.item = item;
-                this.showModal = false;
+                this.helpModal = false;
                 this.$router.push("/my-item/set-price/" + item.id);
               } else {
-                this.modalContent = "File has not been updated.";
+                this.$notify({type: 'error', title: 'Update Item', text: 'Unable to update your item - please check the image sizes and the form for errors!'});
+                this.helpModal = false;
               }
           });
         } else {
@@ -215,10 +228,11 @@ import MediaFilesUpload from "@/pages/components/utils/MediaFilesUpload";
             .then(item => {
               if (item) {
                 this.item = item;
-                this.showModal = false;
+                this.helpModal = false;
                 this.$router.push("/my-item/set-price/" + item.id);
               } else {
-                this.modalContent = "File has not been uploaded.";
+                this.$notify({type: 'error', title: 'Upload Item', text: 'Unable to upload your item - please check the image sizes and the form for errors!'});
+                this.helpModal = false;
               }
             });
         }

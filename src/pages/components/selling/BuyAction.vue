@@ -11,19 +11,12 @@
   </div>
   <div v-else-if="buyNowEnabled">
     <div class="d-flex align-items-start flex-column text-muted">
-      <div class="" v-if="action === 'details'"><router-link :to="itemUrl" class="btn btn-sm btn-success text-white m-0">Buy Now</router-link></div>
-      <div class="mb-2" v-if="action === 'buy'"><a :to="itemUrl" class="btn btn-sm btn-success text-white m-0" @click.prevent="buyNow">Place Order</a></div>
+      <div class="mb-2"><a :to="itemUrl" class="btn btn-sm btn-success text-white m-0" @click.prevent="buyNow">Buy Now</a></div>
       <div class="" style="font-size: 0.8rem;">
         <span class="mr-2" v-html="sellingBuyNowFiat"></span>
         / <span class="ml-2" v-html="sellingBuyNowBtc"></span>
       </div>
     </div>
-  </div>
-  <div v-else-if="sellingAuction">
-    <div class="" style="font-size: 0.8rem;"><span v-html="sellingAuctionFiat"></span></div>
-    <div class="mb-2" style="font-size: 0.8rem;"><span v-html="sellingAuctionBtc"></span></div>
-    <router-link v-if="action === 'details'" :to="itemUrl" class="btn btn-sm btn-success text-white m-0">Open</router-link>
-    <router-link v-if="action === 'bid'" :to="itemTransactionUrl" class="btn btn-sm btn-success text-white m-0">Place Bid</router-link>
   </div>
   <div v-else>
     <p class="text-muted">Not Selling</p>
@@ -36,7 +29,7 @@ import moneyUtils from "@/services/moneyUtils";
 
 // noinspection JSUnusedGlobalSymbols
 export default {
-  name: "BuyersInformationItemDetails",
+  name: "BuyAction",
   components: {
   },
   props: {
@@ -58,7 +51,6 @@ export default {
         return {};
       }
     },
-    action: null
   },
   data() {
     return {
@@ -69,7 +61,6 @@ export default {
   methods: {
     buyNow() {
       if (this.myProfile.loggedIn) {
-        this.showModal = true;
         this.$store.dispatch("assetStore/initialisePayment", {asset: this.asset, item: this.item}).then(asset => {
           if (asset) {
             this.$emit("startPayment", asset);
@@ -103,7 +94,7 @@ export default {
       let priceFiat, priceBtc, priceEth;
       let saleData = this.item.saleData;
       let ethToBtc = this.$store.getters["conversionStore/getCryptoRate"]("eth_btc");
-      priceBtc = moneyUtils.valueInBitcoin(saleData.fiatCurrency, saleData.amount, fiatRate);
+      priceBtc = moneyUtils.valueInBitcoin(saleData.amount, fiatRate);
       priceFiat = this.item.saleData.amount;
       priceEth = moneyUtils.valueInEther(saleData.fiatCurrency, saleData.amount, fiatRate, ethToBtc);
       return symbol + " " + priceFiat + " " + currency;
@@ -115,7 +106,7 @@ export default {
       let priceFiat, priceBtc, priceEth;
       let saleData = this.item.saleData;
       let ethToBtc = this.$store.getters["conversionStore/getCryptoRate"]("eth_btc");
-      priceBtc = moneyUtils.valueInBitcoin(saleData.fiatCurrency, saleData.amount, fiatRate);
+      priceBtc = moneyUtils.valueInBitcoin(saleData.amount, fiatRate);
       priceFiat = this.item.saleData.amount;
       priceEth = moneyUtils.valueInEther(saleData.fiatCurrency, saleData.amount, fiatRate, ethToBtc);
       return priceBtc + " BTC";
@@ -127,7 +118,7 @@ export default {
       let priceFiat, priceBtc, priceEth;
       let saleData = this.item.saleData;
       let ethToBtc = this.$store.getters["conversionStore/getCryptoRate"]("eth_btc");
-      priceBtc = moneyUtils.valueInBitcoin(saleData.fiatCurrency, saleData.reserve, fiatRate, ethToBtc);
+      priceBtc = moneyUtils.valueInBitcoin(saleData.reserve, fiatRate);
       priceFiat = this.item.saleData.reserve;
       priceEth = moneyUtils.valueInEther(saleData.fiatCurrency, saleData.reserve, fiatRate, ethToBtc);
       return symbol + " " + priceFiat + " " + currency;
@@ -139,7 +130,7 @@ export default {
       let priceFiat, priceBtc, priceEth;
       let saleData = this.item.saleData;
       let ethToBtc = this.$store.getters["conversionStore/getCryptoRate"]("eth_btc");
-      priceBtc = moneyUtils.valueInBitcoin(saleData.fiatCurrency, saleData.reserve, fiatRate, ethToBtc);
+      priceBtc = moneyUtils.valueInBitcoin(saleData.reserve, fiatRate);
       priceFiat = this.item.saleData.reserve;
       priceEth = moneyUtils.valueInEther(saleData.fiatCurrency, saleData.reserve, fiatRate, ethToBtc);
       return priceBtc + " BTC";

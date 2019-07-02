@@ -1,5 +1,5 @@
 <template>
-<div class="container-fluid flex-1">
+<div class="container-fluid flex-1 pt-4">
   <div class="d-flex justify-content-center" role="status" v-if="loading">
     <div class="spinner-border" role="status">
       <span class="sr-only">Loading...</span>

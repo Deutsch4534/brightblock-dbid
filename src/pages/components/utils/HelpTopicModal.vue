@@ -39,6 +39,12 @@
   <mdb-modal-body v-else-if="showView === 4">
     <div class='popover-body'>Trusted users will be able to decrypt your profile information - please enter as comma separated list of blockstack user ids.</div>
   </mdb-modal-body>
+  <mdb-modal-body v-else-if="showView === 5">
+    <div class='popover-body'>We are saving the item and images to your user storage - this takes a few moments depending on the size of the images.</div>
+    <div class='popover-body'>Once the uploading is done we will send you to the 'Set Price' where you can decide whether to sell then
+    item via <span class="text-primary">buy now</span> or via <span class="text-primary">bidding</span>.</div>
+    <div class='popover-body'>You can get to set price any time using <span class="text-primary"><i class="fas fa-gavel"></i></span>.</div>
+  </mdb-modal-body>
   <mdb-modal-footer>
     <a class="btn btn-primary text-white" @click.prevent="closeMe">Close</a>
   </mdb-modal-footer>
@@ -50,7 +56,7 @@ import { mdbIcon, mdbModal, mdbModalHeader, mdbModalTitle, mdbModalBody, mdbModa
 
 // noinspection JSUnusedGlobalSymbols
 export default {
-  name: "ConfirmationModal",
+  name: "HelpTopicModal",
   components: {
     mdbModal,
     mdbModalHeader,
@@ -77,6 +83,10 @@ export default {
       trustedUsers: {
         title: "Trusted Users",
         body: "Trusted users will be able to decrypt your profile information - please enter as comma separated list of blockstack user ids."
+      },
+      savingItem: {
+        title: "Saving your item",
+        body: ""
       }
     };
   },
@@ -93,6 +103,9 @@ export default {
     } else if (this.topic === "trusted-users") {
       this.showView = 4;
       this.title = this.trustedUsers.title;
+    } else if (this.topic === "saving-item") {
+      this.showView = 5;
+      this.title = this.savingItem.title;
     }
   },
   methods: {

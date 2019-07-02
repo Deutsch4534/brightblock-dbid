@@ -127,7 +127,7 @@ export default {
     return {
       mediaObjects: [],
       internalError: null,
-      missing: require("@/assets/img/missing/missing.jpg"),
+      missing: require("@/assets/img/missing/missing.png"),
     };
   },
   created() {

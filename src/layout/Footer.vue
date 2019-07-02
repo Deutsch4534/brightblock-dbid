@@ -9,9 +9,9 @@
       <span class="copyright d-none d-sm-block">© 2019 DBID.IO</span>
     </div>
     <div>
-      <span class="mr-3"><a href="https://medium.com/@radicleart" target="_blank" rel="noreferrer"><i class="fab fa-medium"></i></a></span>
+      <span class="mr-3"><a href="https://medium.com/@radiclesociety" target="_blank" rel="noreferrer"><i class="fab fa-medium"></i></a></span>
       <span class="mr-3"><a href="https://twitter.com/radiclesociety" target="_blank" rel="noreferrer"><i class="fab fa-twitter"></i></a></span>
-      <span class="mr-3"><a href="https://github.com/radicleart/brightblock-oam" target="_blank" rel="noreferrer"><i class="fab fa-github"></i></a></span>
+      <span class="mr-3"><a href="https://github.com/radicleart/brightblock-dbid" target="_blank" rel="noreferrer"><i class="fab fa-github"></i></a></span>
     </div>
   </div>
 </footer>

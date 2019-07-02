@@ -54,7 +54,7 @@ export default {
       let saleData = this.artwork.saleData;
       let ethToBtc = store.getters["conversionStore/getCryptoRate"]("eth_btc");
       if (fb) {
-        priceBtc = moneyUtils.valueInBitcoin(saleData.fiatCurrency, saleData.amount, fiatRate);
+        priceBtc = moneyUtils.valueInBitcoin(saleData.amount, fiatRate);
         priceFiat = this.artwork.saleData.amount;
         priceEth = moneyUtils.valueInEther(saleData.fiatCurrency, saleData.amount, fiatRate, ethToBtc);
       } else {
@@ -73,7 +73,7 @@ export default {
       let saleData = this.artwork.saleData;
       let ethToBtc = store.getters["conversionStore/getCryptoRate"]("eth_btc");
       if (fb) {
-        priceBtc = moneyUtils.valueInBitcoin(saleData.fiatCurrency, saleData.reserve, fiatRate, ethToBtc);
+        priceBtc = moneyUtils.valueInBitcoin(saleData.reserve, fiatRate, ethToBtc);
         priceFiat = this.artwork.saleData.reserve;
         priceEth = moneyUtils.valueInEther(saleData.fiatCurrency, saleData.reserve, fiatRate, ethToBtc);
       } else {

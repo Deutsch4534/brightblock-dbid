@@ -1,26 +1,14 @@
 <template>
-<mdb-dropdown tag="li" class="nav-item">
-  <mdb-dropdown-toggle tag="div"  navLink color="" slot="toggle" waves-fixed>
-    <img class="avatar" :src="avatarUrl" v-if="avatar"/>
-    <mdb-icon icon="user-circle" v-else/>
-  </mdb-dropdown-toggle>
-  <mdb-dropdown-menu dropleft>
-    <mdb-dropdown-item tag="div">
-     <strong>{{ username }}</strong>
-    </mdb-dropdown-item>
-    <div class="dropdown-divider"></div>
-    <mdb-dropdown-item>
-      <router-link class="dropdown-item" to="/user/settings">Settings</router-link>
-    </mdb-dropdown-item>
-    <mdb-dropdown-item v-if="showAdmin">
-      <router-link class="dropdown-item" to="/admin/settings">Admin</router-link>
-    </mdb-dropdown-item>
-    <div class="dropdown-divider"></div>
-    <mdb-dropdown-item>
-      <a href="#" class="dropdown-item" @click.prevent="logout">Logout</a>
-    </mdb-dropdown-item>
-  </mdb-dropdown-menu>
-</mdb-dropdown>
+<mdb-navbar-nav class="" v-if="loggedIn">
+  <router-link class="nav-link navbar-link text-nowrap btn btn-sm bg-light px-4" style="max-width: 100px; font-weight: 600;" to="/user/settings">Settings</router-link>
+  <router-link class="nav-link navbar-link text-nowrap btn btn-sm bg-light px-4" style="max-width: 100px; font-weight: 600;" to="/admin/settings">Admin</router-link>
+  <a href="#" class="nav-link navbar-link text-nowrap btn btn-sm bg-light px-4 " style="max-width: 100px; font-weight: 600;" @click.prevent="logout">Logout</a>
+</mdb-navbar-nav>
+<!--
+<mdb-navbar-nav class="" v-else>
+  <a v-on:click.prevent="loginMultiPlayer" class="nav-link navbar-link">Login <i class="fas fa-sign-in-alt"></i></a>
+</mdb-navbar-nav>
+-->
 </template>
 
 <script>
@@ -28,7 +16,7 @@ import { mdbBadge, mdbNavbar, mdbNavItem, mdbNavbarNav, mdbNavbarToggler, mdbBtn
 import myAccountService from "@/services/myAccountService";
 
 export default {
-  name: 'AccountLinks',
+  name: 'AccountLinksXs',
   components: {
     mdbNavbar,
     mdbNavItem,
@@ -107,12 +95,4 @@ export default {
 
 </script>
 <style scoped>
-.avatar {
-  width: 50px;
-  height: 50px;
-  border-radius: 25px;
-}
-
-.fa-user-circle { font-size: 1.7rem; padding-bottom: 4px;}
-
 </style>

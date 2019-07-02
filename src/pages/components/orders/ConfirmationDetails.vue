@@ -1,5 +1,5 @@
 <template>
-<div class="bg-light mb-5">
+<div class="bg-light mb-5 p-4">
   <div class="d-flex justify-content-center">
     <div class="d-flex justify-content-center">
       <h4>{{network}}&nbsp;<span class="text-danger">{{bitcoinConfig.chain}}</span>&nbsp;network</h4>
@@ -28,8 +28,8 @@
       <div>Invoice settled</div>
       <div class="text-muted"><a href="https://lightning.chaintools.io" target="_blank">Check chain <i class="fas fa-external-link-alt"></i></a></div>
     </div>
-    <div class="row mb-3">
-      <div><mdb-btn @click="paySeller" rounded color="white" size="sm" class="mx-0 waves-light">confirm shipping completed</mdb-btn></div>
+    <div class="d-flex justify-content-center mb-3">
+      <div><mdb-btn @click="paySeller" rounded color="white" size="sm" class="mx-0 waves-light">confirm goods received</mdb-btn></div>
     </div>
   </div>
   <div class="d-flex justify-content-start" v-else-if="asset.status === 6">

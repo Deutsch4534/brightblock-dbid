@@ -11,7 +11,7 @@
       Item not found - <router-link to="/">search for items</router-link>
     </div>
   </div>
-  <div class="row" v-if="!orderStarted">
+  <div class="row" v-if="!buyNowStarted && !biddingStarted">
     <div class="col-lg-5 col-xl-4 mb-4">
       <item-image-list-view :item="item"/>
     </div>
@@ -21,10 +21,11 @@
       </div>
       <p class="grey-text"><description-container :text="item.description"/></p>
       <div class="d-flex text-muted justify-content-end mb-3"><small>Listed <!--by; <a class="font-weight-bold dark-grey-text">{{ownerProfile.name}}</a> --> on <span class="">{{created}}</span></small></div>
-      <buyers-information-item-details :item="item" :asset="asset" action="buy" :myProfile="myProfile" @startPayment="startPayment"/>
+      <a v-if="biddingEnabled" class="btn btn-sm btn-primary text-white m-0" @click.prevent="startBidding">Start the Bidding!</a>
+      <buy-action v-else :item="item" :asset="asset" :myProfile="myProfile" @startPayment="startPayment"/>
     </div>
   </div>
-  <div class="row" v-else>
+  <div class="row" v-else-if="buyNowStarted">
     <div class="col-md-8 col-xs-12 offset-md-2">
       <div class=""><h5 class="mb-2">Purchase Order: {{item.title}}</h5></div>
       <div class="d-flex justify-content-end text-muted">
@@ -32,10 +33,22 @@
         <a class="text-primary ml-3" @click.prevent="toggleShippingAddress"><small>check buyer info</small></a>
         <a v-if="assetStatus === 3" class="ml-3 text-danger" @click.prevent="cancelOrder(asset.assetHash)"><small>cancel order</small></a>
       </div>
-      <crypto-address-tabs v-if="showAddress" :buyer="true" :myProfile="myProfile" @saveEmail="saveEmail" @saveAddress="saveAddress"/>
+      <settings-tabs v-if="showAddress" :tabList="tabList" :myProfile="myProfile" @saveEmail="saveEmail" @saveAddress="saveAddress"/>
       <div v-else>
         <order-details class="bg-card mb-4" v-if="showOrderDetails" :item="item" :purchaseCycle="purchaseCycle"/>
         <order-item class="bg-card mb-5" :item="item" :assetHash="asset.assetHash" :myProfile="myProfile" @cancelOrder="cancelOrder"/>
+      </div>
+    </div>
+  </div>
+  <div class="row" v-else-if="biddingStarted">
+    <div class="col-md-8 col-xs-12 offset-md-2">
+      <div class=""><h5 class="mb-2">Purchase Order: {{item.title}}</h5></div>
+      <div class="d-flex justify-content-end text-muted">
+        Bidding Started
+      </div>
+      <settings-tabs v-if="showAddress" :tabList="tabList" :myProfile="myProfile" @saveEmail="saveEmail" @saveAddress="saveAddress"/>
+      <div v-else>
+        <bid-action v-if="biddingEnabled" :item="item" :asset="asset" :myProfile="myProfile" @continueBidding="continueBidding"/>
       </div>
     </div>
   </div>
@@ -47,23 +60,26 @@ import moment from "moment";
 import utils from "@/services/utils";
 import DescriptionContainer from "@/pages/components/utils/DescriptionContainer";
 import ItemImageListView from "@/pages/components/myItem/ItemImageListView";
-import BuyersInformationItemDetails from "@/pages/components/selling/BuyersInformationItemDetails";
+import BuyAction from "@/pages/components/selling/BuyAction";
+import BidAction from "@/pages/components/selling/BidAction";
 import OrderItem from "@/pages/components/orders/OrderItem";
 import OrderDetails from "@/pages/components/orders/OrderDetails";
-import CryptoAddressTabs from "@/pages/components/user-settings/CryptoAddressTabs";
+import SettingsTabs from "@/pages/components/user-settings/SettingsTabs";
 import { mdbSpinner } from 'mdbvue';
 
 // noinspection JSUnusedGlobalSymbols
 export default {
   name: "ItemDetails",
   components: {
-    mdbSpinner, CryptoAddressTabs, DescriptionContainer, ItemImageListView, BuyersInformationItemDetails, OrderItem, OrderDetails,
+    mdbSpinner,
+    BidAction, SettingsTabs, DescriptionContainer, ItemImageListView, BuyAction, OrderItem, OrderDetails,
   },
   props: {
   },
   data() {
     return {
       loading: true,
+      tabList: ["notifications", "shipping", "payments"],
       showOrderDetails: false,
       addressBlurb: "Needed to complete the sale - not shown to anyone else - including us!",
       myProfile: null,
@@ -119,6 +135,20 @@ export default {
         this.showAddress = false;
       }
     },
+    startBidding: function(asset) {
+      this.$store.dispatch("assetStore/initialisePayment", {bidding: true, asset: this.asset, item: this.item}).then(asset => {
+        if (!asset) {
+          this.$notify({type: 'error', title: 'Place Order', text: 'Unable to start bidding at present.'});
+        }
+      });
+    },
+    continueBidding: function(asset) {
+      this.asset = asset;
+      let validity = this.$store.getters["myAccountStore/getProfileValidity"];
+      if (validity.emailValid && validity.shippingValid && validity.bitcoinValid) {
+        this.showAddress = false;
+      }
+    },
     saveEmail: function(email) {
       // this.$notify({type: 'success', title: 'Address Info', text: 'Address updated.'});
     },
@@ -150,6 +180,19 @@ export default {
       }
       return;
     },
+    buyNowStarted() {
+      let purchaseCycle = this.$store.getters["assetStore/getCurrentPurchaseCycleByHash"](this.asset.assetHash);
+      let buyNowStarted = (purchaseCycle && !purchaseCycle.bidding);
+      return this.asset.status > 0 && buyNowStarted;
+    },
+    biddingStarted() {
+      let purchaseCycle = this.$store.getters["assetStore/getCurrentPurchaseCycleByHash"](this.asset.assetHash);
+      let biddingStarted = (purchaseCycle && purchaseCycle.bidding);
+      return this.asset.status > 0 && biddingStarted;
+    },
+    biddingEnabled() {
+      return this.item.saleData.soid === 2;
+    },
     purchaseCycle() {
       let purchaseCycle = this.$store.getters["assetStore/getCurrentPurchaseCycleByHash"](this.asset.assetHash);
       return purchaseCycle;
@@ -164,9 +207,6 @@ export default {
     validAddressInfo() {
       let validity = this.$store.getters["myAccountStore/getProfileValidity"];
       return validity.emailValid && validity.shippingValid;
-    },
-    orderStarted() {
-      return this.asset.status > 0;
     },
   }
 };

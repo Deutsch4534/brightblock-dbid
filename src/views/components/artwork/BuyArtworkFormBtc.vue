@@ -163,7 +163,7 @@ export default {
     btcMessage() {
       try {
         let fiatRate = this.$store.getters["conversionStore/getFiatRate"](this.artwork.saleData.fiatCurrency);
-        let value = moneyUtils.valueInBitcoin(this.artwork.saleData.fiatCurrency, this.artwork.saleData.amount, fiatRate);
+        let value = moneyUtils.valueInBitcoin(this.artwork.saleData.amount, fiatRate);
         return value;
       } catch (e) {
         return "";
@@ -176,7 +176,7 @@ export default {
           return "Payment Info";
         }
         let fiatRate = this.$store.getters["conversionStore/getFiatRate"](this.artwork.saleData.fiatCurrency);
-        let value = moneyUtils.valueInBitcoin(this.artwork.saleData.fiatCurrency, this.artwork.saleData.amount, fiatRate);
+        let value = moneyUtils.valueInBitcoin(this.artwork.saleData.amount, fiatRate);
         return "BUY NOW " + value + " BTC";
       } catch (e) {
         console.log("Error formatting buy label: " + e);

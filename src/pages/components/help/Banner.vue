@@ -28,7 +28,7 @@
   </div>
   <div class="d-block d-sm-none py-2" style="background-color: #37474f;">
     <div class="text-center">
-      <a href="https://www.producthunt.com/posts/dbid-2?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-dbid-2" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=159460&theme=dark" alt="dBid - Turn unused stuff into Bitcoin | Product Hunt Embed" style="width: 250px; height: 54px;" width="250px" height="54px" /></a>
+      <a href="https://www.producthunt.com/posts/dbid?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-dbid" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=159359&theme=light" alt="dBid - Turn unused stuff into Bitcoin | Product Hunt Embed" style="width: 250px; height: 54px;" width="250px" height="54px" /></a>
     </div>
     <div class="text-center banner-text3b ">Earn your own Bitcoin!</div>
   </div>

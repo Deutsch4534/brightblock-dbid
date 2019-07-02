@@ -1,6 +1,6 @@
 <template>
 <div class="">
-  <div class="p-2">
+  <div class=" p-4">
     <div class="d-flex p-2 justify-content-between">
       <mdb-dropdown>
         <mdb-dropdown-toggle slot="toggle" color="primary" size="sm">Payment Options</mdb-dropdown-toggle>

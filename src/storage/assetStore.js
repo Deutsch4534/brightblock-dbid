@@ -2,6 +2,7 @@ import _ from "lodash";
 import store from "@/storage/store";
 import bitcoinService from "brightblock-lib/src/services/bitcoinService";
 import utils from "@/services/utils";
+import moneyUtils from "@/services/moneyUtils";
 import moment from "moment";
 
 const assetStore = {
@@ -57,6 +58,28 @@ const assetStore = {
       }
       return purchaseCycle;
     },
+    getCurrentBiddingData: state => data => {
+      let purchaseCycle = store.getters["assetStore/getCurrentPurchaseCycleByHash"](data.assetHash);
+      let currentBid = data.saleData.openingBid;
+      if (purchaseCycle.bidding && purchaseCycle.bidding.bids.length > 0) {
+        currentBid = purchaseCycle.bidding.bids[purchaseCycle.bidding.bids.length - 1];
+      }
+      let nextBid = currentBid + data.saleData.increment;
+      let fiatRate = store.getters["conversionStore/getFiatRate"](data.saleData.fiatCurrency);
+      let symbol = fiatRate["symbol"];
+      let nextBidBtc = moneyUtils.valueInBitcoin(nextBid, fiatRate);
+      let currentBidBtc = moneyUtils.valueInBitcoin(currentBid, fiatRate);
+      let reserveMet = currentBid < data.saleData.reserve;
+      return {
+        fiatCurrency: data.saleData.fiatCurrency,
+        fiatSymbol: symbol,
+        nextBid: nextBid,
+        nextBidBtc: nextBidBtc,
+        currentBid: currentBid,
+        currentBidBtc: currentBidBtc,
+        reserveMet: reserveMet
+      };
+    },
     getAssets: state => {
       return state.assets;
     },
@@ -77,7 +100,7 @@ const assetStore = {
       _.forEach(state.assets, function(asset) {
         if (asset.purchaseCycles) {
           let purchaseCycle = asset.purchaseCycles[(asset.purchaseCycles.length - 1)];
-          if (purchaseCycle.buyer && purchaseCycle.seller.did === did) {
+          if (purchaseCycle.seller && purchaseCycle.seller.did === did) {
             assets.push(asset);
           }
         }
@@ -234,6 +257,43 @@ const assetStore = {
           if (!asset.purchaseCycles) {
             asset.purchaseCycles = [];
           }
+          if (data.bidding) {
+            purchaseCycle.bidding = {
+              bids: [],
+              saleData: item.saleData,
+            };
+          }
+          asset.purchaseCycles.push(purchaseCycle);
+          bitcoinService.getPaymentAddress(asset).then(asset => {
+            commit("addAsset", asset);
+            resolve(asset);
+          })
+            .catch(error => {
+              console.log(error);
+              resolve();
+            });
+        });
+      });
+    },
+    placeBid({ commit, state, getters}, data) {
+      return new Promise(resolve => {
+        let item = data.item;
+        let asset = data.asset;
+        store.dispatch("userProfilesStore/fetchUserProfile", { username: item.owner }, { root: true }).then(profile => {
+          let seller = profile;
+          let buyer = store.getters["myAccountStore/getMyProfile"];
+          let fiatRate = store.getters["conversionStore/getFiatRate"](item.saleData.fiatCurrency);
+          let otherData = {
+            fiatRate: fiatRate,
+            buyer: buyer,
+            gallerist: null,
+            seller: seller,
+            creator: null,
+          };
+          let purchaseCycle = utils.initialisePurchaseCycle(item, otherData);
+          if (!asset.purchaseCycles) {
+            asset.purchaseCycles = [];
+          }
           asset.purchaseCycles.push(purchaseCycle);
           bitcoinService.getPaymentAddress(asset).then(asset => {
             commit("addAsset", asset);
@@ -264,8 +324,25 @@ const assetStore = {
     },
     lookupAssetsByBuyer({ commit, state, getters}) {
       return new Promise(resolve => {
-        let buyer = store.getters["myAccountStore/getMyProfile"];
-        bitcoinService.lookupAssetsByBuyer(buyer.username).then(assets => {
+        let myProfile = store.getters["myAccountStore/getMyProfile"];
+        bitcoinService.lookupAssetsByBuyer(myProfile.username).then(assets => {
+          if (assets) {
+            commit("addAssets", assets);
+            resolve(assets);
+          } else {
+            resolve();
+          }
+        })
+          .catch(() => {
+            // server error
+            resolve();
+          });
+      });
+    },
+    lookupAssetsBySeller({ commit, state, getters}) {
+      return new Promise(resolve => {
+        let myProfile = store.getters["myAccountStore/getMyProfile"];
+        bitcoinService.lookupAssetsBySeller(myProfile.username).then(assets => {
           if (assets) {
             commit("addAssets", assets);
             resolve(assets);

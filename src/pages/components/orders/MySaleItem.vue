@@ -12,7 +12,7 @@
     <div class="row">
       <div class="col-12"><h4><router-link :to="itemUrl">{{searchItem.title}}</i></router-link></h4></div>
       <div class="col-12">Status: {{assetStatus}}</div>
-      <div class="col-12">Seller: {{seller}}</div>
+      <div class="col-12">Buyer: {{buyer}}</div>
       <div class="col-12">Expired: {{expired}}</div>
       <div v-if="debugMode">
       <div class="col-12">Gaia TX: {{transferred}} Expired: {{expired}}</div>
@@ -33,7 +33,7 @@ import ItemActionLinks from "@/pages/components/myItem/ItemActionLinks";
 
 // noinspection JSUnusedGlobalSymbols
 export default {
-  name: "MyOrder",
+  name: "MySaleItem",
   bodyClass: "index-page",
   components: {
     OrderItem, ItemImageListView, ItemActionLinks

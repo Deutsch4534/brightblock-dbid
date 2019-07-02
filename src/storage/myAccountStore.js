@@ -64,7 +64,7 @@ const myAccountStore = {
     }
   },
   actions: {
-    fetchMyAccount({ state, commit, getters }) {
+    fetchMyAccount({ state, commit }) {
       return new Promise(resolve => {
         let myProfile = state.myProfile;
         if (!myProfile.loggedIn) {
@@ -91,8 +91,8 @@ const myAccountStore = {
             resolve(myProfile);
           }
         } else {
-          myProfile = myAccountService.myProfile();
-          let validity = getters.getProfileValidity;
+          //myProfile = myAccountService.myProfile();
+          let validity = store.getters["myAccountStore/getProfileValidity"];
           if (validity.emailValid || validity.shippingValid || validity.bitcoinValid) {
             resolve(myProfile);
           } else {

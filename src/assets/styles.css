@@ -36,6 +36,7 @@ h1, h2, h3, h4, h5, h6 {
 
 header {
   background-color: #78909c;
+  min-height: 80px;
 }
 
 p {
@@ -96,8 +97,6 @@ a {
 }
 .bg-card {
   background-color: #EFF1F2 !important;
-  border-radius: 10px;
-  padding: 20px;
 }
 .spinner-border {
   margin-top: 40px;

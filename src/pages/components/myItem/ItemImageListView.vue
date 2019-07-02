@@ -1,7 +1,7 @@
 <template>
 <div class="mdb-lightbox" v-if="isImage">
   <mdb-carousel showControls :interval="false" showIndicators> <!-- :interval="1000"  -->
-    <mdb-carousel-item img v-for="(image, index) in item.images" :key="index" :src="image.dataUrl" mask="light" :alt="item.title">
+    <mdb-carousel-item img v-for="(image, index) in item.images" :key="index" :src="getImage(image)" mask="light" :alt="item.title">
       <a @click.prevent="show(0)"><mdb-carousel-caption :text="item.title"></mdb-carousel-caption></a>
     </mdb-carousel-item>
   </mdb-carousel>
@@ -38,6 +38,7 @@ export default {
       current: 0,
       visible: false,
       index: 0,
+      missing: require("@/assets/img/missing/missing.png"),
     };
   },
   mounted() {},
@@ -48,20 +49,24 @@ export default {
     },
     handleHide() {
       this.visible = false;
-    }
-  },
-  computed: {
-    getImage: function() {
-      try {
-        return this.item.images[0].dataUrl;
-      } catch (e) {
-        return;
+    },
+    getImage: function(image) {
+      if (image) {
+        return image.dataUrl;
+      } else {
+        return this.missing;
       }
     },
+  },
+  computed: {
     images() {
-      let images = [];
-      images.push(this.item.images[0].dataUrl);
-      return images;
+      try {
+        let images = [];
+        images.push(this.item.images[0].dataUrl);
+        return images;
+      } catch (e) {
+        return [this.missing];
+      }
     },
     isImage: function() {
       try {

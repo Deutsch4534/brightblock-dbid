@@ -117,7 +117,7 @@ const moneyUtils = {
     return Math.trunc(valueInEther * 1000000000000000000);
   },
 
-  valueInBitcoin(currency, amount, fiatRate) {
+  valueInBitcoin(amount, fiatRate) {
     try {
       let fiatToBtc = 0;
       let precision = 100000000;

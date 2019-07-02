@@ -299,7 +299,7 @@ export default {
   methods: {
     valueInBitcoin(amount) {
       let fiatRate = this.$store.getters["conversionStore/getFiatRate"](this.currency);
-      return moneyUtils.valueInBitcoin(this.currency, amount, fiatRate);
+      return moneyUtils.valueInBitcoin(amount, fiatRate);
     },
     valueInEther(amount) {
       let fiatRate = this.$store.getters["conversionStore/getFiatRate"](this.currency);

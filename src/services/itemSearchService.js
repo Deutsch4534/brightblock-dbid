@@ -33,7 +33,7 @@ const itemSearchService = {
         success(item);
       }
     }
-    itemStorage.commit("itemSearchStore/clearSearchResults");
+    itemStorage.commit("itemSearchStore/clearSearchResults", q);
     searchIndexService.searchDappsIndex(location.hostname, "item", q.field, q.query).then(searchResults => {
       if (!searchResults || searchResults.error) {
         return;

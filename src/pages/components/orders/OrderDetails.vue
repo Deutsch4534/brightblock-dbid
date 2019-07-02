@@ -1,5 +1,5 @@
 <template>
-<div class="row">
+<div class="row p-4">
   <div class="col-5">
     <!--Featured image-->
     <item-image-list-view :item="item"/>

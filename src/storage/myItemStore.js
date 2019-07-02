@@ -95,7 +95,17 @@ const myItemStore = {
     unsold: state => {
       let username = store.getters["myAccountStore/getMyProfile"].username;
       let status = store.state.constants.statuses.item.PURCHASE_BEGUN;
-      return state.myItems.filter(item => username === item.owner && item.status !== status);
+      let filtered = state.myItems.filter(item => username === item.owner && item.status !== status);
+      filtered = filtered.sort(function compare(a, b) {
+        if (a.updated > b.updated) {
+          return -1;
+        }
+        if (a.updated < b.updated) {
+          return 1;
+        }
+        return 0;
+      });
+      return filtered;
     },
     registered: state => registered => {
       if (registered) {
@@ -107,16 +117,46 @@ const myItemStore = {
     selling: state => {
       let username = store.getters["myAccountStore/getMyProfile"].username;
       let status = store.state.constants.statuses.item.PURCHASE_BEGUN;
-      return state.myItems.filter(item => username === item.owner && item.status && item.status === status);
+      let filtered = state.myItems.filter(item => username === item.owner && item.status && item.status === status);
+      filtered = filtered.sort(function compare(a, b) {
+        if (a.updated > b.updated) {
+          return -1;
+        }
+        if (a.updated < b.updated) {
+          return 1;
+        }
+        return 0;
+      });
+      return filtered;
     },
     buying: state => {
       let username = store.getters["myAccountStore/getMyProfile"].username;
       let status = store.state.constants.statuses.item.PURCHASE_BEGUN;
-      return state.myItems.filter(item => username === item.buyer && item.status && item.status === status);
+      let filtered = state.myItems.filter(item => username === item.buyer && item.status && item.status === status);
+      filtered = filtered.sort(function compare(a, b) {
+        if (a.updated > b.updated) {
+          return -1;
+        }
+        if (a.updated < b.updated) {
+          return 1;
+        }
+        return 0;
+      });
+      return filtered;
     },
     sold: state => {
       let username = store.getters["myAccountStore/getMyProfile"].username;
-      return state.myItems.filter(item => username !== item.owner);
+      let filtered = state.myItems.filter(item => username !== item.owner);
+      filtered = filtered.sort(function compare(a, b) {
+        if (a.updated > b.updated) {
+          return -1;
+        }
+        if (a.updated < b.updated) {
+          return 1;
+        }
+        return 0;
+      });
+      return filtered;
     },
     available: state => auctionId => {
       // let available = state.myItems.filter(item => typeof (item.saleData.auctionId) === 'undefined')
