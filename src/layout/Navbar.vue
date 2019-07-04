@@ -2,10 +2,10 @@
 <header class="" >
 <login-tab-modal v-if="showModal" :modal="showModal" @closeModal="closeModal"/>
 <mdb-navbar color="blue-grey lighten-1" light class="pt-3" style="min-height: 80px;">
+  <mdb-navbar-brand>
+    <router-link to="/" class="nav-link navbar-link"><img :src="logo" width="90px" alt="main logo"></router-link>
+  </mdb-navbar-brand>
   <mdb-navbar-toggler>
-    <mdb-navbar-brand left>
-      <router-link to="/" class="nav-link navbar-link"><img :src="logo" width="90px" alt="main logo"></router-link>
-    </mdb-navbar-brand>
     <mdb-navbar-nav center class="">
         <router-link class="nav-link navbar-link text-nowrap btn btn-sm bg-success px-3 text-white" style="max-width: 100px; font-weight: 600;" to="/buy">BUY <i class="fas fa-angle-down text-dark ml-2 fa-1x"></i></router-link>
         <router-link class="nav-link navbar-link text-nowrap btn btn-sm bg-danger px-3 text-white" style="max-width: 100px; font-weight: 600;" to="/sell">SELL <i class="fas fa-angle-up text-dark mr-auto fa-1x"></i></router-link>

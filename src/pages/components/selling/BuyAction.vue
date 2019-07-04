@@ -85,7 +85,10 @@ export default {
     },
     buyNowEnabled() {
       let saleData = this.item.saleData;
-      return saleData.soid === 1 && saleData.amount > 0;
+      if (saleData) {
+        return saleData.soid === 1 && saleData.amount > 0;
+      }
+      return false;
     },
     sellingBuyNowFiat() {
       let fiatRate = this.$store.getters["conversionStore/getFiatRate"](this.item.saleData.fiatCurrency);

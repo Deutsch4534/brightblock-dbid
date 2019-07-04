@@ -41,6 +41,7 @@ const itemSearchService = {
       let usersToFetch = [];
       searchResults.forEach(function(searchResult) {
         // get the unique users from the search
+        itemStorage.commit("itemSearchStore/addSearchResult", searchResult);
         itemSearchService.addUserOrNot(usersToFetch, searchResult.owner);
       });
 

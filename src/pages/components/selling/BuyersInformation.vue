@@ -1,5 +1,10 @@
 <template>
-<div class="">
+<div class="d-flex justify-content-center" role="status" v-if="loading">
+  <div class="spinner-border" role="status">
+    <span class="sr-only">Loading...</span>
+  </div>
+</div>
+<div class="" v-else>
   <div v-if="myItem">
     <div class="d-flex align-items-center flex-column text-muted">
       <div class="" style="font-size: 0.8rem;"><span v-html="sellingBuyNowFiat"></span></div>
@@ -57,9 +62,11 @@ export default {
   },
   data() {
     return {
+      loading: true
     };
   },
   mounted() {
+    this.loading = false;
   },
   methods: {
   },

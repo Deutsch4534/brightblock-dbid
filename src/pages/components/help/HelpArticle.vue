@@ -40,7 +40,7 @@ export default {
     mdbRow,
     mdbCol
   },
-  name: "about",
+  name: "HelpArticle",
   data () {
     return {
       title: "",

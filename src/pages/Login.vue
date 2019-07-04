@@ -5,15 +5,17 @@
     <mdb-modal-header class="">
       <mdb-modal-title tag="h4" bold>Login</mdb-modal-title>
     </mdb-modal-header>
-    <mdb-modal-body>
+    <mdb-modal-body class="px-5">
       <button class="btn btn-primary btn-block" v-on:click="loginMultiPlayer">Login with Blockstack</button>
     </mdb-modal-body>
-    <mdb-modal-footer>
-      <div><small class="text-muted"><a @click.prevent="showBrowser = !showBrowser">Sign Up</a></small></div>
-      <div class="text-center" v-if="showBrowser">
+    <mdb-modal-footer class="d-flex flex-column align-items-start">
+      <div class="row"><div class="col-12">
+        <small class="text-muted"><a @click.prevent="showBrowser = !showBrowser">Signup</a></small>
+      </div></div>
+      <div class="row"><div class="col-12" v-if="showBrowser">
         <div class="mt-3">To access the decentralised web...</div>
         <div class="mt-3">Create your own online identity <a class="text-primary" href="https://blockstack.org/install/" target="_blank" rel="noreferrer"><i class="fas fa-angle-right mr-2"></i><u>Install Blockstack</u></a></div>
-      </div>
+      </div></div>
     </mdb-modal-footer>
   </mdb-modal>
 </mdb-container>

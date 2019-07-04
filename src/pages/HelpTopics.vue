@@ -1,73 +1,79 @@
 <template>
-<div id="my-app-element" class="bg-main container-fluid pt-5">
+<div id="my-app-element" class="container-fluid pt-3">
   <div class="d-flex justify-content-center" role="status" v-if="loading">
     <div class="spinner-border" role="status">
       <span class="sr-only">Loading...</span>
     </div>
   </div>
-  <div v-else>
-    <!--
-    <div id="aboutSection">
-      <about-section :aboutContent="aboutContent" :showAll="false"/>
-    </div>
-    -->
-    <div id="aboutButtons" class="p-5">
+  <div class="bg-card bg-spinner mx-5 p-4" v-else>
+    <div id="aboutButtons">
       <about-buttons :answers="answers" @showAnswer="showAnswer"/>
+    </div>
+    <div id="aboutButtons" class="mt-4">
+      <help-topic :answer="answer"/>
     </div>
   </div>
 </div>
 </template>
 
 <script>
-  import { mdbContainer, mdbRow, mdbCol } from 'mdbvue';
-  import { mdbSpinner } from 'mdbvue';
   import HelpArticle from "./components/help/HelpArticle";
   import HelpFaq from "./components/help/HelpFaq";
   import AboutSection from "./components/help/AboutSection";
   import AboutButtons from "./components/help/AboutButtons";
+  import HelpTopic from "./components/help/HelpTopic";
+  import _ from "lodash";
 
   export default {
     components: {
+      HelpTopic,
       AboutSection,
       AboutButtons,
       HelpArticle,
       HelpFaq,
-      mdbContainer,
-      mdbRow,
-      mdbCol, mdbSpinner
     },
     name: "HelpTopics",
     data () {
       return {
         answers: null,
+        answer: null,
         loading: true,
         aboutContent: null
       }
     },
-    mounted() {
-      this.aboutContent = this.$store.state.contentStore.content["help-list"];
-      if (!this.aboutContent) {
-        this.$prismic.client.getSingle("help-list").then(document => {
-          this.$store.commit("contentStore/helpList", document.data);
-          this.aboutContent = this.$store.state.contentStore.content["help-list"];
-          let topicIds = this.getTopicIds(document);
-          let $self = this;
-          this.$prismic.client.getByIDs(topicIds).then(function(response) {
-            $self.setAnswers($self, response, topicIds);
-          });
-        });
-      } else {
-        this.answers = this.$store.state.contentStore.content["answers"];
-        this.answer = this.answers[0].topic;
-        this.loading = false;
+    watch: {
+      '$route' (to, from) {
+        this.loading = true;
+        this.doMount();
       }
+    },
+    mounted() {
+      this.doMount();
     },
     computed: {
     },
     methods: {
       showAnswer(data) {
-        let url = "/help/topic/" + data.question;
+        let url = "/help/topics/" + data.question;
         this.$router.push(url);
+      },
+      doMount() {
+        let slug = this.$route.params.topicId;
+        this.aboutContent = this.$store.state.contentStore.content["help-list"];
+        if (!this.aboutContent) {
+          this.$prismic.client.getSingle("help-list").then(document => {
+            this.$store.commit("contentStore/helpList", document.data);
+            this.aboutContent = this.$store.state.contentStore.content["help-list"];
+            let topicIds = this.getTopicIds(document);
+            let $self = this;
+            this.$prismic.client.getByIDs(topicIds).then(function(response) {
+              $self.setAnswers($self, response, topicIds);
+              $self.setAnswer(slug);
+            });
+          });
+        } else {
+          this.setAnswer(slug);
+        }
       },
       getTopicIds (pdoc) {
         let topicIds = [];
@@ -78,6 +84,19 @@
           }
         });
         return topicIds;
+      },
+      setAnswer (slug) {
+        this.answers = this.$store.state.contentStore.content["answers"];
+        if (!slug) {
+          this.answer = this.answers[0].topic;
+          this.loading = false;
+        } else {
+          let selec = _.find(this.answers, function(ans) {
+            return slug.indexOf(ans.slug) > -1;
+          })
+          this.answer = selec.topic;
+          this.loading = false;
+        }
       },
       setAnswers ($self, response, topicIds) {
         let topics = [];

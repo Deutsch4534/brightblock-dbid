@@ -1,8 +1,8 @@
 <template>
 <mdb-row class="">
   <mdb-col sm="12">
-    <h4 class="">{{answer.topic.data.title[0].text}}</h4>
-    <div v-for="(item, index) of answer.topic.data.description" :key="index">
+    <h4 class="mb-4">{{answer.data.title[0].text}}</h4>
+    <div v-for="(item, index) of answer.data.description" :key="index">
       <img class="img-fluid" v-if="item.type === 'image'" :src="item.url" alt="answer image"/>
       <div class="" v-else v-html="item.text"></div>
     </div>

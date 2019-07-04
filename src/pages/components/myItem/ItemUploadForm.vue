@@ -114,7 +114,7 @@ import _ from "lodash";
         medium: "physical",
         mediumLocked: false,
         limits: {
-          title: 50,
+          title: 200,
           description: 1000,
           maxEditions: 10,
           keywords: 100
@@ -214,6 +214,8 @@ import _ from "lodash";
               if (item) {
                 this.item = item;
                 this.helpModal = false;
+                this.$store.commit("itemSearchStore/addSearchResult", item);
+                this.$store.commit("itemSearchStore/addItem", item);
                 this.$router.push("/my-item/set-price/" + item.id);
               } else {
                 this.$notify({type: 'error', title: 'Update Item', text: 'Unable to update your item - please check the image sizes and the form for errors!'});
@@ -222,13 +224,15 @@ import _ from "lodash";
           });
         } else {
           this.item.created = moment({}).valueOf();
-          this.item.updated = this.item.created;
+          this.item.updated = moment({}).valueOf();
           this.$store
             .dispatch("myItemStore/uploadItem", this.item)
             .then(item => {
               if (item) {
                 this.item = item;
                 this.helpModal = false;
+                this.$store.commit("itemSearchStore/addSearchResult", item);
+                this.$store.commit("itemSearchStore/addItem", item);
                 this.$router.push("/my-item/set-price/" + item.id);
               } else {
                 this.$notify({type: 'error', title: 'Upload Item', text: 'Unable to upload your item - please check the image sizes and the form for errors!'});

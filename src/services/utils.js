@@ -182,10 +182,14 @@ const utils = {
         bitcoinTx = record.indexData.bitcoinTx;
       }
     }
+    if (!record.indexData.updated) {
+      record.indexData.updated = record.indexData.created;
+    }
     return _.merge(itemData, {
       id: record.indexData.id,
       title: record.indexData.title,
       description: record.indexData.description,
+      created: record.indexData.created,
       updated: record.indexData.updated,
       keywords: record.indexData.keywords,
       medium: record.indexData.medium,
@@ -206,6 +210,7 @@ const utils = {
       id: item.id,
       title: item.title,
       description: item.description,
+      created: item.created,
       updated: item.updated,
       keywords: item.keywords,
       medium: item.medium,

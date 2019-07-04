@@ -16,6 +16,9 @@ const myAccountStore = {
     },
     getPaymentNetwork: state => {
       let profile = state.myProfile;
+      if (!profile.loggedIn) {
+        return;
+      }
       let network = profile.publicKeyData.paymentNetwork;
       let address;
       if (network === 'bitcoin') {
@@ -73,10 +76,18 @@ const myAccountStore = {
             if (loggedInState === 2) {
               myAccountService.doPendingSignin(function(res) {
                 myProfile = myAccountService.myProfile();
-                store.dispatch("myAccountStore/fetchFullProfile", myProfile).then(myProfile => {
+                if (res) {
+                  store.dispatch("myAccountStore/fetchFullProfile", myProfile).then(myProfile => {
+                    commit("myProfile", myProfile);
+                    resolve(myProfile);
+                  })
+                    .catch(e => {
+                      resolve(myProfile);
+                    });
+                } else {
                   commit("myProfile", myProfile);
                   resolve(myProfile);
-                });
+                }
               });
             } else {
               myProfile = myAccountService.myProfile();

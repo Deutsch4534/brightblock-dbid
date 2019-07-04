@@ -1,8 +1,8 @@
 <template>
   <div class="container">
-    <div class="row">
-      <div class="col-md-4 text-center mb-3" v-for="(ans, index) in answers" :key="index">
-        <button class="waves-light btn btn-lg btn-block ripple-parent btn-outline-white" @click="showAnswer(ans.slug, index)">{{ans.slug.split("-").join(" ")}}</button>
+    <div class="d-flex flex-wrap justify-content-between">
+      <div class="" v-for="(ans, index) in answers" :key="index">
+        <span><a class="btn btn-sm btn-primary btn-outline-primary text-nowrap" style="min-width: 180px;" @click="showAnswer(ans.slug, index)">{{ans.slug.split("-").join(" ")}}</a></span>
       </div>
     </div>
   </div>
@@ -38,10 +38,4 @@
   }
 </script>
 <style scoped>
-button {
-  line-height: 40px;
-  font-size: 1.2rem;
-  white-space: nowrap;
-  border-color: #333;
-}
 </style>

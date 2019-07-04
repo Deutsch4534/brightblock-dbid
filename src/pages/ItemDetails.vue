@@ -6,11 +6,12 @@
 </div>
 <div class="container pt-5" v-else>
 
-  <div class="row" v-if="!item">
+  <div class="row" v-if="notfound">
     <div class="col-lg-5 col-xl-4 mb-4">
       Item not found - <router-link to="/">search for items</router-link>
     </div>
   </div>
+  <div v-else>
   <div class="row" v-if="!buyNowStarted && !biddingStarted">
     <div class="col-lg-5 col-xl-4 mb-4">
       <item-image-list-view :item="item"/>
@@ -52,6 +53,7 @@
       </div>
     </div>
   </div>
+  </div>
 </div>
 </template>
 
@@ -79,6 +81,7 @@ export default {
   data() {
     return {
       loading: true,
+      notfound: true,
       tabList: ["notifications", "shipping", "payments"],
       showOrderDetails: false,
       addressBlurb: "Needed to complete the sale - not shown to anyone else - including us!",
@@ -104,6 +107,7 @@ export default {
       this.$store.dispatch("itemSearchStore/fetchItem", itemId).then((item) => {
         if (item) {
           this.item = item;
+          this.notfound = false;
           let validity = this.$store.getters["myAccountStore/getProfileValidity"];
           if (!validity.emailValid || !validity.shippingValid || !validity.bitcoinValid) {
             this.showAddress = true;

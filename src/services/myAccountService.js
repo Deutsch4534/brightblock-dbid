@@ -170,7 +170,10 @@ const myAccountService = {
   doPendingSignin: function(success) {
     handlePendingSignIn().then(() => {
       success(true);
-    });
+    })
+      .catch(e => {
+        success(false);
+      });
   },
   logout: function() {
     signUserOut(window.location.origin);

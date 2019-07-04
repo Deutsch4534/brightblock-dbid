@@ -13,10 +13,13 @@ const itemSearchStore = {
     getItems: state => {
       let registered = state.items;
       registered = registered.sort(function compare(a, b) {
-        if (a.saleData.amount > b.saleData.amount) {
+        if (!b.updated) {
           return -1;
         }
-        if (a.saleData.amount < b.saleData.amount) {
+        if (a.updated > b.updated) {
+          return -1;
+        }
+        if (a.updated < b.updated) {
           return 1;
         }
         return 0;
@@ -44,10 +47,10 @@ const itemSearchStore = {
         item => item.bitcoinTx
       );
       registered = registered.sort(function compare(a, b) {
-        if (a.saleData.amount > b.saleData.amount) {
+        if (a.updated > b.updated) {
           return -1;
         }
-        if (a.saleData.amount < b.saleData.amount) {
+        if (a.updated < b.updated) {
           return 1;
         }
         return 0;
@@ -61,10 +64,10 @@ const itemSearchStore = {
         item => item.bcitem && item.bcitem.itemIndex > -1
       );
       registered = registered.sort(function compare(a, b) {
-        if (a.bcitem.itemIndex > b.bcitem.itemIndex) {
+        if (a.updated > b.updated) {
           return -1;
         }
-        if (a.bcitem.itemIndex < b.bcitem.itemIndex) {
+        if (a.updated < b.updated) {
           return 1;
         }
         return 0;
@@ -90,15 +93,11 @@ const itemSearchStore = {
       }
       return registered.slice(0, 6);
     },
-    getItemsPageItems: (state, getters) => {
-      let registered = getters.getItems;
-      return registered.slice(0, 9);
-    },
-    getItemsByArtist: (state, getters) => username => {
+    getItemsByOwner: (state, getters) => username => {
       let items = [];
       let registered = getters.getItems;
       _.forEach(registered, function(item) {
-        if (item.artist === username) {
+        if (item.owner === username) {
           items.push(item);
         }
       });
@@ -123,9 +122,28 @@ const itemSearchStore = {
       }
     },
     addSearchResult(state, item) {
+      if (item && typeof item.id === "string") {
+        item.id = Number(item.id);
+      }
       let index = _.findIndex(state.searchResults, function(o) {
         return o.id === item.id;
       });
+      if (!item.images) {
+        item.images = [];
+        let image = {
+          dataUrl: require("@/assets/img/logo/dB_256x256_light_transparent.png"),
+          saleData: {
+            soid: 0
+          }
+        };
+        item.images.push(image);
+      }
+      if (!item.saleData) {
+        item.saleData = {
+          soid: 0,
+          fiatCurrency: "EUR"
+        };
+      }
       if (index === -1) {
         state.searchResults.push(item);
       } else {
@@ -158,8 +176,15 @@ const itemSearchStore = {
           resolve(item);
         } else {
           itemSearchService.newQuery(store, {field: "id", query: itemId}, function(item) {
-            commit("addItem", item);
-            resolve(item);
+            if (item) {
+              commit("addItem", item);
+              resolve(item);
+            } else {
+              resolve();
+            }
+          }, function(e) {
+            console.log(e);
+            resolve();
           });
         }
       });

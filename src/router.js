@@ -4,7 +4,6 @@ import Index from "./pages/Index.vue";
 import Sell from "./pages/Sell.vue";
 import ItemDetails from "./pages/ItemDetails.vue";
 import HelpTopics from "./pages/HelpTopics";
-import HelpTopic from "./pages/HelpTopic";
 import Contact from "./pages/Contact.vue";
 import UserSettings from "./pages/UserSettings.vue";
 import Login from "./pages/Login.vue";
@@ -132,7 +131,7 @@ const router = new Router({
         header: Navbar,
         footer: Footer
       },
-      meta: { requiresAuth: true },
+      meta: { requiresAuth: false },
     },
     {
       path: "/my-items",
@@ -238,10 +237,10 @@ const router = new Router({
       meta: { requiresAuth: false }
     },
     {
-      path: "/help/topic/:topicId",
+      path: "/help/topics/:topicId",
       name: "help-topic",
       components: {
-        default: HelpTopic,
+        default: HelpTopics,
         header: Navbar,
         footer: Footer
       },

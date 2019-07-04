@@ -1,5 +1,6 @@
 /* Fonts, colors and global styles  */
 
+/**
 @font-face {
   font-family: 'Noto Serif Disp ExtCond';
   src: url('./fonts/NotoSerifDisplay-ExtraCondensedLight.eot');
@@ -21,6 +22,7 @@
   font-weight: 300;
   font-style: italic;
 }
+*/
 
 body {
   height: 100vh;

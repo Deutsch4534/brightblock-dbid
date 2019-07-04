@@ -4,15 +4,15 @@
   "description": "Turn old stuff into Bitcoin",
   "start_url": "/buy",
   "icons": [{
-    "src": "https://dbid.io/static/dB_256x256_dark.png",
+    "src": "https://dbid.io/static/dB_256x256_light.png",
     "sizes": "256x256",
     "type": "image/png"
   }, {
-    "src": "https://dbid.io/static/dB_512x512_dark.png",
+    "src": "https://dbid.io/static/dB_512x512_light.png",
     "sizes": "512x512",
     "type": "image/png"
   }],
-  "background_color": "#333333",
-  "display": "standalone",
-  "theme_color": "#333333"
+  "background_color": "#EFF1F2",
+  "display": "browser",
+  "theme_color": "#EFF1F2"
 }

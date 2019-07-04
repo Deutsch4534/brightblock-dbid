@@ -146,7 +146,6 @@ const myItemService = {
 
   uploadItem: function(item, success, failure) {
     item.id = moment({}).valueOf();
-    item.updated = item.id;
     myItemService.uploadOrTransferItem(item, success, failure);
   },
 
@@ -212,15 +211,7 @@ const myItemService = {
 
   updateItem: function(item, reindex, updateProvData, success, failure) {
     let provFile = itemFileName + item.id + ".json";
-    var now = moment({}).valueOf();
-    item.updated = now;
-    if (!item.bcitem) {
-      // for backwards compat with items created before this object was added.
-      item.bcitem = {
-        status: "new",
-        itemIndex: -1
-      };
-    }
+    item.updated = moment({}).valueOf();
     searchIndexService.removeRecord("id", item.id).then(function() {
       let record = utils.convertToBlockstack(item);
       getFile(itemRootFileName, { decrypt: false })

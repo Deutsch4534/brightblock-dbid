@@ -9,6 +9,8 @@
   <mdb-card-body class="text-center" cascade >
     <div class="d-flex align-items-center align-content-between flex-column" style="min-height: 200px;">
       <div class=""><mdb-card-title><strong><router-link :to="itemUrl"><description-container :text="item.title" :limit="3" :morable="false" style="color: #445544;font-size: 1.4rem;"/></router-link></strong></mdb-card-title></div>
+      <mdb-card-text>{{item.updated}}</mdb-card-text>
+      <mdb-card-text>{{updated}}</mdb-card-text>
       <div class="mb-auto"><mdb-card-text><description-container :text="item.description" :limit="4" :morable="true" class="text-muted" style="font-size: 1.1rem;"/></mdb-card-text></div>
       <div class="mt-auto"><buyers-information :item="item" action="details" :myProfile="myProfile"/></div>
     </div>
@@ -76,6 +78,9 @@ export default {
   computed: {
     itemUrl() {
       return `/items/${this.item.id}`;
+    },
+    updated() {
+      return moment(this.item.updated).format();
     },
   }
 };
