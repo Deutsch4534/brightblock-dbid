@@ -5,48 +5,37 @@
   </div>
 </div>
 <div id="my-app-element" class="container bg-spinner" v-else>
-  <div class="">
+  <mdb-navbar expand="medium" color="danger" dark>
+    <mdb-navbar-brand>
+      <span class="text-white" style="font-weight: 500">Selling</span>
+    </mdb-navbar-brand>
+    <mdb-navbar-toggler >
+      <mdb-navbar-nav right class="text-light">
+          <router-link class="nav-link navbar-link btn btn-primary" to="/my-item/upload" :class="activeTab === 2 ? 'text-light font-weight-bolder' : 'text-dark'">New Listing</router-link>
+          <router-link class="nav-link navbar-link btn btn-primary" to="/my-items" :class="activeTab === 3 ? 'text-light font-weight-bolder' : 'text-dark'">Listings</router-link>
+          <router-link class="nav-link navbar-link btn btn-primary" to="/my-orders" :class="activeTab === 5 ? 'text-light font-weight-bolder' : 'text-dark'">Purchases</router-link>
+          <router-link class="nav-link navbar-link btn btn-primary" :to="myItemUrl" v-if="activeTab === 4" :class="activeTab === 4 ? 'text-light font-weight-bolder' : 'text-dark'">{{listingLabel}}</router-link>
+          <router-link class="nav-link navbar-link btn btn-primary" to="/seller-info" :class="activeTab === 1 ? 'text-light font-weight-bolder' : 'text-dark'" v-if="sellerInfoNeeded">Seller Info <span class="text-danger">*</span></router-link>
+          <router-link class="nav-link navbar-link btn btn-primary" to="/seller-info" :class="activeTab === 1 ? 'text-white font-weight-bolder' : 'text-dark'" v-else>Seller Info</router-link>
+      </mdb-navbar-nav>
+    </mdb-navbar-toggler>
+  </mdb-navbar>
+  <div>
     <div v-if="loggedIn">
-      <mdb-navbar color="warning" dark>
-        <mdb-navbar-brand>
-          Selling on dBid
-        </mdb-navbar-brand>
-        <mdb-navbar-toggler>
-          <mdb-navbar-nav class="text-light">
-              <router-link class="nav-link navbar-link" to="/seller-info" :class="activeTab === 1 ? 'text-light font-weight-bolder' : 'text-dark'" v-if="sellerInfoNeeded">Seller Info <span class="text-danger">*</span></router-link>
-              <router-link class="nav-link navbar-link" to="/seller-info" :class="activeTab === 1 ? 'text-light font-weight-bolder' : 'text-dark'" v-else>Seller Info</router-link>
-              <router-link class="nav-link navbar-link" to="/my-item/upload" :class="activeTab === 2 ? 'text-light font-weight-bolder' : 'text-dark'">New Listing</router-link>
-              <router-link class="nav-link navbar-link" to="/my-items" :class="activeTab === 3 ? 'text-light font-weight-bolder' : 'text-dark'">Listings</router-link>
-              <router-link class="nav-link navbar-link" to="/my-orders" :class="activeTab === 5 ? 'text-light font-weight-bolder' : 'text-dark'">Purchases</router-link>
-              <router-link class="nav-link navbar-link" :to="myItemUrl" v-if="activeTab === 4" :class="activeTab === 4 ? 'text-light font-weight-bolder' : 'text-dark'">{{listingLabel}}</router-link>
-          </mdb-navbar-nav>
-        </mdb-navbar-toggler>
-      </mdb-navbar>
-
-      <div v-if="activeTab === 1">
-        <div class="" style="min-height: 50vh;">
-          <seller-info :formTitle="'Update Seller Info'" :myProfile="myProfile" @sellerInfoUpdated="updateSellerState"/>
-        </div>
+      <div v-if="activeTab === 1" style="min-height: 50vh;">
+        <seller-info :myProfile="myProfile"/>
       </div>
-      <div v-if="activeTab === 2">
-        <div class="bg-card p-4">
-          <item-upload-form :formTitle="'New Item'" :itemId="itemId" :mode="'upload'" :myProfile="myProfile"/>
-        </div>
+      <div class="bg-card p-4" v-if="activeTab === 2">
+        <item-upload-form :formTitle="'New Item'" :itemId="itemId" :mode="'upload'" :myProfile="myProfile"/>
       </div>
-      <div v-if="activeTab === 3">
-        <div class="d-flex justify-content-start bg-card p-4">
-          <my-items :formTitle="'Listings'" :myProfile="myProfile"/>
-        </div>
+      <div class="d-flex justify-content-start bg-card p-4" v-if="activeTab === 3">
+        <my-items :formTitle="'Listings'" :myProfile="myProfile"/>
       </div>
-      <div v-if="activeTab === 4">
-        <div class="bg-card">
-          <my-item :itemId="itemId" :myProfile="myProfile" :itemAction="itemAction"/>
-        </div>
+      <div class="bg-card" v-if="activeTab === 4">
+        <my-item :itemId="itemId" :myProfile="myProfile" :itemAction="itemAction"/>
       </div>
-      <div v-if="activeTab === 5">
-        <div class="bg-card">
-          <my-orders :myProfile="myProfile" :itemAction="itemAction"/>
-        </div>
+      <div class="bg-card" v-if="activeTab === 5">
+        <my-orders :myProfile="myProfile" :itemAction="itemAction"/>
       </div>
     </div>
     <div v-else>
@@ -83,6 +72,7 @@ export default {
       activeTab: 1,
       sellerInfoNeeded: false,
       myProfile: null,
+      assetHash: null
     };
   },
   watch: {
@@ -161,7 +151,7 @@ export default {
         this.activeTab = 4;
       } else if (routeName === "my-orders") {
         this.listingLabel = "Purchases"
-        this.itemAction = "orders"
+        this.itemAction = "purchase-orders"
         this.activeTab = 5;
       }
       this.loading = false;
@@ -178,12 +168,10 @@ export default {
 };
 </script>
 <style scoped>
-.primary {
-  color: white;
-}
-.secodary {
-  color: #000;
-  text-decoration: underline;
-  font-size: 3.2rem;
+.btn {
+  font-size: 0.7rem;
+  padding: 4px 10px;
+  margin: 2px 3px;
+  text-transform: capitalize;
 }
 </style>

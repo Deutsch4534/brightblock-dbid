@@ -1,5 +1,6 @@
 // myAccountStore.js
 import userProfilesService from "@/services/userProfilesService";
+import myAccountService from "@/services/myAccountService";
 import _ from "lodash";
 import store from "@/storage/store";
 import {
@@ -116,6 +117,41 @@ const userProfilesStore = {
     }
   },
   actions: {
+    fetchShippingDetails({ commit, state, getters }, users) {
+      return new Promise(resolve => {
+        let userProfile = getters.getProfile(users.buyer, true);
+        if (userProfile && userProfile.username) {
+          let index = _.findIndex(userProfile.publicKeyData.secured, function(entry) {
+            return entry.username === users.username;
+          });
+          if (index > -1) {
+            let shippingEnc = userProfile.publicKeyData.secured[index];
+            userProfile.shippingAddress = myAccountService.decryptMessage(shippingEnc.shippingAddress);
+            commit("addUser", userProfile);
+            resolve(userProfile);
+          } else {
+            resolve();
+          }
+        } else {
+          userProfilesService.fetchUserProfile(users.buyer,function(userProfile) {
+            let index = _.findIndex(userProfile.publicKeyData.secured, function(entry) {
+              return entry.username === users.username;
+            });
+            if (index > -1) {
+              let shippingEnc = userProfile.publicKeyData.secured[index];
+              userProfile.shippingAddress = myAccountService.decryptMessage(shippingEnc.shippingAddress);
+              commit("addUser", userProfile);
+              resolve(userProfile);
+            } else {
+              resolve();
+            }
+          },
+          function() {
+            resolve();
+          });
+        }
+      });
+    },
     fetchUserProfile({ commit, state, getters }, user) {
       return new Promise(resolve => {
         if (

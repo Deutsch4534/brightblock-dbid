@@ -11,7 +11,7 @@
   </div>
   <div v-else-if="buyNowEnabled">
     <div class="d-flex align-items-start flex-column text-muted">
-      <div class="mb-2"><a :to="itemUrl" class="btn btn-sm btn-success text-white m-0" @click.prevent="buyNow">Buy Now</a></div>
+      <div class="mb-2"><a class="btn btn-sm btn-success text-white m-0" @click.prevent="buyNow">Buy Now</a></div>
       <div class="" style="font-size: 0.8rem;">
         <span class="mr-2" v-html="sellingBuyNowFiat"></span>
         / <span class="ml-2" v-html="sellingBuyNowBtc"></span>
@@ -63,13 +63,14 @@ export default {
       if (this.myProfile.loggedIn) {
         this.$store.dispatch("assetStore/initialisePayment", {asset: this.asset, item: this.item}).then(asset => {
           if (asset) {
-            this.$emit("startPayment", asset);
+            this.$router.push("/my-orders/" + asset.assetHash);
+            //this.$emit("startPayment", asset);
           } else {
             this.$notify({type: 'error', title: 'Place Order', text: 'Unable to place the order at present.'});
           }
         });
       } else {
-        this.$notify({type: 'warning', title: 'Login Required', text: 'Please login to continue.'});
+        this.$notify({type: 'warn', title: 'Login Required', text: 'Please login to continue.'});
       }
     },
   },

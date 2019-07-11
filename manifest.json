@@ -2,7 +2,7 @@
   "name": "dBid",
   "short_name": "dBid",
   "description": "Turn old stuff into Bitcoin",
-  "start_url": "/buy",
+  "start_url": "https://dbid.io/buy",
   "icons": [{
     "src": "https://dbid.io/static/dB_256x256_light.png",
     "sizes": "256x256",

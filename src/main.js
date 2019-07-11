@@ -16,7 +16,7 @@ import Datetime from "vue-datetime";
 // You need a specific loader for CSS files
 import "vue-datetime/dist/vue-datetime.css";
 import {VueMasonryPlugin} from 'vue-masonry';
-import VueBootstrapTypeahead from 'vue-bootstrap-typeahead';
+//import VueBootstrapTypeahead from 'vue-bootstrap-typeahead';
 
 Vue.config.productionTip = false;
 
@@ -31,7 +31,7 @@ Vue.use(PrismicVue, {
 Vue.use(VueMasonryPlugin);
 
 Vue.config.productionTip = false;
-Vue.component('vue-bootstrap-typeahead', VueBootstrapTypeahead);
+//Vue.component('vue-bootstrap-typeahead', VueBootstrapTypeahead);
 
 const app = new Vue({
   router,
@@ -44,7 +44,9 @@ const app = new Vue({
       store.dispatch("assetStore/fetchBalance");
       store.dispatch("assetStore/fetchRadPayConfig");
       store.dispatch("assetStore/subscribeAssetTransferNews");
-      store.dispatch("contentStore/fetchTaxonomy");
+      store.dispatch("contentStore/fetchTaxonomy").then(() => {
+        store.dispatch("itemSearchStore/searchCategoryPopulations");
+      });
 
       let profile = this.$store.getters["myAccountStore/getMyProfile"];
       if (profile.loggedIn) {

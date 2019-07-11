@@ -1,4 +1,5 @@
 import _ from "lodash";
+import store from "@/storage/store";
 
 const moneyUtils = {
   convertPrices(artwork, blockchainItem, fiatRate, ethToBtc) {
@@ -19,7 +20,7 @@ const moneyUtils = {
     let priceInBtc = 0;
     let priceInFiat = 0;
     let symbol = "?";
-
+    
     if (fiatRate) {
       fiatToBtc = fiatRate["15m"];
       priceInBtc = priceInEth * ethToBtc;
@@ -144,12 +145,13 @@ const moneyUtils = {
   },
 
   buildInitialSaleData() {
+    let prefs = store.getters["myItemStore/getMyPreferences"];
     return {
       soid: 0,
       amount: 0,
       reserve: 0,
       increment: 0,
-      fiatCurrency: "EUR",
+      fiatCurrency: (prefs && prefs.fiatCurrency) ? prefs.fiatCurrency : "USD",
       initialRateBtc: 0,
       initialRateEth: 0,
       amountInEther: 0,

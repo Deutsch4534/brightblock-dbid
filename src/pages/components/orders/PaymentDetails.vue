@@ -1,29 +1,21 @@
 <template>
 <div class="">
-  <div class=" p-4">
-    <div class="d-flex p-2 justify-content-between">
-      <mdb-dropdown>
-        <mdb-dropdown-toggle slot="toggle" color="primary" size="sm">Payment Options</mdb-dropdown-toggle>
-        <mdb-dropdown-menu>
-          <mdb-dropdown-item><a @click.prevent="toggleNetwork('bitcoin', $event)">Bitcoin</a></mdb-dropdown-item>
-          <mdb-dropdown-item><a @click.prevent="toggleNetwork('lightning', $event)">Lighting</a></mdb-dropdown-item>
-          <div class="dropdown-divider"></div>
-          <mdb-dropdown-item><a @click.prevent="toggleNetwork('opennode', $event)">Opennode</a></mdb-dropdown-item>
-        </mdb-dropdown-menu>
-      </mdb-dropdown>
-      <div class="bg-warning text-white py-1 px-2">Valid for: {{validForCalc}}</div>
+  <div class="">
+    <div class="d-flex justify-content-between">
+      <div><button class="btn btn-success" @click="rechooseNetwork()"><i class="fas fa-angle-left"></i> Back</button></div>
+      <div><button class="btn btn-warning" @click="rechooseNetwork()">Valid for: {{validForCalc}}</button></div>
     </div>
     <div class="d-flex justify-content-center">
-      <div>
-        <span class="">{{network}}</span> -
+      <div class="text-capitalize">
+        <span>{{network}}</span> -
         <span class="text-danger">{{bitcoinConfig.chain}}</span> net
       </div>
     </div>
     <div class="d-flex justify-content-center">
-      <p class="text-muted text-center p-0 m-0">{{amountBtc}}</p>
+      <p class="text-muted text-center p-0 m-0">{{amountFiat}}</p>
     </div>
     <div class="d-flex justify-content-center">
-      <p class="text-muted text-center p-0 m-0 mb-3">{{amountFiat}}</p>
+      <p class="text-muted text-center p-0 mb-3"><i class="fab fa-btc"></i> {{amountBtc}}</p>
     </div>
     <div class="d-flex justify-content-center" v-if="network === 'opennode'">
       <p class="text-center p-5"><a @click="toggleNetwork('opennode')" href="https://www.opennode.co/" target="_blank">Opennode <i class="fas fa-external-link-alt"></i></a> is a bitcoin and lightning payment provider - integration with opennode is coming soon.</p>
@@ -41,9 +33,9 @@
     <div class="d-flex justify-content-center" v-if="network !== 'opennode'">
       <img class="mx-auto " :src="qrImage" alt="'scan qr code'" width="auto">
     </div>
-    <div class="d-flex p-2 text-light justify-content-center" v-if="network !== 'opennode'">
-      <a :href="paymentUri" class="btn btn-primary mr-3">Open in wallet <i class="fas fa-external-link-alt"></i></a>
-      <a class="btn btn-primary ml-3" @click.prevent="copyAddress">Copy <i class="fas fa-clone ml-4"></i></a>
+    <div class="d-flex p-2 text-light  justify-content-center" v-if="network !== 'opennode'">
+      <a :href="paymentUri" class="btn btn-primary text-uppercase mr-3">Open in wallet <i class="fas fa-external-link-alt"></i></a>
+      <a class="btn btn-primary text-uppercase ml-3" @click.prevent="copyAddress">Copy <i class="fas fa-clone ml-4"></i></a>
     </div>
 
 
@@ -59,27 +51,22 @@
 import QRCode from "qrcode";
 import bitcoinService from "brightblock-lib/src/services/bitcoinService";
 import moment from "moment";
-import { mdbProgress, mdbDropdown, mdbDropdownItem, mdbDropdownMenu, mdbDropdownToggle } from 'mdbvue';
 
 // noinspection JSUnusedGlobalSymbols
 export default {
   name: "PaymentDetails",
   components: {
-    mdbProgress,
-    mdbDropdown,
-    mdbDropdownItem,
-    mdbDropdownMenu,
-    mdbDropdownToggle
   },
   props: {
     validFor: "",
     eternal: true,
-    assetHash: null
+    assetHash: null,
+    network: null,
+    validFor: null
   },
   data() {
     return {
       qrImage: require("@/assets/img/missing/artwork-missing.jpg"),
-      network: "bitcoin",
       bitcoinUri: null,
       lightningUri: null,
       paymentUri: null,
@@ -112,12 +99,15 @@ export default {
       let purchaseCycle = this.$store.getters["assetStore/getCurrentPurchaseCycleByHash"](this.assetHash);
       let amF = purchaseCycle.buyer.amountFiat + " " + purchaseCycle.currency;
       let fiatRate = this.$store.getters["conversionStore/getFiatRate"](purchaseCycle.currency);
-      let symbol = fiatRate["symbol"];
+      let symbol = "";
+      if (fiatRate) {
+        return fiatRate["symbol"] + " " + amF;
+      }
       return symbol + " " + amF;
     },
     amountBtc() {
       let purchaseCycle = this.$store.getters["assetStore/getCurrentPurchaseCycleByHash"](this.assetHash);
-      return purchaseCycle.buyer.amountBitcoin + " BTC";
+      return purchaseCycle.buyer.amountBitcoin;
     },
     lightningConfig() {
       let lightningConfig = this.$store.getters["assetStore/getLightningConfig"];
@@ -156,6 +146,9 @@ export default {
     cancelOrder() {
       this.$emit("cancelOrder", this.assetHash);
     },
+    rechooseNetwork() {
+      this.$emit("chooseNetwork");
+    },
     copyPeerAddress() {
       document.execCommand("copy");
       var copyText = document.getElementById("payment-address");
@@ -193,7 +186,7 @@ export default {
       }
       //let gp = event.currentTarget.parentElement.parentElement.classList.remove("show");
       let gp = event.currentTarget.parentElement.parentElement.parentElement;
-      gp.classList.add("collapse")
+      gp.classList.add("collapse");
       gp.classList.remove("collapse-item");
       this.network = network;
     },
@@ -206,3 +199,11 @@ export default {
   }
 };
 </script>
+<style scoped>
+.btn {
+  font-size: 1.0rem;
+  padding: 4px 10px;
+  margin: 2px 3px;
+  text-transform: capitalize;
+}
+</style>

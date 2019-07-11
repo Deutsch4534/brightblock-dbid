@@ -11,7 +11,7 @@
       <h6>Shipping Address <i class="fas fa-check text-success ml-2" v-if="validShippingInfo"></i></h6>
     </div>
   </div>
-  <form v-on:submit.prevent="checkForm" class="needs-validation py-1" novalidate>
+  <form v-on:submit.prevent="checkForm" class="needs-validation py-1" novalidate  v-on:keydown.13.prevent="addressChange">
   <div class="row mb-4">
     <div class="col-md-6">
       <input type="text" class="form-control" id="vline1" placeholder="Address line 1" v-model="address.line1" required @change="addressChange" required>
@@ -22,7 +22,7 @@
   </div>
   <div class="row mb-4">
     <div class="col-md-6">
-      <input type="text" class="form-control" id="vline3" placeholder="Address line 3" v-model="address.line3" @change="addressChange">
+      <input type="text" class="form-control" id="vline3" placeholder="Address line 3" v-model="address.line3">
     </div>
     <div class="col-md-6">
       <input type="text" class="form-control" id="vline4" placeholder="Town or city" v-model="address.city" @change="addressChange" required>
@@ -103,7 +103,7 @@ export default {
     },
     checkForm(event) {
       if (event) {
-        event.preventDefault;
+        event.preventDefault();
         event.target.classList.add('was-validated');
       }
       this.errors = [];

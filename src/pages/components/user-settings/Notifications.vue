@@ -76,6 +76,7 @@ export default {
   mounted() {
     let myProfile = this.$store.getters["myAccountStore/getMyProfile"];
     this.auxiliaryProfile = myProfile.auxiliaryProfile;
+    this.allowUse = myProfile.auxiliaryProfile.emailAddress.allowUse;
     this.oldEmailAddress = this.auxiliaryProfile.emailAddress;
     this.newEmail = this.auxiliaryProfile.emailAddress.email;
     this.loading = false;
@@ -142,7 +143,7 @@ export default {
     },
     checkEmailForm(event) {
       if (event) {
-        event.preventDefault;
+        event.preventDefault();
         event.target.classList.add('was-validated');
       }
       this.errors = [];

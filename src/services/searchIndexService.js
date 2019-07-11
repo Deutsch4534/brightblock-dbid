@@ -26,10 +26,9 @@ const searchIndexService = {
     return new Promise(function(resolve) {
       indexable.domain = location.hostname;
       indexable.objType = objType;
-      if (Array.isArray(indexable.keywords)) {
-        indexable.keywords = indexable.keywords.map(keyword => keyword.name).join(",");
-      } else {
-        indexable.keywords = indexable.keywords;
+      if (indexable.keywords && !Array.isArray(indexable.keywords)) {
+        // throw new Error("Keywords need to be an array to be indexed in search.");
+        indexable.keywords = [];
       }
       let saleType = settings.taxonomy.saleTypes[0];
       if (indexable.saleData) {
@@ -140,6 +139,19 @@ const searchIndexService = {
     return new Promise(function(resolve) {
       searchIndexService
         .makeGetCall("/index/dapps/" + domain + "/" + objType + "/" + term + "?q=" + query)
+        .then(function(result) {
+          resolve(result);
+        })
+        .catch(function() {
+          resolve();
+        });
+    });
+  },
+
+  searchCategoriesIndex: function(domain, objType, term, query) {
+    return new Promise(function(resolve) {
+      searchIndexService
+        .makeGetCall("/index/categories/" + domain + "/" + objType + "/" + term + "?q=" + query)
         .then(function(result) {
           resolve(result);
         })

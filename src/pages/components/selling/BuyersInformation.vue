@@ -16,7 +16,7 @@
     <div class="d-flex align-items-center flex-column text-muted">
       <div class="" style="font-size: 0.8rem;"><span v-html="sellingBuyNowFiat"></span></div>
       <div class="" style="font-size: 0.8rem;"><i class="fab fa-btc"></i> <span v-html="sellingBuyNowBtc"></span></div>
-      <div class=""><router-link :to="itemUrl" class="btn btn-sm btn-success text-white m-0">Make Offer</router-link></div>
+      <div class=""><router-link :to="itemUrl" class="btn btn-sm btn-success text-white m-0">Buy Now</router-link></div>
     </div>
   </div>
   <div v-else-if="sellingAuction">
@@ -106,7 +106,7 @@ export default {
       priceBtc = moneyUtils.valueInBitcoin(saleData.amount, fiatRate);
       priceFiat = this.item.saleData.amount;
       priceEth = moneyUtils.valueInEther(saleData.fiatCurrency, saleData.amount, fiatRate, ethToBtc);
-      return priceBtc + " BTC";
+      return priceBtc;
     },
     sellingAuctionFiat() {
       let fiatRate = this.$store.getters["conversionStore/getFiatRate"](this.item.saleData.fiatCurrency);
@@ -130,7 +130,7 @@ export default {
       priceBtc = moneyUtils.valueInBitcoin(saleData.reserve, fiatRate);
       priceFiat = this.item.saleData.reserve;
       priceEth = moneyUtils.valueInEther(saleData.fiatCurrency, saleData.reserve, fiatRate, ethToBtc);
-      return priceBtc + " BTC";
+      return priceBtc;
     },
     debugMode() {
       let debugMode = this.$store.state.constants.debugMode;

@@ -21,8 +21,7 @@ npm run build
 
 ## Purpose
 
-http://dbid.io "dBid" is a peer to peer decentralised marketplace and auction site built on using Blockstack with payments and
-provenance of assets on Bitcoin and Lightning.
+https://dbid.io "dBid" is a peer to peer marketplace and bidding site.
 
 ![Turn unused stuff into Bitcoin!](http://dbid.io/static/banner.png "Turn unused stuff into Bitcoin")
 

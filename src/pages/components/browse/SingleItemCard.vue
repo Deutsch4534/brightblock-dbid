@@ -1,5 +1,5 @@
 <template>
-<mdb-card cascade class="m-0 p-0 bg-card" style="max-width: 300px; border-radius: 10px; background-color: #eceff1;">
+<mdb-card v-if="item && item.id" cascade class="m-0 p-0 bg-card" style="max-width: 300px; border-radius: 10px; background-color: #eceff1;">
   <mdb-view hover cascade>
     <router-link :to="itemUrl">
       <img style="max-height: 200px; min-height: 200px; width: 100%; border-top-left-radius: 10px; border-top-right-radius: 10px; border-bottom-left-radius: 5px;border-bottom-right-radius: 5px;" :src="item.images[0].dataUrl"  :alt="item.title"/>
@@ -8,10 +8,11 @@
   </mdb-view>
   <mdb-card-body class="text-center" cascade >
     <div class="d-flex align-items-center align-content-between flex-column" style="min-height: 200px;">
-      <div class=""><mdb-card-title><strong><router-link :to="itemUrl"><description-container :text="item.title" :limit="3" :morable="false" style="color: #445544;font-size: 1.4rem;"/></router-link></strong></mdb-card-title></div>
-      <mdb-card-text>{{item.updated}}</mdb-card-text>
-      <mdb-card-text>{{updated}}</mdb-card-text>
-      <div class="mb-auto"><mdb-card-text><description-container :text="item.description" :limit="4" :morable="true" class="text-muted" style="font-size: 1.1rem;"/></mdb-card-text></div>
+      <div class=""><mdb-card-title><strong><router-link :to="itemUrl"><description-container :text="item.title" :limit="20" :morable="false" style="color: #445544;font-size: 1.4rem;"/></router-link></strong></mdb-card-title></div>
+      <mdb-card-text v-if="debugMode">{{item.updated}}</mdb-card-text>
+      <mdb-card-text v-if="debugMode">{{item.searchWords}}</mdb-card-text>
+      <mdb-card-text v-if="debugMode">{{item.keywords}}</mdb-card-text>
+      <div class="mb-auto" v-if="debugMode"><mdb-card-text><description-container :text="item.description" :limit="4" :morable="true" class="text-muted" style="font-size: 1.1rem;"/></mdb-card-text></div>
       <div class="mt-auto"><buyers-information :item="item" action="details" :myProfile="myProfile"/></div>
     </div>
   </mdb-card-body>
@@ -81,6 +82,9 @@ export default {
     },
     updated() {
       return moment(this.item.updated).format();
+    },
+    debugMode() {
+      return this.$store.state.constants.debugMode;
     },
   }
 };

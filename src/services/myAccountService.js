@@ -9,6 +9,7 @@ import {
   redirectToSignIn,
   decodeToken,
   encryptContent,
+  decryptContent,
   signUserOut, getFile, putFile, getPublicKeyFromPrivate
 } from "blockstack";
 import moment from "moment";
@@ -201,6 +202,12 @@ const myAccountService = {
         failure({ERR_CODE: 4, message: "Error uploading aux profile."});
       });
   },
+  encryptMessage: function(message, pubkey) {
+    return encryptContent(JSON.stringify(message), {publicKey: pubkey});
+  },
+  decryptMessage: function(message) {
+    return JSON.parse(decryptContent(message));
+  },
   updatePublicKeyData: function(myProfile, publicKeyData, success, failure) {
     // check for trusted ids for whom we want to encrypt our private data with their public key.
     let auxiliaryProfile = myProfile.auxiliaryProfile;
@@ -241,20 +248,20 @@ const myAccountService = {
   addRelationship: function(myProfile, friendProfile, username, success, failure) {
     // check for trusted ids for whom we want to encrypt our private data with their public key.
     if (!friendProfile.publicKeyData || !friendProfile.publicKeyData.publicBlockstackKey) {
-      return;
+      if (failure) failure();
     }
     let auxiliaryProfile = myProfile.auxiliaryProfile;
     let publicKeyData = myProfile.publicKeyData;
-    let pubkey = friendProfile.publicKeyData.publicBlockstackKey;
+    let sellerPubkey = friendProfile.publicKeyData.publicBlockstackKey;
     if (!publicKeyData.secured) publicKeyData.secured = [];
     let encObj = {
       username: friendProfile.username
     };
     if (auxiliaryProfile.emailAddress) {
-      encObj.emailAddress = encryptContent(JSON.stringify(auxiliaryProfile.emailAddress), {publicKey: pubkey});
+      encObj.emailAddress = encryptContent(JSON.stringify(auxiliaryProfile.emailAddress), {publicKey: sellerPubkey});
     }
     if (auxiliaryProfile.shippingAddress) {
-      encObj.shippingAddress = encryptContent(JSON.stringify(auxiliaryProfile.shippingAddress), {publicKey: pubkey});
+      encObj.shippingAddress = encryptContent(JSON.stringify(auxiliaryProfile.shippingAddress), {publicKey: sellerPubkey});
     }
     let index = _.findIndex(publicKeyData.secured, function(o) {
       return o.username === username;

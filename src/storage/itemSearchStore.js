@@ -7,7 +7,8 @@ const itemSearchStore = {
   state: {
     searchResults: [],
     items: [],
-    artists: []
+    artists: [],
+    categoryPopulations: []
   },
   getters: {
     getItems: state => {
@@ -28,6 +29,16 @@ const itemSearchStore = {
     },
     getQuery: state => {
       return state.query;
+    },
+    getCategory1Population: state => {
+      let lev1 = store.getters["contentStore/getLevel1"];
+      _.forEach(lev1, function(category) {
+        let pop = state.categoryPopulations.find(pop => pop.id === category.id);
+        if (pop) {
+          category.hits = pop.hits;
+        }
+      });
+      return lev1;
     },
     getSearchResults: state => {
       let registered = state.searchResults;
@@ -121,6 +132,9 @@ const itemSearchStore = {
         state.items.splice(index, 1, item);
       }
     },
+    addCategoryPopulations(state, searchResults) {
+      state.categoryPopulations = searchResults;
+    },
     addSearchResult(state, item) {
       if (item && typeof item.id === "string") {
         item.id = Number(item.id);
@@ -166,6 +180,29 @@ const itemSearchStore = {
     searchItems({ commit }, data) {
       return new Promise(resolve => {
         itemSearchService.newQuery(store, data);
+      });
+    },
+
+    searchCategoryPopulations({ commit }) {
+      let categories = store.getters["contentStore/getLevel1"];
+      if (!categories || categories.length === 0) {
+        return;
+      }
+      let query = [];
+      _.forEach(categories, function(category) {
+        //let level2 = store.getters["contentStore/getLevel2"](category);
+        query.push(category.id);
+      });
+      let criteria = {
+        field: "keywords",
+        query: query.join(","),    // "5d0b725e7c104d2902b191c5,5d1f2a0d4588cb2f86129493", //query.join(","),
+        objectType: "item"
+      };
+      return new Promise(resolve => {
+        itemSearchService.searchCategoryPopulationQuery(criteria, function(searchResults) {
+          commit("addCategoryPopulations", searchResults);
+          resolve(searchResults);
+        });
       });
     },
 

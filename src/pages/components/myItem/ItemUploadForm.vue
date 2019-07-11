@@ -16,7 +16,7 @@
           <li v-for="error in errors" :key="error.id">{{ error }}</li>
         </ul>
       </p>
-      <div class="form-group mb-3"><h5>{{formTitle}}</h5></div>
+      <div class="form-group mb-3"><h5>{{formTitle}} <sup class="text-danger">*</sup></h5></div>
       <div class="form-group mb-3">
         <input type="text" class="form-control" id="validationCustom01" :placeholder="'Item Title (' + limits.title + ' chars max)'" v-model="item.title" required :maxlength="limits.title">
         <div class="invalid-feedback">Please enter a title!</div>
@@ -29,7 +29,7 @@
         </div>
       </div>
 
-      <div class="form-group mb-3"><h5>Item Type</h5></div>
+      <div class="form-group mb-3"><h5>Item Type <sup class="text-danger">*</sup></h5></div>
       <div class="form-group mb-5" v-if="!mediumLocked">
         <select id="validationCustom06-1" @change="doMedium" class="text-black browser-default custom-select" v-model="medium" required>
           <option v-for="(medium) in media" :key="medium.value" :value="medium.value">{{medium.label}}</option>
@@ -42,18 +42,15 @@
         Digital Video
       </div>
 
-      <div class="form-group mb-3"><h5>Categories</h5></div>
-      <div class="form-group mb-5">
-        <div id="vc-040-error" class="invalid-feedback">
-          Please select some categories!
-        </div>
-        <taxonomy @closeKeywords="closeKeywords" :initKeywords="item.keywords"/>
+      <taxonomy-select @categories="categories" :initCategories="item.keywords"/>
+      <div id="vc-040-error" class="invalid-feedback mb-4">
+        Please choose closest fitting categories, keywords and tags
       </div>
 
-      <div class="form-group mb-3"><h5>Images</h5></div>
+      <div class="form-group mb-3"><h5>Images <sup class="text-danger">*</sup></h5></div>
       <div class="form-group mb-5">
-        <div id="vc-040-error" class="invalid-feedback">
-          Please select some categories!
+        <div id="vc-042-error" class="invalid-feedback">
+          Please add some images
         </div>
         <media-files-upload :parentalError="parentalError" :contentModel="contentModel3" :mediaFiles="mediaFilesImages" :limit="5" :sizeLimit="2500" :mediaTypes="'image'" @updateMedia="updateMediaImages($event)"/>
       </div>
@@ -68,7 +65,7 @@
       <!-- Submit button row -->
       <div class="row">
         <div class="col-12">
-          <button type="submit" class="btn btn-sm btn-light" @click.prevent="checkForm">Save</button>
+          <button type="submit" class="btn btn-md btn-primary" @click.prevent="checkForm">Save</button>
         </div>
       </div>
 
@@ -82,7 +79,8 @@ import { mdbIcon, mdbPopover, mdbCol, mdbRow, mdbContainer, mdbBtn } from "mdbvu
 import { mdbSpinner } from 'mdbvue';
 import moment from "moment";
 import ConfirmationModal from "@/pages/components/utils/ConfirmationModal";
-import Taxonomy from "@/pages/components/utils/Taxonomy";
+import TaxonomySelect from "@/pages/components/utils/TaxonomySelect";
+import KeywordsEntry from "@/pages/components/utils/KeywordsEntry";
 import MediaFilesUpload from "@/pages/components/utils/MediaFilesUpload";
 import HelpTopicModal from "@/pages/components/utils/HelpTopicModal";
 import _ from "lodash";
@@ -92,7 +90,7 @@ import _ from "lodash";
     name: "ItemUploadForm",
     components: {
       HelpTopicModal,
-      Taxonomy,
+      TaxonomySelect,KeywordsEntry,
       MediaFilesUpload,
       mdbSpinner,
       mdbContainer,
@@ -109,7 +107,6 @@ import _ from "lodash";
         loading: true,
         showMedia: false,
         helpModal: false,
-        showKeywords: false,
         media: this.$store.state.constants.taxonomy.media,
         medium: "physical",
         mediumLocked: false,
@@ -117,7 +114,7 @@ import _ from "lodash";
           title: 200,
           description: 1000,
           maxEditions: 10,
-          keywords: 100
+          keywords: 1000
         },
         contentModel3: {
           title: null,
@@ -170,22 +167,21 @@ import _ from "lodash";
         this.helpModal = false;
       },
       stripRubbishKeywork(item) {
-        let filtkeys = []
-        _.forEach(item.keywords, function(keyword) {
-          if (keyword && Array.isArray(keyword)) {
-            filtkeys.push(keyword.name);
-          }
-          else if (keyword && keyword.typeof === "string" && keyword.length > 1) {
-            filtkeys.push(keyword);
-          }
-        });
-        this.item.keywords = filtkeys;
+        if (item.keywords && typeof item.keywords === "string") {
+          let filtkeys = [];
+          let $self = this;
+          let keywordNames = item.keywords.split(",");
+          _.forEach(keywordNames, function(keywordName) {
+            keywordName = keywordName.trim();
+            filtkeys.push({level: 3, parent: "Other Categories", name: keywordName});
+          });
+          this.item.keywords = filtkeys;
+        }
       },
       doMedium () {
         this.item.medium = this.medium;
       },
-      closeKeywords: function(chosen) {
-        this.showKeywords = false;
+      categories: function(chosen) {
         this.item.keywords = chosen;
         document.getElementById("vc-040-error").style.display = "none";
       },
@@ -206,6 +202,7 @@ import _ from "lodash";
         this.alertMessage =
           "Uploading item to your storage..";
         this.helpModal = true;
+        //this.item.keywords = this.$store.getters["contentStore/getParents"](this.item.keywords);
         if (this.mode === "update") {
           this.item.updated = moment({}).valueOf();
           this.$store
@@ -216,6 +213,7 @@ import _ from "lodash";
                 this.helpModal = false;
                 this.$store.commit("itemSearchStore/addSearchResult", item);
                 this.$store.commit("itemSearchStore/addItem", item);
+                this.$store.dispatch("itemSearchStore/searchCategoryPopulations");
                 this.$router.push("/my-item/set-price/" + item.id);
               } else {
                 this.$notify({type: 'error', title: 'Update Item', text: 'Unable to update your item - please check the image sizes and the form for errors!'});
@@ -233,6 +231,7 @@ import _ from "lodash";
                 this.helpModal = false;
                 this.$store.commit("itemSearchStore/addSearchResult", item);
                 this.$store.commit("itemSearchStore/addItem", item);
+                this.$store.dispatch("itemSearchStore/searchCategoryPopulations");
                 this.$router.push("/my-item/set-price/" + item.id);
               } else {
                 this.$notify({type: 'error', title: 'Upload Item', text: 'Unable to upload your item - please check the image sizes and the form for errors!'});
@@ -256,10 +255,10 @@ import _ from "lodash";
         if (!this.item.description) {
           this.errors.push("description required.");
         }
-        if (this.item.keywords.length === 0) {
-          this.errors.push("Please select or add some categories.");
+        if (!this.item.keywords || this.item.keywords.length === 0) {
+          this.errors.push("Please select or add some categories, keywords and tags.");
           document.getElementById("vc-040-error").style.display = "block";
-          document.getElementById("vc-040-error").innerHTML = "Please select or add some categories.";
+          document.getElementById("vc-040-error").innerHTML = "Choose a category.";
         }
         this.item.medium = this.medium;
         if (!this.item.medium || (this.item.medium !== "physical" && this.item.medium !== "digital")) {

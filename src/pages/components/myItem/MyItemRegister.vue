@@ -127,6 +127,22 @@ export default {
     updateMediaRecords (mediaObjects) {
       this.item.supportingDocuments = mediaObjects.media;
     },
+    doBitcoinRegCall (asset) {
+      bitcoinService.registerAsset(asset).then(asset => {
+        if (!asset || !asset.assetRegistrationTx) {
+          this.$notify({type: 'error', title: 'Register Item', text: 'Unable to register item at the moment - please try again later.'});
+        } else {
+          this.asset = asset;
+          item.bitcoinTx = asset.assetRegistrationTx;
+          this.$store.dispatch("myItemStore/updateItem", {item: item, updateProvData: false});
+          this.$notify({type: 'success', title: 'Register Item', text: 'Registered item on the bitcoin blockchain.'});
+        }
+      })
+        .catch(err => {
+          console.log(err);
+          this.$notify({type: 'error', title: 'Register Item', text: 'Unable to register item at the moment - please try again later.'});
+        });
+    },
     registerItemBitcoin: function() {
       let item = this.item;
       try {
@@ -134,20 +150,13 @@ export default {
         this.$store.dispatch("myItemStore/updateItem", {item: this.item, updateProvData: true}).then(item => {
           if (item) {
             this.item = item;
-            bitcoinService.registerAsset(this.asset).then(asset => {
-              if (!asset || !asset.assetRegistrationTx) {
-                this.$notify({type: 'error', title: 'Register Item', text: 'Unable to register item at the moment - please try again later.'});
-              } else {
-                this.asset = asset;
-                item.bitcoinTx = asset.assetRegistrationTx;
-                this.$store.dispatch("myItemStore/updateItem", {item: item, updateProvData: false});
-                this.$notify({type: 'success', title: 'Register Item', text: 'Registered item on the bitcoin blockchain.'});
-              }
-            })
-              .catch(err => {
-                console.log(err);
-                this.$notify({type: 'error', title: 'Register Item', text: 'Unable to register item at the moment - please try again later.'});
+            if (this.asset && this.asset.assetId) {
+              this.doBitcoinRegCall(asset);
+            } else {
+              this.$store.dispatch("assetStore/initialiseAsset", item).then(asset => {
+                this.doBitcoinRegCall(asset);
               });
+            }
           } else {
             this.$notify({type: 'error', title: 'Register Item', text: 'Unable to register item at the moment - please try again later.'});
           }

@@ -2,6 +2,7 @@ import Router from "vue-router";
 
 import Index from "./pages/Index.vue";
 import Sell from "./pages/Sell.vue";
+import PurchaseOrder from "./pages/PurchaseOrder.vue";
 import ItemDetails from "./pages/ItemDetails.vue";
 import HelpTopics from "./pages/HelpTopics";
 import Contact from "./pages/Contact.vue";
@@ -212,7 +213,7 @@ const router = new Router({
     {
       path: "/my-orders/:assetHash",
       name: "my-order",
-      components: { default: Sell, header: Navbar, footer: Footer },
+      components: { default: PurchaseOrder, header: Navbar, footer: Footer },
       meta: { requiresAuth: true }
     },
 

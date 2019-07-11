@@ -102,7 +102,7 @@ export default {
     },
     checkEmailForm(event) {
       if (event) {
-        event.preventDefault;
+        event.preventDefault();
         event.target.classList.add('was-validated');
       }
       this.errors = [];

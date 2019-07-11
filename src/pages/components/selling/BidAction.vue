@@ -81,7 +81,7 @@ export default {
     placeBid(bidAmount) {
       if (this.myProfile.loggedIn) {
         if (this.item.owner === this.myProfile.username) {
-          this.$notify({type: 'warning', title: 'Bidding Rules', text: 'Not allowed to bid on your own item.'});
+          this.$notify({type: 'warn', title: 'Bidding Rules', text: 'Not allowed to bid on your own item.'});
           return;
         }
         this.$store.dispatch("assetStore/placeBid", {assetHash: this.asset.assetHash, bidAmount: bidAmount, bidder: this.myProfile.username}).then(asset => {
@@ -92,7 +92,7 @@ export default {
           }
         });
       } else {
-        this.$notify({type: 'warning', title: 'Login Required', text: 'Please login to continue.'});
+        this.$notify({type: 'warn', title: 'Login Required', text: 'Please login to continue.'});
       }
     },
     startCountdown() {

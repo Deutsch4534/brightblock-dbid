@@ -232,6 +232,8 @@ export default {
     this.$store.dispatch("myAuctionsStore/fetchMyAuctions").then(() => {
       this.loading = false;
     });
+    let prefs = this.$store.getters["myItemStore/getMyPreferences"].fiatCurrency;
+    if (prefs) this.currency = prefs.fiatCurrency;
     if (this.item.saleData.fiatCurrency) {
       this.currency = this.item.saleData.fiatCurrency;
     }
@@ -293,7 +295,7 @@ export default {
 
     currencySymbol() {
       let fiatRate = this.$store.getters["conversionStore/getFiatRate"](this.currency);
-      return fiatRate["symbol"];
+      if (fiatRate) return fiatRate["symbol"];
     }
   },
   methods: {
@@ -345,15 +347,14 @@ export default {
         item.saleData.auctionId = null;
       }
       item.saleData.fiatCurrency = this.currency;
-      let fiatRates = this.$store.getters["conversionStore/getFiatRates"];
-      item.saleData.initialRateBtc = fiatRates[this.currency]["15m"];
+      let fiatRate = this.$store.getters["conversionStore/getFiatRate"](this.currency);
+      item.saleData.initialRateBtc = fiatRate["15m"];
       let ethToBtc = this.$store.getters["conversionStore/getCryptoRate"]("eth_btc");
       item.saleData.initialRateEth = ethToBtc;
 
-      let fiatRate = this.$store.getters["conversionStore/getFiatRate"](this.currency);
       item.saleData.amountInEther = moneyUtils.valueInEther(this.currency, item.saleData.amount, fiatRate, ethToBtc);
 
-      this.$notify({type: 'warning', title: 'Set Price', text: 'Setting price - please wait...'});
+      this.$notify({type: 'warn', title: 'Set Price', text: 'Setting price - please wait...'});
       this.$store.dispatch("myItemStore/updateItem", {item: item, updateProvData: false})
         .then(() => {
           this.$notify({type: 'success', title: 'Set Price', text: 'Price information set.'});

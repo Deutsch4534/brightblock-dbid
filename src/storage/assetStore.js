@@ -1,6 +1,7 @@
 import _ from "lodash";
 import store from "@/storage/store";
 import bitcoinService from "brightblock-lib/src/services/bitcoinService";
+import myAccountService from "@/services/myAccountService";
 import utils from "@/services/utils";
 import moneyUtils from "@/services/moneyUtils";
 import moment from "moment";
@@ -66,7 +67,8 @@ const assetStore = {
       }
       let nextBid = currentBid + data.saleData.increment;
       let fiatRate = store.getters["conversionStore/getFiatRate"](data.saleData.fiatCurrency);
-      let symbol = fiatRate["symbol"];
+      let symbol = "";
+      if (fiatRate) symbol = fiatRate["symbol"];
       let nextBidBtc = moneyUtils.valueInBitcoin(nextBid, fiatRate);
       let currentBidBtc = moneyUtils.valueInBitcoin(currentBid, fiatRate);
       let reserveMet = currentBid < data.saleData.reserve;
@@ -197,7 +199,7 @@ const assetStore = {
         }
       });
     },
-    subscribeAssetPurchaseNews({ commit, state, getters}) {
+    subscribeAssetPurchaseNews({ commit, state, getters}, myProfile) {
       return new Promise(resolve => {
         bitcoinService.subscribeAssetPurchaseNews(function(assets) {
           _.forEach(assets, function(asset) {
@@ -354,6 +356,49 @@ const assetStore = {
             // server error
             resolve();
           });
+      });
+    },
+    notifySeller({ commit, state, getters}, data) {
+      return new Promise(resolve => {
+        let asset = data.asset;
+        let text = data.text;
+        let pcIndex = asset.purchaseCycles.length - 1;
+        let pc = asset.purchaseCycles[pcIndex];
+        let myProfile = store.getters["myAccountStore/getMyProfile"];
+        let result = {
+          emailSent: false,
+          assetMessageSent: false
+        };
+        let emailMessage = {
+          text: text,
+          toField: pc.seller.did,
+          subject: "You have a buyer on dbid.io",
+          originatorEmail: myProfile.publicKeyData.email,
+          originatorName: myProfile.username,
+        };
+        let attachMessageData = {
+          pcIndex: pcIndex,
+          assetHash: asset.assetHash
+        };
+
+        store.dispatch("userProfilesStore/fetchUserProfile", { username: pc.seller.did }).then(profile => {
+          if (profile.publicKeyData.email) {
+            emailMessage.toField = profile.publicKeyData.email;
+            store.dispatch("contentStore/sendPurchaseEmail", emailMessage);
+            result.emailSent = true;
+          }
+          attachMessageData.message = myAccountService.encryptMessage(emailMessage, profile.publicKeyData.publicBlockstackKey);
+          bitcoinService.attachMessageToAsset(attachMessageData).then(asset => {
+            if (asset) {
+              result.assetMessageSent = true;
+              commit("addAsset", asset);
+            }
+            resolve(result);
+          })
+            .catch(() => {
+              resolve(result);
+            });
+        });
       });
     },
     cancelPurchase({ commit, state, getters}, assetHash) {

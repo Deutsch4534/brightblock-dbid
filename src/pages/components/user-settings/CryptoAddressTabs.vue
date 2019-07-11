@@ -1,37 +1,25 @@
 <template>
 <div class="">
-<mdb-navbar color="light" class="pt-3">
-  <mdb-navbar-toggler>
-    <mdb-navbar-brand>
-      Payments on dBid
-    </mdb-navbar-brand>
-    <mdb-navbar-nav>
-        <a class="nav-link navbar-link text-nowrap active" id="bitcoin-tab-md" data-toggle="tab" @click.prevent="showTab('bitcoin')" href="#bitcoin-md" role="tab" aria-controls="bitcoin-md" aria-selected="true">
-          Bitcoin<i class="fas fa-check text-success ml-2" v-if="paymentAddress('bitcoin')"></i><i class="fas fa-times text-danger ml-2" v-else></i></a>
-        <a class="nav-link navbar-link text-nowrap" id="lightning-tab-md" data-toggle="tab" @click.prevent="showTab('lightning')" href="#lightning-md" role="tab" aria-controls="lightning-md"
-          aria-selected="false">Lightning<i class="fas fa-check text-success ml-2" v-if="paymentAddress('lightning')"></i></a>
-        <a class="nav-link navbar-link text-nowrap" id="stacks-tab-md" data-toggle="tab" @click.prevent="showTab('stacks')" href="#stacks-md" role="tab" aria-controls="stacks-md"
-          aria-selected="false">Stacks<i class="fas fa-check text-success ml-2" v-if="paymentAddress('stacks')"></i></a>
-    </mdb-navbar-nav>
-  </mdb-navbar-toggler>
-</mdb-navbar>
-<div class="tab-content card pt-3 m-0" id="myTabContentMD">
-  <div class="tab-pane fade show active" id="bitcoin-md" role="tabpanel" aria-labelledby="bitcoin-tab-md">
-    <mdb-container fluid class="">
+  <mdb-navbar expand="medium" color="grey darken-1" class="text-white" style="min-height: 54px;" dark>
+    <mdb-navbar-toggler>
+      <mdb-navbar-nav>
+          <a @click.prevent="showTab('bitcoin')" class="nav-link navbar-link" :class="activeTab === 'bitcoin' ? 'text-light font-weight-bolder' : 'text-dark'">Bitcoin<i class="fas fa-check text-success ml-2" v-if="paymentAddress('bitcoin')"></i><i class="fas fa-times text-danger ml-2" v-else></i></a>
+          <a @click.prevent="showTab('lightning')" class="nav-link navbar-link" :class="activeTab === 'lightning' ? 'text-light font-weight-bolder' : 'text-dark'">Lightning<i class="fas fa-check text-success ml-2" v-if="paymentAddress('lightning')"></i></a>
+          <a @click.prevent="showTab('stacks')" class="nav-link navbar-link" :class="activeTab === 'stacks' ? 'text-light font-weight-bolder' : 'text-dark'">Stacks<i class="fas fa-check text-success ml-2" v-if="paymentAddress('stacks')"></i></a>
+      </mdb-navbar-nav>
+    </mdb-navbar-toggler>
+  </mdb-navbar>
+  <div class="">
+    <div v-if="activeTab === 'bitcoin'" class="bg-card p-4">
       <bitcoin-address :buyer="buyer" :activeTab="activeTab" @paymentNetworkUpdate="paymentNetworkUpdate"/>
-    </mdb-container>
-  </div>
-  <div class="tab-pane fade" id="lightning-md" role="tabpanel" aria-labelledby="lightning-tab-md">
-    <mdb-container fluid class="">
+    </div>
+    <div v-else-if="activeTab === 'lightning'" class="bg-card p-4">
       <lightning-address :buyer="buyer" :activeTab="activeTab" @paymentNetworkUpdate="paymentNetworkUpdate"/>
-    </mdb-container>
-  </div>
-  <div class="tab-pane fade" id="stacks-md" role="tabpanel" aria-labelledby="stacks-tab-md">
-    <mdb-container fluid class="">
+    </div>
+    <div v-else-if="activeTab === 'stacks'" class="bg-card p-4">
       <stacks-address :buyer="buyer" :activeTab="activeTab" @paymentNetworkUpdate="paymentNetworkUpdate"/>
-    </mdb-container>
+    </div>
   </div>
-</div>
 </div>
 </template>
 
@@ -78,34 +66,6 @@ export default {
     },
     showTab(tab) {
       this.activeTab = tab;
-      let $ele = document.getElementById("bitcoin-tab-md");
-      $ele.classList.remove('active');
-      if (!this.buyer) {
-        $ele = document.getElementById("lightning-tab-md");
-        $ele.classList.remove('active');
-        $ele = document.getElementById("stacks-tab-md");
-        $ele.classList.remove('active');
-      }
-      $ele = document.getElementById(tab + "-tab-md");
-      $ele.classList.add('active');
-
-      if (!this.buyer) {
-        $ele = document.getElementById("lightning-md");
-        $ele.classList.remove('active');
-        $ele.classList.remove('show');
-
-        $ele = document.getElementById("stacks-md");
-        $ele.classList.remove('active');
-        $ele.classList.remove('show');
-      }
-
-      $ele = document.getElementById("bitcoin-md");
-      $ele.classList.remove('active');
-      $ele.classList.remove('show');
-
-      $ele = document.getElementById(tab + "-md");
-      $ele.classList.add('active');
-      $ele.classList.add('show');
     },
     paymentNetworkUpdate(data) {
       if (data === "stacks") {
@@ -128,9 +88,4 @@ export default {
 };
 </script>
 <style scoped>
-.container-fluid {
-}
-.navbar {
-  align-items: start;
-}
 </style>

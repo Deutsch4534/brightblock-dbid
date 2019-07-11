@@ -12,6 +12,7 @@ const myItemStore = {
   namespaced: true,
   state: {
     myItems: [],
+    myPreferences: {}
   },
   getters: {
     bcstatus: (state, getters) => id => {
@@ -52,6 +53,9 @@ const myItemStore = {
       }
       return true;
     },
+    getMyPreferences: state => {
+      return state.myPreferences;
+    },
     numberItemsSold: (state, getters) => {
       return getters.sold.length;
     },
@@ -70,7 +74,9 @@ const myItemStore = {
           keywords: [],
           owner: "unknown",
           medium: "physical",
-          saleData: {},
+          saleData: {
+            fiatCurrency: state.myPreferences.fiatCurrency
+          },
           images: [],
           created: moment({}),
           supportingDocuments: []
@@ -183,6 +189,9 @@ const myItemStore = {
         state.myItems.splice(index, 1, myItem);
       }
     },
+    updatePreference(state, pref) {
+      state.myPreferences[pref.name] = pref.value;
+    },
   },
   actions: {
     addToAuction({ commit }, item) {
@@ -282,6 +291,7 @@ const myItemStore = {
       myItemService.getMyItems(myProfile,
         function(myItem) {
           commit("addMyItem", myItem);
+          if (myItem && myItem.saleData) commit("updatePreference", {name: "fiatCurrency", value: myItem.saleData.fiatCurrency});
           store.dispatch("userProfilesStore/fetchUserProfile", { username: myItem.owner }, { root: true });
         },
       );
@@ -290,11 +300,13 @@ const myItemStore = {
       return new Promise(resolve => {
         let myItem = getters["myItem"](itemId);
         if (myItem && myItem.id) {
+          if (myItem && myItem.saleData) commit("updatePreference", {name: "fiatCurrency", value: myItem.saleData.fiatCurrency});
           resolve(myItem);
         } else {
           myItemService.getMyItem(itemId,
             function(myItem) {
               if (myItem) {
+                if (myItem && myItem.saleData) commit("updatePreference", {name: "fiatCurrency", value: myItem.saleData.fiatCurrency});
                 commit("addMyItem", myItem);
                 store.dispatch("userProfilesStore/fetchUserProfile", { username: myItem.owner }, { root: true });
                 resolve(myItem);
@@ -378,6 +390,7 @@ const myItemStore = {
     uploadItem({ commit }, item) {
       return new Promise(resolve => {
         item.saleData = moneyUtils.buildInitialSaleData();
+        store.dispatch("contentStore/checkNewCategories", item.keywords);
         myItemService.uploadItem(
           item,
           function(item) {
@@ -490,6 +503,9 @@ const myItemStore = {
         if (!data.item.saleData || !data.item.saleData.soid) {
           data.item.saleData = moneyUtils.buildInitialSaleData();
         }
+        store.dispatch("contentStore/checkNewCategories", data.item.keywords);
+        commit("updatePreference", {name: "fiatCurrency", value: data.item.saleData.fiatCurrency});
+
         myItemService.updateItem(
           data.item, true, data.updateProvData,
           function(item) {

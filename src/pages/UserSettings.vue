@@ -53,12 +53,4 @@ export default {
 };
 </script>
 <style scoped>
-.container-fluid {
-}
-.navbar {
-  align-items: start;
-}
-.tab-content {
-  padding-top: 0px;
-}
 </style>

@@ -5,11 +5,11 @@
       <span class="sr-only">Loading...</span>
     </div>
   </div>
-  <div class="bg-card bg-spinner mx-5 p-4" v-else>
-    <div id="aboutButtons">
+  <div class="container bg-card bg-spinner p-4" v-else :style="bannerBgStyle2">
+    <div id="about-buttons">
       <about-buttons :answers="answers" @showAnswer="showAnswer"/>
     </div>
-    <div id="aboutButtons" class="mt-4">
+    <div id="help-topic" class="mt-4">
       <help-topic :answer="answer"/>
     </div>
   </div>
@@ -51,6 +51,26 @@
       this.doMount();
     },
     computed: {
+      bannerBgStyle1() {
+        // let imageUrl = content["banner-bg-img"].url;
+        return {
+          "margin-top": "0px",
+          "background-repeat": "no-repeat",
+          "background-size": "135px",
+          "background-image": `url(https://prismic-io.s3.amazonaws.com/dbid%2F16f8e705-50e4-48d4-9e59-d436156729ca_generic_+banner_+back.png)`,
+          "background-position": "center 30%",
+        };
+      },
+      bannerBgStyle2() {
+        // let imageUrl = content["banner-bg-img"].url;
+        return {
+          "margin-top": "0px",
+          "background-repeat": "no-repeat",
+          "background-size": "135px",
+          "background-image": `url(https://prismic-io.s3.amazonaws.com/dbid%2F16f8e705-50e4-48d4-9e59-d436156729ca_generic_+banner_+back.png)`,
+          "background-position": "center 50%",
+        };
+      },
     },
     methods: {
       showAnswer(data) {

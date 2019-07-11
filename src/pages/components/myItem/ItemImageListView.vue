@@ -2,7 +2,7 @@
 <div class="mdb-lightbox" v-if="isImage">
   <mdb-carousel showControls :interval="false" showIndicators> <!-- :interval="1000"  -->
     <mdb-carousel-item img v-for="(image, index) in item.images" :key="index" :src="getImage(image)" mask="light" :alt="item.title">
-      <a @click.prevent="show(0)"><mdb-carousel-caption :text="item.title"></mdb-carousel-caption></a>
+      <a @click.prevent="show(0)"><mdb-carousel-caption :text="'open'"></mdb-carousel-caption></a>
     </mdb-carousel-item>
   </mdb-carousel>
   <mdb-lightbox
@@ -79,4 +79,12 @@ export default {
 };
 </script>
 <style scoped>
+.carousel .carousel-control-prev-icon {
+  width: 40px;
+  height: 40px;
+}
+.carousel .carousel-control-next-icon {
+  width: 40px;
+  height: 40px;
+}
 </style>

@@ -4,55 +4,52 @@
     <span class="sr-only">Loading...</span>
   </div>
 </div>
-<div class="container pt-5" v-else>
-
+<div class="container" v-else>
   <div class="row" v-if="notfound">
     <div class="col-lg-5 col-xl-4 mb-4">
       Item not found - <router-link to="/">search for items</router-link>
     </div>
   </div>
-  <div v-else>
-  <div class="row" v-if="!buyNowStarted && !biddingStarted">
-    <div class="col-lg-5 col-xl-4 mb-4">
-      <item-image-list-view :item="item"/>
+  <div class="my-4" v-else>
+    <mdb-navbar expand="medium" color="success" dark>
+      <mdb-navbar-toggler>
+        <mdb-navbar-brand>
+          <span style="font-weight: 500">
+            Buy: {{item.title}}
+          </span>
+        </mdb-navbar-brand>
+      </mdb-navbar-toggler>
+    </mdb-navbar>
+    <div class="d-flex bg-card p-4">
+      <div class="col-lg-5 col-xl-4 mb-4">
+        <item-image-list-view :item="item"/>
+      </div>
+      <div class="col-lg-7 col-xl-7 ml-xl-4 mb-4">
+        <h3 class="mb-3" v-html="item.description"></h3>
+        <div class="d-flex text-muted justify-content-start mb-3"><small>Listed <!--by; <a class="font-weight-bold dark-grey-text">{{ownerProfile.name}}</a> --> on <span class="">{{created}}</span></small></div>
+        <div v-if="activeTab === 'not-selling'">
+          <not-selling :itemId="item.id"/>
+        </div>
+        <div v-else-if="activeTab === 'under-offer'">
+          <under-offer :itemId="item.id"/>
+        </div>
+        <div v-else-if="activeTab === 'start-buying'">
+          <buy-action :item="item" :asset="asset" :myProfile="myProfile" @startPayment="startPayment"/>
+        </div>
+        <div v-else-if="activeTab === 'start-bidding'">
+          <a class="btn btn-sm btn-primary text-white m-0" @click.prevent="startBidding">Start the Bidding!</a>
+        </div>
+        <div v-else-if="activeTab === 'bidding-started'">
+          <bid-action :item="item" :asset="asset" :myProfile="myProfile" @continueBidding="continueBidding"/>
+        </div>
+        <div v-else-if="activeTab === 'me-buying'">
+          You are buying this item - please <router-link :to="purchaseUrl"><u>go here to complete the purchase</u></router-link>.
+        </div>
+        <div v-else-if="activeTab === 'me-selling'">
+          You are selling this item - please visit the <router-link :to="purchaseUrl"><u>go here to complete the sale</u></router-link>.
+      </div>
+      </div>
     </div>
-    <div class="col-lg-7 col-xl-7 ml-xl-4 mb-4">
-      <div class="d-flex">
-        <div class="mr-auto"><h3 class="mb-3">{{item.title}}</h3></div>
-      </div>
-      <p class="grey-text"><description-container :text="item.description"/></p>
-      <div class="d-flex text-muted justify-content-end mb-3"><small>Listed <!--by; <a class="font-weight-bold dark-grey-text">{{ownerProfile.name}}</a> --> on <span class="">{{created}}</span></small></div>
-      <a v-if="biddingEnabled" class="btn btn-sm btn-primary text-white m-0" @click.prevent="startBidding">Start the Bidding!</a>
-      <buy-action v-else :item="item" :asset="asset" :myProfile="myProfile" @startPayment="startPayment"/>
-    </div>
-  </div>
-  <div class="row" v-else-if="buyNowStarted">
-    <div class="col-md-8 col-xs-12 offset-md-2">
-      <div class=""><h5 class="mb-2">Purchase Order: {{item.title}}</h5></div>
-      <div class="d-flex justify-content-end text-muted">
-        <a class="text-primary" @click.prevent="showOrderDetails = !showOrderDetails"><small>order details</small></a>
-        <a class="text-primary ml-3" @click.prevent="toggleShippingAddress"><small>check buyer info</small></a>
-        <a v-if="assetStatus === 3" class="ml-3 text-danger" @click.prevent="cancelOrder(asset.assetHash)"><small>cancel order</small></a>
-      </div>
-      <settings-tabs v-if="showAddress" :tabList="tabList" :myProfile="myProfile" @saveEmail="saveEmail" @saveAddress="saveAddress"/>
-      <div v-else>
-        <order-details class="bg-card mb-4" v-if="showOrderDetails" :item="item" :purchaseCycle="purchaseCycle"/>
-        <order-item class="bg-card mb-5" :item="item" :assetHash="asset.assetHash" :myProfile="myProfile" @cancelOrder="cancelOrder"/>
-      </div>
-    </div>
-  </div>
-  <div class="row" v-else-if="biddingStarted">
-    <div class="col-md-8 col-xs-12 offset-md-2">
-      <div class=""><h5 class="mb-2">Purchase Order: {{item.title}}</h5></div>
-      <div class="d-flex justify-content-end text-muted">
-        Bidding Started
-      </div>
-      <settings-tabs v-if="showAddress" :tabList="tabList" :myProfile="myProfile" @saveEmail="saveEmail" @saveAddress="saveAddress"/>
-      <div v-else>
-        <bid-action v-if="biddingEnabled" :item="item" :asset="asset" :myProfile="myProfile" @continueBidding="continueBidding"/>
-      </div>
-    </div>
-  </div>
   </div>
 </div>
 </template>
@@ -62,19 +59,22 @@ import moment from "moment";
 import utils from "@/services/utils";
 import DescriptionContainer from "@/pages/components/utils/DescriptionContainer";
 import ItemImageListView from "@/pages/components/myItem/ItemImageListView";
+import NotSelling from "@/pages/components/selling/NotSelling";
+import UnderOffer from "@/pages/components/selling/UnderOffer";
+
 import BuyAction from "@/pages/components/selling/BuyAction";
 import BidAction from "@/pages/components/selling/BidAction";
-import OrderItem from "@/pages/components/orders/OrderItem";
-import OrderDetails from "@/pages/components/orders/OrderDetails";
 import SettingsTabs from "@/pages/components/user-settings/SettingsTabs";
 import { mdbSpinner } from 'mdbvue';
+import { mdbNavbar, mdbNavbarBrand, mdbNavbarToggler, mdbNavbarNav, mdbNavItem, mdbDropdown, mdbDropdownMenu, mdbDropdownToggle, mdbInput, mdbDropdownItem } from 'mdbvue';
 
 // noinspection JSUnusedGlobalSymbols
 export default {
   name: "ItemDetails",
   components: {
     mdbSpinner,
-    BidAction, SettingsTabs, DescriptionContainer, ItemImageListView, BuyAction, OrderItem, OrderDetails,
+    BidAction, SettingsTabs, DescriptionContainer, ItemImageListView, BuyAction, NotSelling, UnderOffer,
+    mdbNavbar, mdbNavbarBrand, mdbNavbarToggler, mdbNavbarNav, mdbNavItem, mdbDropdown, mdbDropdownMenu, mdbDropdownToggle, mdbInput, mdbDropdownItem
   },
   props: {
   },
@@ -82,15 +82,9 @@ export default {
     return {
       loading: true,
       notfound: true,
-      tabList: ["notifications", "shipping", "payments"],
-      showOrderDetails: false,
-      addressBlurb: "Needed to complete the sale - not shown to anyone else - including us!",
       myProfile: null,
       asset: null,
       assetHash: null,
-      addressValid: false,
-      emailValid: false,
-      showAddress: false,
       item: {
         type: Object,
         default() {
@@ -101,20 +95,15 @@ export default {
   },
   mounted() {
     let itemId = Number(this.$route.params.itemId);
-    this.$store.dispatch("assetStore/subscribeAssetPurchaseNews");
     this.$store.dispatch("myAccountStore/fetchMyAccount").then((myProfile) => {
       this.myProfile = myProfile;
+      this.$store.dispatch("assetStore/subscribeAssetPurchaseNews", myProfile);
       this.$store.dispatch("itemSearchStore/fetchItem", itemId).then((item) => {
         if (item) {
           this.item = item;
           this.notfound = false;
-          let validity = this.$store.getters["myAccountStore/getProfileValidity"];
-          if (!validity.emailValid || !validity.shippingValid || !validity.bitcoinValid) {
-            this.showAddress = true;
-          }
-          let assetHash = utils.buildBitcoinHash(item);
-          this.assetHash = assetHash;
-          this.$store.dispatch("assetStore/lookupAssetByHash", assetHash).then(asset => {
+          this.assetHash = utils.buildBitcoinHash(item);
+          this.$store.dispatch("assetStore/lookupAssetByHash", this.assetHash).then(asset => {
             if (asset) {
               this.asset = asset;
               this.loading = false;
@@ -134,10 +123,7 @@ export default {
   methods: {
     startPayment: function(asset) {
       this.asset = asset;
-      let validity = this.$store.getters["myAccountStore/getProfileValidity"];
-      if (validity.emailValid && validity.shippingValid && validity.bitcoinValid) {
-        this.showAddress = false;
-      }
+      this.$router.push("/my-orders/" + this.assetHash);
     },
     startBidding: function(asset) {
       this.$store.dispatch("assetStore/initialisePayment", {bidding: true, asset: this.asset, item: this.item}).then(asset => {
@@ -146,35 +132,15 @@ export default {
         }
       });
     },
+    paymentExpired() {
+      let purchaseCycle = this.$store.getters["assetStore/getCurrentPurchaseCycleByHash"](this.asset.assetHash);
+      let now = moment({}).valueOf();
+      let diff = now - purchaseCycle.created;
+      return (100 - ((diff) / 1000));
+      //return diff < 0;
+    },
     continueBidding: function(asset) {
       this.asset = asset;
-      let validity = this.$store.getters["myAccountStore/getProfileValidity"];
-      if (validity.emailValid && validity.shippingValid && validity.bitcoinValid) {
-        this.showAddress = false;
-      }
-    },
-    saveEmail: function(email) {
-      // this.$notify({type: 'success', title: 'Address Info', text: 'Address updated.'});
-    },
-    saveAddress: function(address) {
-      // this.$notify({type: 'success', title: 'Address Info', text: 'Address updated.'});
-    },
-    cancelAddress: function() {
-      this.showAddress = false;
-    },
-    cancelOrder(assetHash) {
-      this.$store.dispatch("assetStore/cancelPurchase", assetHash).then((asset) => {
-        this.asset = asset;
-      });
-    },
-    toggleShippingAddress() {
-      let validity = this.$store.getters["myAccountStore/getProfileValidity"];
-      if (!validity.emailValid || !validity.shippingValid || !validity.bitcoinValid) {
-        this.showAddress = true;
-        this.$notify({type: 'warning', title: 'Information Needed', text: 'Please enter the info needed to proceed with the buying / selling - this data is completely private and only used as needed to complete a sale.'});
-      } else {
-        this.showAddress = !this.showAddress;
-      }
     },
   },
   computed: {
@@ -184,16 +150,6 @@ export default {
       }
       return;
     },
-    buyNowStarted() {
-      let purchaseCycle = this.$store.getters["assetStore/getCurrentPurchaseCycleByHash"](this.asset.assetHash);
-      let buyNowStarted = (purchaseCycle && !purchaseCycle.bidding);
-      return this.asset.status > 0 && buyNowStarted;
-    },
-    biddingStarted() {
-      let purchaseCycle = this.$store.getters["assetStore/getCurrentPurchaseCycleByHash"](this.asset.assetHash);
-      let biddingStarted = (purchaseCycle && purchaseCycle.bidding);
-      return this.asset.status > 0 && biddingStarted;
-    },
     biddingEnabled() {
       return this.item.saleData.soid === 2;
     },
@@ -201,16 +157,41 @@ export default {
       let purchaseCycle = this.$store.getters["assetStore/getCurrentPurchaseCycleByHash"](this.asset.assetHash);
       return purchaseCycle;
     },
-    assetStatus() {
-      let asset = this.$store.getters["assetStore/getAssetByHash"](this.assetHash);
-      if (asset) {
-        return asset.status;
-      }
-      return -1;
+    purchaseUrl() {
+      return "/my-orders/" + this.asset.assetHash;
     },
-    validAddressInfo() {
-      let validity = this.$store.getters["myAccountStore/getProfileValidity"];
-      return validity.emailValid && validity.shippingValid;
+    activeTab() {
+      if (this.buyerInfo) {
+        return "buyer-info";
+      }
+      let activeTab = "not-selling";
+      if (this.item.saleData.soid === 1) {
+        activeTab = "start-buying";
+      } else if (this.item.saleData.soid === 2) {
+        activeTab = "start-bidding";
+      }
+      let asset = this.$store.getters["assetStore/getAssetByHash"](this.assetHash);
+      if (asset && asset.status > 0) {
+        activeTab = "under-offer";
+        let purchaseCycle = this.$store.getters["assetStore/getCurrentPurchaseCycleByHash"](this.assetHash);
+        let biddingStarted = (purchaseCycle && purchaseCycle.bidding);
+        if (biddingStarted) {
+          activeTab = "bidding-started";
+        } else {
+          let username = this.myProfile.username
+          if (username === purchaseCycle.buyer.did) {
+            if (this.paymentExpired() < 0) {
+              this.$store.dispatch("assetStore/cancelPurchase", this.assetHash);
+            }
+            activeTab = "me-buying";
+            //this.$router.push("/my-orders/" + this.assetHash);
+          } else if (username === purchaseCycle.seller.did) {
+            activeTab = "me-selling";
+            //this.$router.push("/my-sales/" + this.assetHash);
+          }
+        }
+      }
+      return activeTab;
     },
   }
 };

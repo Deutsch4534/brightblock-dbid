@@ -18,25 +18,27 @@
             </a>
           </div>
           <input class="form-control my-0 py-1 search-input" type="text"  v-on:keyup.13.prevent="findBySearchTerm" v-model="query" placeholder="Search" aria-label="Search">
-          <a class="ml-2 text-light elements" @click.prevent="showCategories = !showCategories" title="toggle categories" style="position:relative; top:4px"><i class="fas fa-caret-square-down fa-2x elements"></i></a>
+          <a class="ml-2 text-light elements" @click.prevent="toggleAdvancedSearch()" title="toggle categories" style="position:relative; top:4px"><i class="fas fa-caret-square-down fa-2x elements"></i></a>
           <a class="ml-2 text-light elements" @click.prevent="clearSearch" title="clear search" style="position:relative; top:4px"><i class="fas fa-times fa-2x"></i></a>
         </div>
       </div>
     </div>
   </div>
-  <div class="mt-3" v-if="showCategories">
+  <div class="my-4" v-if="showCategories">
+    <!--
     <div class="d-flex justify-content-start">
       <span class="mr-4 text-white d-none d-sm-none d-md-block" style="position:relative; top: 7px;">Advanced Search Options</span>
-      <vue-bootstrap-typeahead inputClass="validate" placeholder="Keywords" :minMatchingChars="0" :data="keywordNames" v-model="searchword" @hit="findByKeyword"/>
       <select class="text-black browser-default custom-select custom-select-md mb-3 ml-4" v-model="medium" style="width:150px;" v-on:change="findByMedium">
         <option>Type</option>
         <option v-for="(medium) in filters.media" :key="medium.value" :value="medium.value">{{medium.label}}</option>
       </select>
     </div>
-    <div class="d-flex text-lowercase mr-2">
+    -->
+    <div class="text-capitalise mr-2 text-center">
+      <span v-for="(category, index) in getCategory1Population" :key="index" class="badge badge-pill text-dark ml-2 mt-2 p-2" :class="(filterCategory && filterCategory.name === category.name) ? 'badge-warning' : 'badge-light'"><a style="text-decoration: capitalise;" v-html="category.name" @click.prevent="findByKeyword(category)"></a> <sup class="text-dark">{{category.hits}}</sup></span>
     </div>
-    <div class="d-flex text-lowercase mr-2">
-      <span class="badge badge-pill badge-dark ml-2" v-for="(category, index) in level1Categories" :key="index"><a v-html="category.name" @click="findByKeyword(category.name)"></a></span>
+    <div class="text-capitalise mr-2 text-center">
+      <span v-for="(category, index) in level2Categories" :key="index" class="badge badge-pill badge-warning ml-2 mt-2 p-2"><a style="text-decoration: capitalise;" v-html="category.name" @click.prevent="findByKeyword(category)"></a> <sup class="text-primary">{{category.hits}}</sup></span>
     </div>
   </div>
 </div>
@@ -45,6 +47,7 @@
 <script>
 import _ from "lodash";
 import { mdbBtn, mdbBadge } from 'mdbvue';
+import Taxonomy from "@/pages/components/utils/Taxonomy";
 
 // noinspection JSUnusedGlobalSymbols
 export default {
@@ -56,11 +59,9 @@ export default {
   data () {
     return {
       query: null,
+      level1: null,
+      filterCategory: null,
       latestOffers: "Recent",
-      keywords: [],
-      keywordNames: [],
-      searchword: null,
-      rawKeyword: null,
       medium: "Type",
       saleType: "Any Sale Type",
       username: null,
@@ -77,23 +78,25 @@ export default {
     let myProfile = this.$store.getters["myAccountStore/getMyProfile"];
     this.username = myProfile.username;
     let $self = this;
-    this.$store.dispatch("contentStore/fetchTaxonomy").then((keywords) => {
-      $self.keywordNames = keywords.map(keyword => keyword.name);
-    });
   },
   methods: {
+    toggleAdvancedSearch () {
+      this.showCategories = !this.showCategories;
+      this.level1 = this.$store.getters["itemSearchStore/getCategory1Population"];
+    },
     updateSearch (cause) {
       let query = [];
       if (this.query) {
         query.push("(title:" + encodeURI(this.query) + " OR description:" + encodeURI(this.query) + ")");
-      } else if (cause === "findBySearchTerm") {
-        //query.push("");
       }
-      if (this.searchword && this.searchword.length > 0) {
-        query.push("(keywords:" + encodeURI(this.searchword) + ")");
+      if (this.filterCategory) {
+        query.push("(keywords:" + this.filterCategory.id + ")");
       }
-      if (this.medium && this.medium !== "Any Medium") {
-        query.push("(medium:" + this.medium + ")");
+      if (this.medium && this.medium === "digital") {
+        query.push("(medium:digital)");
+      }
+      if (this.medium && this.medium === "physical") {
+        query.push("(medium:physical)");
       }
       if (this.saleType && this.saleType !== "Any Sale Type") {
         query.push("(saleType:" + this.saleType + ")");
@@ -108,7 +111,7 @@ export default {
         objectType: "item"
       }
 
-      if (!this.query && !this.searchword) {
+      if (!this.query && !this.filterCategory) {
         this.latestOffers = "Recent";
       } else {
         //this.latestOffers = "Found " + this.itemsSize + ": ";
@@ -116,8 +119,8 @@ export default {
         if (this.query && this.query.length > 0) {
           this.latestOffers += this.query;
         }
-        if (this.searchword && this.searchword.length > 0) {
-          this.latestOffers += " " + this.rawKeyword;
+        if (this.filterCategory && this.filterCategory.length > 0) {
+          this.latestOffers += " " + this.filterCategory.name;
         }
       }
 
@@ -132,22 +135,13 @@ export default {
     findBySaleType () {
       this.updateSearch();
     },
-    findByKeyword: function(keyword) {
-      this.rawKeyword = keyword;
-      if (keyword && keyword.length > 1) {
-        this.searchword = keyword.trim();
-        let regexp = new RegExp(" ", 'g');
-        this.searchword = this.searchword.replace(regexp, "\\ ");
-        this.keywords.push(this.searchword);
-      } else {
-        this.searchword = null;
-      }
+    findByKeyword: function(category) {
+      this.filterCategory = category;
       this.updateSearch();
     },
     clearSearch: function() {
       this.query = null;
-      this.searchword = null;
-      this.keywords = [];
+      this.filterCategory = null;
       this.medium = "Any Medium";
       this.saleType = "Any Sale Type";
       this.showCategories = false;
@@ -155,9 +149,15 @@ export default {
     },
   },
   computed: {
-    level1Categories() {
-      let lev1 = this.$store.getters["contentStore/getLevel1"];
+    getCategory1Population() {
+      let lev1 = this.$store.getters["itemSearchStore/getCategory1Population"];
       return lev1;
+    },
+    level2Categories() {
+      if (this.filterCategory) {
+        let lev2 = this.$store.getters["contentStore/getLevel2"](this.filterCategory);
+        return lev2;
+      }
     },
     resultSize() {
       let results = this.$store.getters["itemSearchStore/getSearchResults"];

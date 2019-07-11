@@ -14,7 +14,12 @@ const conversionStore = {
       return state.fiatRates;
     },
     getFiatRate: state => currency => {
-      return state.fiatRates[currency];
+      if (state.fiatRates) {
+        if (state.fiatRates[currency]) {
+          return state.fiatRates[currency];
+        }
+      }
+      return {};
     },
     getCryptoRate: state => pair => {
       return state.cryptoRates[pair];

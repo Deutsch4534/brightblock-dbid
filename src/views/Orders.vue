@@ -43,13 +43,13 @@ export default {
     };
   },
   mounted() {
-    this.$store.dispatch("assetStore/subscribeAssetPurchaseNews");
     this.$store.dispatch("myAccountStore/fetchMyAccount").then((profile) => {
       this.myProfile = profile;
-        this.$store.dispatch("assetStore/lookupAssetsByBuyer").then((assets) => {
-          this.orders = assets;
-          this.loaded = true;
-        });
+      this.$store.dispatch("assetStore/subscribeAssetPurchaseNews", profile);
+      this.$store.dispatch("assetStore/lookupAssetsByBuyer").then((assets) => {
+        this.orders = assets;
+        this.loaded = true;
+      });
     });
   },
   methods: {

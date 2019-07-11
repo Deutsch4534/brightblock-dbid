@@ -10,11 +10,13 @@
   </div>
   <div class="col-lg-7 col-xl-7 ml-xl-4 mb-4">
     <div class="row">
-      <div class="col-12"><h4><router-link :to="itemUrl">{{searchItem.title}}</i></router-link></h4></div>
-      <div class="col-12">Status: {{assetStatus}}</div>
-      <div class="col-12">Buyer: {{buyer}}</div>
-      <div class="col-12">Expired: {{expired}}</div>
+      <div class="col-12 mb-3"><h4><router-link :to="itemUrl">{{searchItem.title}}</i></router-link></h4></div>
+      <div class="col-12 mb-3 text-danger">{{assetStatus}}</div>
+      <div class="col-12 mb-3" v-if="tradeType === 'buying'">Seller: {{seller}}</div>
+      <div class="col-12 mb-3" v-if="tradeType === 'selling'">Buyer: {{buyer}}</div>
+      <div class="col-12"><button class="btn btn-small p-2 m-0 btn-primary text-capitalize" @click="openPurchase">Open Details</button></div>
       <div v-if="debugMode">
+      <div class="col-12">Expired: {{expired}}</div>
       <div class="col-12">Gaia TX: {{transferred}} Expired: {{expired}}</div>
       <div class="col-12">Asset Buyer: {{buyer}} </div>
       <div class="col-12">Item Owner: {{itemOwner}}</div>
@@ -27,7 +29,6 @@
 </template>
 
 <script>
-import OrderItem from "@/pages/components/orders/OrderItem";
 import ItemImageListView from "@/pages/components/myItem/ItemImageListView";
 import ItemActionLinks from "@/pages/components/myItem/ItemActionLinks";
 
@@ -36,9 +37,10 @@ export default {
   name: "MySaleItem",
   bodyClass: "index-page",
   components: {
-    OrderItem, ItemImageListView, ItemActionLinks
+    ItemImageListView, ItemActionLinks
   },
   props: {
+    tradeType: null,
     myProfile: {
       type: Object,
       default() {
@@ -71,6 +73,9 @@ export default {
     });
   },
   methods: {
+    openPurchase: function() {
+      this.$router.push("/my-orders/" + this.asset.assetHash);
+    }
   },
   computed: {
     transferred() {

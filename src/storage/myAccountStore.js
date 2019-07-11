@@ -134,8 +134,15 @@ const myAccountStore = {
     },
     updateAuxiliaryProfile({ state, commit }, auxiliaryProfile) {
       return new Promise(resolve => {
-        myAccountService.updateAuxiliaryProfile(
-          auxiliaryProfile,
+        let myProfile = state.myProfile;
+        if (auxiliaryProfile.emailAddress.allowUse) {
+          myProfile.publicKeyData.email = auxiliaryProfile.emailAddress.email;
+          store.dispatch("myAccountStore/updatePublicKeyData", myProfile.publicKeyData);
+        } else if (myProfile.publicKeyData.email) {
+          myProfile.publicKeyData.email = null;
+          store.dispatch("myAccountStore/updatePublicKeyData", myProfile.publicKeyData);
+        }
+        myAccountService.updateAuxiliaryProfile(auxiliaryProfile,
           function(auxiliaryProfile) {
             let myProfile = state.myProfile;
             myProfile.auxiliaryProfile = auxiliaryProfile;

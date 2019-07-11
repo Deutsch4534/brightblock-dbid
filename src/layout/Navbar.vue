@@ -1,7 +1,7 @@
 <template>
 <header class="" >
 <login-tab-modal v-if="showModal" :modal="showModal" @closeModal="closeModal"/>
-<mdb-navbar color="blue-grey lighten-1" light class="pt-3" style="min-height: 80px;">
+<mdb-navbar expand="medium" color="blue-grey lighten-1" light>
   <mdb-navbar-brand>
     <router-link to="/" class="nav-link navbar-link"><img :src="logo" width="90px" alt="main logo"></router-link>
   </mdb-navbar-brand>

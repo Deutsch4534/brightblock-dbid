@@ -44,9 +44,9 @@ export default {
   },
   mounted() {
     this.assetHash = this.$route.params.assetHash;
-    this.$store.dispatch("assetStore/subscribeAssetPurchaseNews");
     this.$store.dispatch("myAccountStore/fetchMyAccount").then((profile) => {
       this.myProfile = profile;
+      this.$store.dispatch("assetStore/subscribeAssetPurchaseNews", profile);
       this.loaded = true;
     });
   },

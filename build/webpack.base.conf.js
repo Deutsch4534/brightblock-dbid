@@ -14,7 +14,6 @@ module.exports = {
   plugins: [
     new CopyWebpackPlugin([
       path.join(__dirname, '..', 'robots.txt'),
-      path.join(__dirname, '..', 'service-worker.js'),
       path.join(__dirname, '..', 'manifest.json')
     ])
   ],

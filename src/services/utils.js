@@ -41,6 +41,19 @@ const utils = {
     return message;
   },
 
+  sortCollection(collection, field) {
+    let sorted = collection.sort(function compare(a, b) {
+      if (a[field] > b[field]) {
+        return 1;
+      }
+      if (a[field] < b[field]) {
+        return -1;
+      }
+      return 0;
+    });
+    return sorted;
+  },
+
   buildWebrtcSessionData(connection, data) {
     let pairs = data.split(",");
     let username = pairs[0].split("=")[1];

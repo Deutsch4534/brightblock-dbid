@@ -26,6 +26,11 @@ const itemSearchService = {
       success(searchResults);
     });
   },
+  searchCategoryPopulationQuery(q, success, failure) {
+    searchIndexService.searchCategoriesIndex(location.hostname, "item", q.field, q.query).then(searchResults => {
+      if (success) success(searchResults);
+    });
+  },
   newQuery(itemStorage, q, success, failure) {
     if (q.field === "id") {
       let item = itemStorage.getters["itemSearchStore/getItem"](q.query);
@@ -39,13 +44,23 @@ const itemSearchService = {
         return;
       }
       let usersToFetch = [];
+      let validResults = [];
       searchResults.forEach(function(searchResult) {
         // get the unique users from the search
-        itemStorage.commit("itemSearchStore/addSearchResult", searchResult);
-        itemSearchService.addUserOrNot(usersToFetch, searchResult.owner);
-      });
 
+        searchResult.searchWords = searchResult.keywords;
+        if (searchResult.owner) {
+          itemStorage.commit("itemSearchStore/addSearchResult", searchResult);
+          itemSearchService.addUserOrNot(usersToFetch, searchResult.owner);
+          validResults.push(searchResult);
+        }
+      });
+      searchResults = validResults;
       _.forEach(usersToFetch, function(username) {
+        if (!username) {
+          //if (success) success();
+          //return;
+        }
         itemStorage.dispatch("userProfilesStore/fetchUserProfile", { username: username }, { root: true });
         // for each unique user get their root item file and then load the prov files matching the search
         getFile(itemRootFileName, { decrypt: false, username: username }).then(function(file) {
@@ -78,6 +93,7 @@ const itemSearchService = {
     let indexData = records[index];
     indexData.buyer = searchResult.buyer;
     indexData.status = searchResult.status;
+    indexData.searchWords = searchResult.searchWords;
     itemSearchService.fetchProvenanceFile(
       indexData,
       searchResult.owner,

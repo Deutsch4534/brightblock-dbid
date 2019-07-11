@@ -1,36 +1,37 @@
 <template>
-<div class="row p-4">
-  <div class="col-5">
+<div>
+<div class="row">
+  <div class="col-2">
     <!--Featured image-->
-    <item-image-list-view :item="item"/>
+    <img style="max-height: 100px; max-width: 100%; border-top-left-radius: 10px; border-top-right-radius: 10px; border-bottom-left-radius: 5px;border-bottom-right-radius: 5px;" :src="item.images[0].dataUrl"  :alt="item.title"/>
   </div>
-  <div class="col-7">
-    <div class="row pb-3">
-      <div class="col-3"><b>Order</b></div>
-      <div class="col-2"><b>%</b></div>
+  <div class="col-10">
+    <div class="row pb-1">
+      <div class="col-2"><b>Order</b></div>
+      <div class="col-1"><b>%</b></div>
       <div class="col-2"><b>{{purchaseCycle.currency}}</b></div>
       <div class="col-2"><b>BTC</b></div>
     </div>
-    <div class="row pb-3" v-if="showDetails">
-      <div class="col-3">Seller</div>
-      <div class="col-2"></div>
+    <div class="row pb-1" v-if="showDetails">
+      <div class="col-2">Seller</div>
+      <div class="col-1"></div>
       <div class="col-2">{{purchaseCycle.seller.amountFiat}}</div>
       <div class="col-2">{{purchaseCycle.seller.amountBitcoin}}</div>
     </div>
-    <div class="row pb-3" v-for="(row, index) in purchaseCycle.residuals" :key="index" v-if="showDetails & isNotArtist">
-      <div class="col-3" v-html="fetchLabel(row.label)" style="text-transform: capitalize;"></div>
-      <div class="col-2">{{row.rate}}</div>
+    <div class="row pb-1" v-for="(row, index) in purchaseCycle.residuals" :key="index" v-if="showDetails & isNotArtist">
+      <div class="col-2" v-html="fetchLabel(row.label)" style="text-transform: capitalize;"></div>
+      <div class="col-1">{{row.rate}}</div>
       <div class="col-2">{{row.amountFiat}}</div>
       <div class="col-2">{{row.amountBitcoin}}</div>
     </div>
-    <div class="row pb-3" v-if="showDetails">
-      <div class="col-3">Platform</div>
-      <div class="col-2">{{purchaseCycle.platform.rate}}</div>
+    <div class="row pb-1" v-if="showDetails">
+      <div class="col-2">Platform</div>
+      <div class="col-1">{{purchaseCycle.platform.rate}}</div>
       <div class="col-2">{{purchaseCycle.platform.amountFiat}}</div>
       <div class="col-2">{{purchaseCycle.platform.amountBitcoin}}</div>
     </div>
-    <div class="row pb-3">
-      <div class="col-5"><b>Total</b></div>
+    <div class="row">
+      <div class="col-3"><b>Total</b></div>
       <div class="col-2"><b>{{purchaseCycle.buyer.amountFiat}}</b></div>
       <div class="col-2"><b>{{purchaseCycle.buyer.amountBitcoin}}</b></div>
     </div>
@@ -40,6 +41,7 @@
     </div>
     -->
   </div>
+</div>
 </div>
 </template>
 
