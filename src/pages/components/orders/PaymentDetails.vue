@@ -23,7 +23,7 @@
 
     <div class="col-12" v-if="network === 'lightning'">
       <p class="text-muted text-nowrap" style="width: 0.7rem;"><small>
-      For lightning payments please open a channel from your lightning wallet to radpay lightning node:
+      For lightning payments you can open a channel from your lightning wallet to radpay lightning node:
       <br/>
       <span id="payment-address" class="text-success">{{lightningPeer}}</span><a href="#" @click.prevent="copyPeerAddress"><i class="fas fa-clone ml-4"></i></a>
       </small>
@@ -76,6 +76,9 @@ export default {
     this.bitcoinUri = bitcoinService.getBitcoinUri(this.asset);
     this.lightningUri = bitcoinService.getLightningUri(this.asset);
     this.paymentUri = this.bitcoinUri;
+    if (this.network === "lightning") {
+      this.paymentUri = this.lightningUri;
+    }
     this.addQrCode("qrcode1", this.paymentUri);
   },
   computed: {

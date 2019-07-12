@@ -18,9 +18,8 @@ if (workbox) {
     })
   );
 
-  /**
   workbox.routing.registerRoute(
-    new RegExp('/^https:\/\/radicle\.art/gallery'),
+    new RegExp('/.*'),
     new workbox.strategies.CacheFirst({
       cacheName: 'radicle-cache',
       plugins: [
@@ -33,8 +32,7 @@ if (workbox) {
       ],
     }),
   );
-  **/
-  
+
   workbox.routing.registerRoute(
     // Cache image files.
     /\.(?:png|jpg|jpeg|svg|gif|woff2|eot|ttf)$/,

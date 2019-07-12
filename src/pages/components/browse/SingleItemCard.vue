@@ -10,6 +10,7 @@
     <div class="d-flex align-items-center align-content-between flex-column" style="min-height: 200px;">
       <div class=""><mdb-card-title><strong><router-link :to="itemUrl"><description-container :text="item.title" :limit="20" :morable="false" style="color: #445544;font-size: 1.4rem;"/></router-link></strong></mdb-card-title></div>
       <mdb-card-text v-if="debugMode">{{item.updated}}</mdb-card-text>
+      <mdb-card-text v-if="debugMode" class="text-danger">{{item.owner}}</mdb-card-text>
       <mdb-card-text v-if="debugMode">{{item.searchWords}}</mdb-card-text>
       <mdb-card-text v-if="debugMode">{{item.keywords}}</mdb-card-text>
       <div class="mb-auto" v-if="debugMode"><mdb-card-text><description-container :text="item.description" :limit="4" :morable="true" class="text-muted" style="font-size: 1.1rem;"/></mdb-card-text></div>

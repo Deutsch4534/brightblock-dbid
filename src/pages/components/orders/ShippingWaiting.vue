@@ -1,20 +1,20 @@
 <template>
-<div class="bg-light mb-5 p-4">
-  <div class="d-flex justify-content-center">
-    <div class="d-flex justify-content-center">
-      <h4>{{network}}&nbsp;<span class="text-danger">{{bitcoinConfig.chain}}</span>&nbsp;network</h4>
-    </div>
-  </div>
+<div>
   <div class="mx-md-5">
-    <div class="d-flex justify-content-start mb-3">Wey hey - we found you a potential buyer!</div>
+    <div class="d-flex justify-content-start mb-3">Wey hey - you have a potential buyer!</div>
     <div class="d-flex justify-content-start mb-3">Once their payment is confirmed we will display shipping details for you to send the goods.</div>
   </div>
   <div class="mx-md-5">
+    <div class="d-flex justify-content-between text-muted">
+      <div>Confirmations {{buyerConfirmations}} / 6 (apprx 1 hour)</div>
+      <div class="text-muted"><a :href="buyerBlockchainUrl" target="_blank">Check chain <i class="fas fa-external-link-alt"></i></a></div>
+    </div>
+  </div>
+  <!--
+  <div class="mx-md-5">
     <div class="d-flex justify-content-start text-muted">Note: If the payment fails for any reason the item will remain listed!</div>
   </div>
-  <div class="mx-md-5 my-4">
-    <div class="d-flex justify-content-center mb-3">Thank you for using dbid!</div>
-  </div>
+  -->
 </div>
 </template>
 
@@ -37,9 +37,25 @@ export default {
   mounted() {
   },
   computed: {
+    buyerBlockchainUrl() {
+      let purchaseCycle = this.$store.getters["assetStore/getCurrentPurchaseCycleByHash"](this.assetHash);
+      let bitcoinConfig = this.$store.getters["assetStore/getBitcoinConfig"];
+      let txid = purchaseCycle.buyer.chainData.txid;
+      if (bitcoinConfig.chain === "test") {
+        return "https://testnet.smartbit.com.au/tx/" + txid;
+      }
+      return "https://www.blockchain.com/btc/tx/" + txid;
+    },
     buyerConfirmations() {
       let purchaseCycle = this.$store.getters["assetStore/getCurrentPurchaseCycleByHash"](this.assetHash);
       return purchaseCycle.buyer.chainData.confirmations;
+    },
+    shippingAddress() {
+      let purchaseCycle = this.$store.getters["assetStore/getCurrentPurchaseCycleByHash"](this.assetHash);
+      let profile = this.$store.getters['userProfilesStore/getProfile'](purchaseCycle.buyer.did);
+      let confs = purchaseCycle.buyer.chainData.confirmations;
+      if (confs < 3) return;
+      return profile.shippingAddress;
     },
     network() {
       let purchaseCycle = this.$store.getters["assetStore/getCurrentPurchaseCycleByHash"](this.assetHash);
@@ -49,16 +65,7 @@ export default {
       if (purchaseCycle.buyer.chainData.lightningMethod) {
         return "lightning";
       }
-      return "unknown";
-    },
-    bitcoinConfig() {
-      let bitcoinConfig = this.$store.getters["assetStore/getBitcoinConfig"];
-      if (!bitcoinConfig) {
-        bitcoinConfig = {
-          chain: "unknown"
-        }
-      }
-      return bitcoinConfig;
+      return;
     },
   },
   methods: {

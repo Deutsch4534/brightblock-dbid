@@ -1,51 +1,90 @@
 <template>
 <div id="my-app-element" class="my-4 container">
-  <mdb-navbar expand="medium" color="success" style="min-height: 54px;" dark>
+  <mdb-navbar expand="medium" color="danger" style="min-height: 54px;" dark v-if="iamseller">
     <mdb-navbar-toggler>
       <mdb-navbar-brand>
         <span style="font-weight: 500">
-          Order: {{item.title}}
+          Selling: {{item.title}}
         </span>
       </mdb-navbar-brand>
       <mdb-navbar-nav right class="text-light">
+        <router-link class="nav-link navbar-link btn btn-primary" to="/my-item/upload">New Listing</router-link>
+        <router-link class="nav-link navbar-link btn btn-primary" to="/my-items">Listings</router-link>
+        <router-link class="nav-link navbar-link btn btn-primary" to="/my-orders">Purchases</router-link>
+        <a v-if="activeTab === 'buyer-info'" class="nav-link navbar-link btn btn-primary" @click.prevent="buyerInfo = !buyerInfo">Back</a>
+        <a v-else class="nav-link navbar-link btn btn-primary" @click.prevent="buyerInfo = !buyerInfo">Seller Info <i class="fas fa-check text-success ml-2" v-if="validAddressInfo"></i><i class="fas fa-times text-danger ml-2" v-else></i></a>
+        <a v-if="assetStatus === 3" class="nav-link navbar-link btn btn-primary" @click.prevent="cancelOrderSeller(assetHash)">Cancel Order</a>
+      </mdb-navbar-nav>
+    </mdb-navbar-toggler>
+  </mdb-navbar>
+  <mdb-navbar expand="medium" color="success" style="min-height: 54px;" dark v-else>
+    <mdb-navbar-toggler>
+      <mdb-navbar-brand>
+        <span style="font-weight: 500">
+          Buying: {{item.title}}
+        </span>
+      </mdb-navbar-brand>
+      <mdb-navbar-nav right class="text-light">
+        <router-link class="nav-link navbar-link btn btn-primary" to="/my-item/upload">New Listing</router-link>
+        <router-link class="nav-link navbar-link btn btn-primary" to="/my-items">Listings</router-link>
+        <router-link class="nav-link navbar-link btn btn-primary" to="/my-orders">Purchases</router-link>
         <a v-if="activeTab === 'buyer-info'" class="nav-link navbar-link btn btn-primary" @click.prevent="buyerInfo = !buyerInfo">Back</a>
         <a v-else class="nav-link navbar-link btn btn-primary" @click.prevent="buyerInfo = !buyerInfo">Buyer Info <i class="fas fa-check text-success ml-2" v-if="validAddressInfo"></i><i class="fas fa-times text-danger ml-2" v-else></i></a>
         <a v-if="assetStatus === 3" class="nav-link navbar-link btn btn-primary" @click.prevent="cancelOrder(assetHash)">Cancel Order</a>
       </mdb-navbar-nav>
     </mdb-navbar-toggler>
   </mdb-navbar>
-  <div class="bg-card mb5">
+  <div class="bg-card mb3">
     <order-details v-if="activeTab !== 'buyer-info'" class="p-3" :item="item" :purchaseCycle="purchaseCycle" style="background-color:  #bdbdbd;"/>
-    <div class="p-4" v-if="activeTab === 'payment-expired'">
-      <payment-expired :assetHash="asset.assetHash" :itemId="item.id"/>
+    <div class="bg-light mb-5 p-4">
+      <div class="d-flex justify-content-center">
+        <div class="d-flex justify-content-center text-capitalize">
+          <h4>{{networkName}}&nbsp;<span class="text-danger">{{bitcoinConfig.chain}}</span>&nbsp;network</h4>
+        </div>
+      </div>
+      <div class="p-4" v-if="activeTab === 'payment-expired'">
+        <payment-expired :assetHash="asset.assetHash" :itemId="item.id"/>
+      </div>
+      <div class="p-4" v-else-if="activeTab === 'payment-details'">
+        <payment-details :eternal="true" :network="network" :assetHash="asset.assetHash" :validFor="validFor" @chooseNetwork="chooseNetwork"/>
+      </div>
+      <div class="p-4" v-else-if="activeTab === 'payment-network'">
+        <payment-network @chooseNetwork="chooseNetwork"/>
+      </div>
+      <div class="p-4" v-else-if="activeTab === 'confirmation-details-state4'">
+        <confirmation-details-state4 :assetHash="asset.assetHash" :item="item"/>
+      </div>
+      <div class="p-4" v-else-if="activeTab === 'confirmation-details-state5'">
+        <confirmation-details-state5 :assetHash="asset.assetHash" :item="item" @paySeller="paySeller"/>
+      </div>
+      <div class="p-4" v-else-if="activeTab === 'confirmation-details-state6'">
+        <confirmation-details-state6 :assetHash="asset.assetHash"/>
+      </div>
+      <div class="p-4" v-else-if="activeTab === 'confirmation-details-state7'">
+        <confirmation-details-state7 :assetHash="asset.assetHash"/>
+      </div>
+      <div class="p-4" v-else-if="activeTab === 'buyer-info'">
+        <settings-tabs :tabList="tabList" :myProfile="myProfile"/>
+      </div>
+      <div class="p-4" v-else-if="activeTab === 'shipping-expired'">
+        <shipping-expired :assetHash="asset.assetHash" :itemId="item.id"/>
+      </div>
+      <div class="p-4" v-else-if="activeTab === 'shipping-waiting'">
+        <shipping-waiting :assetHash="asset.assetHash"/>
+      </div>
+      <div class="p-4" v-else-if="activeTab === 'shipping-required'">
+        <shipping-required  :myProfile="myProfile" :assetHash="asset.assetHash"/>
+      </div>
+      <div class="p-4" v-else-if="activeTab === 'seller-settling'">
+        <seller-settling  :myProfile="myProfile" :assetHash="asset.assetHash"/>
+      </div>
+      <div class="p-4" v-else-if="activeTab === 'seller-settled'">
+        <seller-settled  :myProfile="myProfile" :assetHash="asset.assetHash"/>
+      </div>
     </div>
-    <div class="p-4" v-else-if="activeTab === 'payment-details'">
-      <payment-details :eternal="true" :network="network" :assetHash="asset.assetHash" :validFor="validFor" @chooseNetwork="chooseNetwork"/>
-    </div>
-    <div class="p-4" v-else-if="activeTab === 'payment-network'">
-      <payment-network @chooseNetwork="chooseNetwork"/>
-    </div>
-    <div class="p-4" v-else-if="activeTab === 'confirmation-details-state4'">
-      <confirmation-details-state4 :assetHash="asset.assetHash" :purchaseCycle="purchaseCycle" @notifySeller="notifySeller"/>
-    </div>
-    <div class="p-4" v-else-if="activeTab === 'confirmation-details-state5'">
-      <confirmation-details-state5 :assetHash="asset.assetHash" :item="item" :purchaseCycle="purchaseCycle" @paySeller="paySeller" @notifySeller="notifySeller"/>
-    </div>
-    <div class="p-4" v-else-if="activeTab === 'confirmation-details-state6'">
-      <confirmation-details-state6 :assetHash="asset.assetHash" :purchaseCycle="purchaseCycle"/>
-    </div>
-    <div class="p-4" v-else-if="activeTab === 'confirmation-details-state7'">
-      <confirmation-details-state7 :assetHash="asset.assetHash" :purchaseCycle="purchaseCycle"/>
-    </div>
-    <div class="" v-else-if="activeTab === 'buyer-info'">
-      <settings-tabs :tabList="tabList" :myProfile="myProfile"/>
-    </div>
-    <div class="" v-else-if="activeTab === 'shipping-waiting'">
-      <shipping-waiting :assetHash="asset.assetHash"/>
-    </div>
-    <div class="p-5" v-else-if="activeTab === 'shipping-required'">
-      <shipping-required  :myProfile="myProfile" :assetHash="asset.assetHash"/>
-    </div>
+    <mdb-footer fluid color="blue-grey" class="font-small py-2 m-0">
+      <div class="d-flex justify-content-center">Thank you for using dbid!</div>
+    </mdb-footer>
   </div>
 </div>
 </template>
@@ -54,8 +93,11 @@
 import QRCode from "qrcode";
 import bitcoinService from "brightblock-lib/src/services/bitcoinService";
 import moment from "moment";
+import SellerSettling from "@/pages/components/orders/SellerSettling";
+import SellerSettled from "@/pages/components/orders/SellerSettled";
 import ShippingWaiting from "@/pages/components/orders/ShippingWaiting";
 import ShippingRequired from "@/pages/components/orders/ShippingRequired";
+import ShippingExpired from "@/pages/components/orders/ShippingExpired";
 import OrderDetails from "@/pages/components/orders/OrderDetails";
 import PaymentExpired from "@/pages/components/orders/PaymentExpired";
 import PaymentDetails from "@/pages/components/orders/PaymentDetails";
@@ -66,15 +108,17 @@ import ConfirmationDetailsState5 from "@/pages/components/orders/ConfirmationDet
 import ConfirmationDetailsState4 from "@/pages/components/orders/ConfirmationDetailsState4";
 import ConfirmationDetailsState6 from "@/pages/components/orders/ConfirmationDetailsState6";
 import ConfirmationDetailsState7 from "@/pages/components/orders/ConfirmationDetailsState7";
+import { mdbFooter, mdbContainer, mdbRow, mdbCol } from 'mdbvue';
 
 // noinspection JSUnusedGlobalSymbols
 export default {
   name: "MyOrder",
   components: {
-    ShippingRequired, ShippingWaiting,
-    ConfirmationDetailsState7, ConfirmationDetailsState6, ConfirmationDetailsState4, ConfirmationDetailsState5,
+    ShippingRequired, ShippingWaiting,SellerSettling,SellerSettled,
+    ShippingExpired, ConfirmationDetailsState7, ConfirmationDetailsState6, ConfirmationDetailsState4, ConfirmationDetailsState5,
     PaymentExpired, PaymentDetails, PaymentNetwork, SettingsTabs, OrderDetails,
-    mdbNavbar, mdbNavbarBrand, mdbNavbarToggler, mdbNavbarNav, mdbNavItem, mdbDropdown, mdbDropdownMenu, mdbDropdownToggle, mdbInput, mdbDropdownItem
+    mdbNavbar, mdbNavbarBrand, mdbNavbarToggler, mdbNavbarNav, mdbNavItem, mdbDropdown, mdbDropdownMenu, mdbDropdownToggle, mdbInput, mdbDropdownItem,
+    mdbFooter, mdbContainer, mdbRow, mdbCol
   },
   props: {
     item: null,
@@ -121,6 +165,31 @@ export default {
     }
   },
   computed: {
+    iamseller() {
+      return this.whoami === "seller";
+    },
+    bitcoinConfig() {
+      let bitcoinConfig = this.$store.getters["assetStore/getBitcoinConfig"];
+      if (!bitcoinConfig) {
+        bitcoinConfig = {
+          chain: "unknown"
+        }
+      }
+      return bitcoinConfig;
+    },
+    networkName() {
+      let purchaseCycle = this.$store.getters["assetStore/getCurrentPurchaseCycleByHash"](this.assetHash);
+      if (purchaseCycle.buyer.chainData.bitcoinMethod) {
+        return "Bitcoin";
+      } else if (purchaseCycle.buyer.chainData.lightningMethod) {
+        return "Lightning";
+      }
+      return "Network"
+    },
+    purchaseCycle() {
+      let purchaseCycle = this.$store.getters["assetStore/getCurrentPurchaseCycleByHash"](this.assetHash);
+      return purchaseCycle;
+    },
     purchaseCycle() {
       let purchaseCycle = this.$store.getters["assetStore/getCurrentPurchaseCycleByHash"](this.assetHash);
       return purchaseCycle;
@@ -130,35 +199,42 @@ export default {
       return asset;
     },
     activeTab() {
+      if (this.whoami === "nobody") {
+        return "";
+      }
+
+      let asset = this.$store.getters["assetStore/getAssetByHash"](this.asset.assetHash);
+      let purchaseCycle = this.$store.getters["assetStore/getCurrentPurchaseCycleByHash"](this.asset.assetHash);
       let activeTab = "buyer-info";
       if (this.buyerInfo) {
         return "buyer-info";
-      }
-      if (this.purchaseExpired) {
-        return "payment-expired";
       }
       let validity = this.$store.getters["myAccountStore/getProfileValidity"];
       if (!validity.emailValid || !validity.shippingValid) {
         return "buyer-info";
       }
-      let asset = this.$store.getters["assetStore/getAssetByHash"](this.asset.assetHash);
-      let purchaseCycle = this.$store.getters["assetStore/getCurrentPurchaseCycleByHash"](this.asset.assetHash);
       if (this.whoami === "seller") {
+        if (purchaseCycle.expired) {
+          return "shipping-expired";
+        }
         if (asset.status < 5) {
-          if (purchaseCycle.confirmations < 3) {
+          if (purchaseCycle.buyer.chainData.confirmations < 3) {
             return "shipping-waiting";
           } else {
             return "shipping-required";
           }
         } else if (asset.status === 5) {
-          if (purchaseCycle.confirmations < 3) {
-            return "shipping-waiting";
-          } else {
-            return "shipping-required";
-          }
+          return "shipping-required";
+        } else if (asset.status === 6) {
+          return "seller-settling";
+        } else if (asset.status === 7) {
+          return "seller-settled";
         }
         return "shipping-confirmation";
       } else {
+        if (purchaseCycle.expired) {
+          return "payment-expired";
+        }
         if (asset.status === 3) {
           if (this.paymentExpired() < 0) {
             return "payment-expired";
@@ -196,6 +272,9 @@ export default {
       this.$store.dispatch("assetStore/cancelPurchase", this.asset.assetHash);
       this.$router.push("/items/" + this.item.id);
     },
+    cancelOrderSeller() {
+      this.$notify({type: 'warn', title: 'Purchase Order', text: 'Only the buyer can cancel at this stage.'});
+    },
     paymentExpired() {
       let purchaseCycle = this.$store.getters["assetStore/getCurrentPurchaseCycleByHash"](this.asset.assetHash);
       let now = moment({}).valueOf();
@@ -220,20 +299,6 @@ export default {
         });
       }
     },
-    notifySeller(sellerMessage) {
-      let asset = this.$store.getters["assetStore/getAssetByHash"](this.assetHash);
-      let text = sellerMessage;
-      if (!sellerMessage) {
-        text = "One of your items on dbid.io has been sold: <br/><br/>" + this.item.title + "<br/><br/>please login <a href=\"https://dbid.io/my-orders/" + this.assetHash + "\">here for shipping details.</a>";
-      }
-      let data = {
-        text: text,
-        asset: this.asset
-      };
-      this.$store.dispatch("assetStore/notifySeller", data).then((result) => {
-        this.$notify({type: 'success', title: 'Message Sent', text: 'Message has been sent to the seller.'});
-      });
-    },
     startCountdown() {
       let $self = this;
       let asset = $self.$store.getters["assetStore/getAssetByHash"]($self.assetHash);
@@ -247,6 +312,9 @@ export default {
           return;
         }
         if (asset.status !== 3 || purchaseCycle.buyer.chainData.txid) {
+          clearInterval(countdown);
+        }
+        if (purchaseCycle.expired) {
           clearInterval(countdown);
         }
         if (purchaseCycle.buyer.chainData.txid) {

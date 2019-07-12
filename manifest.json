@@ -2,17 +2,17 @@
   "name": "dBid",
   "short_name": "dBid",
   "description": "Turn old stuff into Bitcoin",
-  "start_url": "https://dbid.io/buy",
+  "start_url": "https://dbid.io",
   "icons": [{
-    "src": "https://dbid.io/static/dB_256x256_light.png",
+    "src": "https://dbid.io/static/dB_256x256_dark.png",
     "sizes": "256x256",
     "type": "image/png"
   }, {
-    "src": "https://dbid.io/static/dB_512x512_light.png",
+    "src": "https://dbid.io/static/dB_512x512_dark.png",
     "sizes": "512x512",
     "type": "image/png"
   }],
   "background_color": "#EFF1F2",
-  "display": "browser",
+  "display": "standalone",
   "theme_color": "#EFF1F2"
 }

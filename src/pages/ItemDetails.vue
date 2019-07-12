@@ -46,7 +46,7 @@
           You are buying this item - please <router-link :to="purchaseUrl"><u>go here to complete the purchase</u></router-link>.
         </div>
         <div v-else-if="activeTab === 'me-selling'">
-          You are selling this item - please visit the <router-link :to="purchaseUrl"><u>go here to complete the sale</u></router-link>.
+          Potential buyer online now - please visit <router-link :to="purchaseUrl"><u>here to complete the sale</u></router-link>.
       </div>
       </div>
     </div>
@@ -83,7 +83,6 @@ export default {
       loading: true,
       notfound: true,
       myProfile: null,
-      asset: null,
       assetHash: null,
       item: {
         type: Object,
@@ -105,11 +104,9 @@ export default {
           this.assetHash = utils.buildBitcoinHash(item);
           this.$store.dispatch("assetStore/lookupAssetByHash", this.assetHash).then(asset => {
             if (asset) {
-              this.asset = asset;
               this.loading = false;
             } else {
               this.$store.dispatch("assetStore/initialiseAsset", item).then(asset => {
-                this.asset = asset;
                 this.loading = false;
               });
             }
@@ -150,6 +147,10 @@ export default {
       }
       return;
     },
+    asset() {
+      let asset = this.$store.getters["assetStore/getAssetByHash"](this.assetHash);
+      return asset;
+    },
     biddingEnabled() {
       return this.item.saleData.soid === 2;
     },
@@ -161,6 +162,8 @@ export default {
       return "/my-orders/" + this.asset.assetHash;
     },
     activeTab() {
+      let asset = this.$store.getters["assetStore/getAssetByHash"](this.assetHash);
+      let purchaseCycle = this.$store.getters["assetStore/getCurrentPurchaseCycleByHash"](this.assetHash);
       if (this.buyerInfo) {
         return "buyer-info";
       }
@@ -170,10 +173,8 @@ export default {
       } else if (this.item.saleData.soid === 2) {
         activeTab = "start-bidding";
       }
-      let asset = this.$store.getters["assetStore/getAssetByHash"](this.assetHash);
       if (asset && asset.status > 0) {
         activeTab = "under-offer";
-        let purchaseCycle = this.$store.getters["assetStore/getCurrentPurchaseCycleByHash"](this.assetHash);
         let biddingStarted = (purchaseCycle && purchaseCycle.bidding);
         if (biddingStarted) {
           activeTab = "bidding-started";

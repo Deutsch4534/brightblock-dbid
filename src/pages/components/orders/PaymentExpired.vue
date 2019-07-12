@@ -4,7 +4,7 @@
     Purchase has expired for this order placed on
     <br/> {{purchaseCycleEnded()}}
     <br/>
-    <router-link to="/"><u>continue shopping</u></router-link>
+    <a @click.prevent="cancelOrder()"><u>Cancel Order</u></a>
   </div>
 </div>
 </template>
@@ -34,6 +34,10 @@ export default {
     purchaseCycleEnded() {
       let purchaseCycle = this.$store.getters["assetStore/getCurrentPurchaseCycleByHash"](this.assetHash);
       return moment(purchaseCycle.created).format();
+    },
+    cancelOrder() {
+      this.$store.dispatch("assetStore/cancelPurchase", this.assetHash);
+      this.$router.push("/items/" + this.itemId);
     },
   }
 };
