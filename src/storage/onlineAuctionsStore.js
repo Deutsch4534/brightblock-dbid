@@ -172,7 +172,7 @@ const onlineAuctionsStore = {
       )[0];
       if (!auction) {
         console.log(
-          "Auction not found - this means the logged in user is the administrator and the auction has already been updated in myAuctionsStore."
+          "Auction not found - this means the logged in user is the administrator and the auction has already been updated in myAuctionStore."
         );
         return;
       }
@@ -187,7 +187,7 @@ const onlineAuctionsStore = {
       )[0];
       if (!auction) {
         console.log(
-          "Auction not found - this means the logged in user is the administrator and the auction has already been updated in myAuctionsStore."
+          "Auction not found - this means the logged in user is the administrator and the auction has already been updated in myAuctionStore."
         );
         return;
       }

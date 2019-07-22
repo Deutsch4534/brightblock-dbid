@@ -7,8 +7,8 @@
   </mdb-navbar-brand>
   <mdb-navbar-toggler>
     <mdb-navbar-nav center class="">
-        <router-link class="nav-link navbar-link text-nowrap btn btn-sm bg-success px-3 text-white" style="max-width: 100px; font-weight: 600;" to="/buy">BUY <i class="fas fa-angle-down text-dark ml-2 fa-1x"></i></router-link>
-        <router-link class="nav-link navbar-link text-nowrap btn btn-sm bg-danger px-3 text-white" style="max-width: 100px; font-weight: 600;" to="/sell">SELL <i class="fas fa-angle-up text-dark mr-auto fa-1x"></i></router-link>
+        <router-link class="nav-link navbar-link text-nowrap btn btn-sm teal lighten-1 px-3 text-white" style="max-width: 100px; font-weight: 600;" to="/buy">BUY <i class="fas fa-angle-down text-dark ml-2 fa-1x"></i></router-link>
+        <router-link class="nav-link navbar-link text-nowrap btn btn-sm deep-orange lighten-1 px-3 text-white" style="max-width: 100px; font-weight: 600;" to="/sell">SELL <i class="fas fa-angle-up text-dark mr-auto fa-1x"></i></router-link>
     </mdb-navbar-nav>
     <div class="d-md-none d-sm-block">
       <mdb-navbar-nav right class="">
@@ -73,6 +73,8 @@ export default {
   created() {
     this.getContent();
     this.$store.dispatch("assetStore/lookupAssetsByBuyer").then((assets) => {
+    });
+    this.$store.dispatch("assetStore/lookupAssetsBySeller").then((assets) => {
     });
   },
   beforeDestroy: function () {

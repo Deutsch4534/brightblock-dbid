@@ -8,13 +8,6 @@
       <single-item-card :item="item" :myProfile="myProfile"/>
     </mdb-masonry-item>
   </mdb-masonry>
-  <!--
-  <div class="">
-    <div class="row">
-      <single-item-card class="col-md-4" v-for="(item, index) of items" :key="index" :item="item" :myProfile="myProfile"/>
-    </div>
-  </div>
-  -->
 </div>
 </template>
 

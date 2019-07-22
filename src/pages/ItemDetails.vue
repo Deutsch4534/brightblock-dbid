@@ -6,12 +6,12 @@
 </div>
 <div class="container" v-else>
   <div class="row" v-if="notfound">
-    <div class="col-lg-5 col-xl-4 mb-4">
+    <div class="col-lg-5 col-xl-4 p-4 mb-4">
       Item not found - <router-link to="/">search for items</router-link>
     </div>
   </div>
   <div class="my-4" v-else>
-    <mdb-navbar expand="medium" color="success" dark>
+    <mdb-navbar expand="medium" color="blue-grey lighten-1" dark style="min-height: 54px;">
       <mdb-navbar-toggler>
         <mdb-navbar-brand>
           <span style="font-weight: 500">
@@ -25,8 +25,12 @@
         <item-image-list-view :item="item"/>
       </div>
       <div class="col-lg-7 col-xl-7 ml-xl-4 mb-4">
-        <h3 class="mb-3" v-html="item.description"></h3>
-        <div class="d-flex text-muted justify-content-start mb-3"><small>Listed <!--by; <a class="font-weight-bold dark-grey-text">{{ownerProfile.name}}</a> --> on <span class="">{{created}}</span></small></div>
+        <h4 class="mb-3" v-html="item.title"></h4>
+        <p class="mb-3" v-html="item.description"></p>
+        <div class="d-flex text-muted justify-content-between mb-3">
+          <small><a class="font-weight-bold dark-grey-text">{{item.owner}}</a></small>
+          <small>Listed on <span class="">{{created}}</span></small>
+        </div>
         <div v-if="activeTab === 'not-selling'">
           <not-selling :itemId="item.id"/>
         </div>
@@ -34,20 +38,26 @@
           <under-offer :itemId="item.id"/>
         </div>
         <div v-else-if="activeTab === 'start-buying'">
-          <buy-action :item="item" :asset="asset" :myProfile="myProfile" @startPayment="startPayment"/>
+          <buy-action :item="item" :assetHash="assetHash" :myProfile="myProfile"/>
         </div>
         <div v-else-if="activeTab === 'start-bidding'">
-          <a class="btn btn-sm btn-primary text-white m-0" @click.prevent="startBidding">Start the Bidding!</a>
+          <bid-action :item="item" :assetHash="assetHash" :myProfile="myProfile" @continueBidding="continueBidding"/>
+        </div>
+        <div v-else-if="activeTab === 'ended-bidding'">
+          <a class="btn btn-sm btn-primary text-white m-0">Bidding has ended on this item!</a>
         </div>
         <div v-else-if="activeTab === 'bidding-started'">
-          <bid-action :item="item" :asset="asset" :myProfile="myProfile" @continueBidding="continueBidding"/>
+          <bid-action :item="item" :assetHash="assetHash" :myProfile="myProfile" @continueBidding="continueBidding"/>
         </div>
         <div v-else-if="activeTab === 'me-buying'">
           You are buying this item - please <router-link :to="purchaseUrl"><u>go here to complete the purchase</u></router-link>.
         </div>
         <div v-else-if="activeTab === 'me-selling'">
           Potential buyer online now - please visit <router-link :to="purchaseUrl"><u>here to complete the sale</u></router-link>.
-      </div>
+        </div>
+        <div v-else>
+          <router-link class="btn btn-primary text-white" to="/login">Login to Continue</router-link>.
+        </div>
       </div>
     </div>
   </div>
@@ -105,9 +115,11 @@ export default {
           this.$store.dispatch("assetStore/lookupAssetByHash", this.assetHash).then(asset => {
             if (asset) {
               this.loading = false;
+              this.assetHash = asset.assetHash;
             } else {
               this.$store.dispatch("assetStore/initialiseAsset", item).then(asset => {
                 this.loading = false;
+                this.assetHash = asset.assetHash;
               });
             }
           });
@@ -118,50 +130,32 @@ export default {
     });
   },
   methods: {
-    startPayment: function(asset) {
-      this.asset = asset;
-      this.$router.push("/my-orders/" + this.assetHash);
-    },
-    startBidding: function(asset) {
-      this.$store.dispatch("assetStore/initialisePayment", {bidding: true, asset: this.asset, item: this.item}).then(asset => {
-        if (!asset) {
-          this.$notify({type: 'error', title: 'Place Order', text: 'Unable to start bidding at present.'});
-        }
-      });
-    },
     paymentExpired() {
-      let purchaseCycle = this.$store.getters["assetStore/getCurrentPurchaseCycleByHash"](this.asset.assetHash);
+      let purchaseCycle = this.$store.getters["assetStore/getCurrentPurchaseCycleByHash"](this.assetHash);
       let now = moment({}).valueOf();
       let diff = now - purchaseCycle.created;
       return (100 - ((diff) / 1000));
       //return diff < 0;
     },
-    continueBidding: function(asset) {
-      this.asset = asset;
+    continueBidding: function() {
+      // this.asset = asset;
     },
   },
   computed: {
     created() {
       if (this.item.created) {
-        return moment(this.item.created).format("YYYY-MM-DD HH:mm (Z)");
+        //return moment(this.item.created).format("YYYY-MM-DD HH:mm (Z)");
+        return moment(this.item.created).format("LLLL");
       }
       return;
     },
-    asset() {
-      let asset = this.$store.getters["assetStore/getAssetByHash"](this.assetHash);
-      return asset;
-    },
-    biddingEnabled() {
-      return this.item.saleData.soid === 2;
-    },
-    purchaseCycle() {
-      let purchaseCycle = this.$store.getters["assetStore/getCurrentPurchaseCycleByHash"](this.asset.assetHash);
-      return purchaseCycle;
-    },
     purchaseUrl() {
-      return "/my-orders/" + this.asset.assetHash;
+      return "/my-orders/" + this.assetHash;
     },
     activeTab() {
+      if (!this.myProfile.loggedIn) {
+        return "login";
+      }
       let asset = this.$store.getters["assetStore/getAssetByHash"](this.assetHash);
       let purchaseCycle = this.$store.getters["assetStore/getCurrentPurchaseCycleByHash"](this.assetHash);
       if (this.buyerInfo) {
@@ -171,7 +165,12 @@ export default {
       if (this.item.saleData.soid === 1) {
         activeTab = "start-buying";
       } else if (this.item.saleData.soid === 2) {
-        activeTab = "start-bidding";
+        let now = moment({}).valueOf();
+        if (this.item.saleData.biddingEnds < now) {
+          activeTab = "ended-bidding";
+        } else {
+          activeTab = "start-bidding";
+        }
       }
       if (asset && asset.status > 0) {
         activeTab = "under-offer";
@@ -185,7 +184,6 @@ export default {
               this.$store.dispatch("assetStore/cancelPurchase", this.assetHash);
             }
             activeTab = "me-buying";
-            //this.$router.push("/my-orders/" + this.assetHash);
           } else if (username === purchaseCycle.seller.did) {
             activeTab = "me-selling";
             //this.$router.push("/my-sales/" + this.assetHash);

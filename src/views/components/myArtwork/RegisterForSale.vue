@@ -249,7 +249,7 @@ export default {
     };
   },
   mounted() {
-    this.$store.dispatch("myAuctionsStore/fetchMyAuctions").then(() => {
+    this.$store.dispatch("myAuctionStore/fetchMyAuctions").then(() => {
       this.loading = false;
     });
     if (this.artwork.saleData.fiatCurrency) {
@@ -268,17 +268,17 @@ export default {
     this.increment = this.artwork.saleData.increment;
     this.openingBid = (this.artwork.saleData.openingBid) ? this.artwork.saleData.openingBid : 0;
     if (this.artwork.saleData.biddingEnds) {
-      this.biddingEnds = moment(this.artwork.saleData.biddingEnds).format();
+      this.biddingEnds = moment(this.artwork.saleData.biddingEnds).format("LLLL");
     } else {
       let dd = moment({}).add(2, "weeks");
       dd.hour(10);
       dd.minute(0);
-      this.biddingEnds = dd.add(2, "days").format();
+      this.biddingEnds = dd.add(2, "days").format("LLLL");
     }
   },
   computed: {
     canAuction() {
-      let auctions = this.$store.getters["myAuctionsStore/myAuctionsFuture"];
+      let auctions = this.$store.getters["myAuctionStore/myAuctionsFuture"];
       let cs = this.$store.getters["myArtworksStore/canSell"](this.artwork.id);
       return cs && auctions && auctions.length > 0;
     },
@@ -293,7 +293,7 @@ export default {
 
     auctions() {
       try {
-        return this.$store.getters["myAuctionsStore/myAuctionsFuture"];
+        return this.$store.getters["myAuctionStore/myAuctionsFuture"];
       } catch (e) {
         return [];
       }
@@ -301,7 +301,7 @@ export default {
 
     isAuctions() {
       try {
-        return this.$store.getters["myAuctionsStore/myAuctionsFuture"].length > 0;
+        return this.$store.getters["myAuctionStore/myAuctionsFuture"].length > 0;
       } catch (e) {
         return false;
       }

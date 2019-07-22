@@ -25,8 +25,9 @@
     <div class="text-danger" v-if="message">
       <p>{{message}}</p>
     </div>
-    <div class="mb-4" v-if="changeBtcAddress || removedAddress">
+    <div class="mb-4 ml-2" v-if="changeBtcAddress || removedAddress">
       <input type="text" class="form-control" required id="vc-bitcoin-address" placeholder="Your bitcoin address" v-on:keyup.13="saveBitcoinAddress($event)" v-model="bitcoinAddress">
+      <button class="ml-0 btn btn-primary btn-sm"><a @click="saveBitcoinAddress($event)">Save</a></button>
     </div>
     <div class="mb-3">
       <canvas id="qrcode"></canvas>

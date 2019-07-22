@@ -8,36 +8,45 @@ import bs58check from "bs58check";
 import moneyUtils from "./moneyUtils";
 
 const utils = {
-  dt_Offset(serverTime, compareTime, webcast) {
-    let message = "Starts in: ";
-    if (!webcast) {
-      message = "Bidding ends: ";
-    }
+  dt_Offset(serverTime, compareTime, short) {
+    let message = "";
     if (serverTime > compareTime) {
-      message = "Finished: ";
+      return;
     }
     let now = moment(serverTime);
     let starts = moment(compareTime);
     let days = starts.diff(now, "days");
     if (days !== 0) {
-      message += Math.abs(days) + " days ";
+      if (short) {
+        message += Math.abs(days) + "d ";
+      } else {
+        message += Math.abs(days) + " days ";
+      }
     }
     starts = starts.subtract(days, "day");
     let hours = starts.diff(now, "hours");
     if (hours !== 0) {
-      message += Math.abs(hours) + " hours ";
+      if (short) {
+        message += Math.abs(hours) + "h ";
+      } else {
+        message += Math.abs(hours) + " hours ";
+      }
     }
     starts = starts.subtract(hours, "hour");
     let mins = starts.diff(now, "minutes");
     if (mins !== 0) {
-      message += Math.abs(mins) + " mins ";
+      if (short) {
+        message += Math.abs(mins) + "m ";
+      } else {
+        message += Math.abs(mins) + " mins ";
+      }
+      if (short && (days > 0 || hours > 0)) {
+        return message;
+      }
     }
     starts = starts.subtract(mins, "minute");
     let seconds = starts.diff(now, "seconds");
     message += Math.abs(seconds) + " secs ";
-    if (serverTime > compareTime) {
-      message += " ago.";
-    }
     return message;
   },
 

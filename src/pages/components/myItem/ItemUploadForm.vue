@@ -10,62 +10,74 @@
     <help-topic-modal class="text-left" :modal="helpModal" :topic="'saving-item'" @closeModal="helpModalClose"/>
     <form class="text-dark text-white needs-validation" novalidate v-on:submit.prevent="checkForm" id="itemForm">
       <!-- item type -->
-      <p v-if="errors.length">
-        <b>Please correct the following error(s):</b>
-        <ul>
-          <li v-for="error in errors" :key="error.id">{{ error }}</li>
-        </ul>
-      </p>
-      <div class="form-group mb-3"><h5>{{formTitle}} <sup class="text-danger">*</sup></h5></div>
-      <div class="form-group mb-3">
-        <input type="text" class="form-control" id="validationCustom01" :placeholder="'Item Title (' + limits.title + ' chars max)'" v-model="item.title" required :maxlength="limits.title">
-        <div class="invalid-feedback">Please enter a title!</div>
-      </div>
-      <div class="form-group mb-5">
-        <!--<label for="validationCustom02">Description of Item</label>-->
-        <textarea type="text" class="form-control" id="validationCustom02" :placeholder="'Description of the Item (' + limits.description + ' chars max)'" v-model="item.description" required :maxlength="limits.description"></textarea>
-        <div class="invalid-feedback">
-          Please enter a description!
+
+      <div class="card" v-if="errors.length">
+        <div class="card-body">
+          <p class="text-capitalize">Please correct the below error(s):</p>
+          <ul>
+            <li v-for="error in errors" :key="error.id">{{ error }}</li>
+          </ul>
         </div>
       </div>
 
-      <div class="form-group mb-3"><h5>Item Type <sup class="text-danger">*</sup></h5></div>
-      <div class="form-group mb-5" v-if="!mediumLocked">
-        <select id="validationCustom06-1" @change="doMedium" class="text-black browser-default custom-select" v-model="medium" required>
-          <option v-for="(medium) in media" :key="medium.value" :value="medium.value">{{medium.label}}</option>
-        </select>
-        <div class="invalid-feedback">
-          Please enter the artwork medium!
+      <div class="card">
+        <div class="card-body">
+          <p class="text-capitalize">Type of item?</p>
+          <div class="d-flex justify-content-between">
+            <div class="mb-3" style="width: 49%"><span style="text-transform: capitalize;" v-model="medium" @click="medium = 'physical'" :class="(medium === 'physical') ? 'btn btn-block teal lighten-1 text-white' : 'btn btn-block btn-white'" required><span class="d-flex justify-content-between"><span>Physical Item</span> <i class="mt-1 ml-2 fas fa-angle-down"></i></span></span></div>
+            <div class="mb-3" style="width: 49%"><span style="text-transform: capitalize;" v-model="medium" @click="medium = 'digital'" :class="(medium === 'digital') ? 'btn btn-block teal lighten-1 text-white' : 'btn btn-block btn-white'" required><span class="d-flex justify-content-between"><span>Digital Item</span> <i class="mt-1 ml-2 fas fa-angle-down"></i></span></span></div>
+          </div>
         </div>
       </div>
-      <div class="col-4 mb-5" v-else>
-        Digital Video
-      </div>
 
-      <taxonomy-select @categories="categories" :initCategories="item.keywords"/>
-      <div id="vc-040-error" class="invalid-feedback mb-4">
-        Please choose closest fitting categories, keywords and tags
-      </div>
-
-      <div class="form-group mb-3"><h5>Images <sup class="text-danger">*</sup></h5></div>
-      <div class="form-group mb-5">
-        <div id="vc-042-error" class="invalid-feedback">
-          Please add some images
+      <div class="card" v-if="formStage > 0">
+        <div class="card-body">
+          <p class="text-capitalize">{{medium}} item title and description</p>
+          <div class="form-group">
+            <input type="text" class="form-control" id="validationCustom01" :placeholder="'Item Title (' + limits.title + ' chars max)'" v-model="item.title" required :maxlength="limits.title">
+            <div class="invalid-feedback">Please enter a title!</div>
+          </div>
+          <div class="form-group">
+            <textarea type="text" class="form-control" id="validationCustom02" :placeholder="'Description of the Item (' + limits.description + ' chars max)'" v-model="item.description" required :maxlength="limits.description"></textarea>
+            <div class="invalid-feedback">
+              Please enter a description!
+            </div>
+          </div>
         </div>
-        <media-files-upload :parentalError="parentalError" :contentModel="contentModel3" :mediaFiles="mediaFilesImages" :limit="5" :sizeLimit="2500" :mediaTypes="'image'" @updateMedia="updateMediaImages($event)"/>
       </div>
 
-      <p class="mb-3" v-if="errors.length">
-        <b>Please correct the following error(s):</b>
-        <ul>
-          <li v-for="error in errors" :key="error">{{ error }}</li>
-        </ul>
-      </p>
+      <div class="card" v-if="formStage > 1">
+        <div class="card-body">
+          <taxonomy-select @categories="categories" :initCategories="item.keywords"/>
+          <div id="vc-040-error" class="invalid-feedback mb-4">
+            Please choose closest fitting categories, keywords and tags
+          </div>
+        </div>
+      </div>
+
+      <div class="card" v-if="formStage > 2">
+        <div class="card-body">
+          <p class="text-capitalize">Images <sup class="text-danger">*</sup></p>
+          <media-files-upload :parentalError="parentalError" :contentModel="contentModel3" :mediaFiles="mediaFilesImages" :limit="5" :sizeLimit="2500" :mediaTypes="'image'" @updateMedia="updateMediaImages($event)"/>
+          <div id="vc-042-error" class="invalid-feedback">
+            Please add some images
+          </div>
+        </div>
+      </div>
+
+      <div class="card" v-if="errors.length">
+        <div class="card-body">
+          <p class="text-capitalize">Please correct the above error(s):</p>
+          <ul>
+            <li v-for="error in errors" :key="error.id">{{ error }}</li>
+          </ul>
+        </div>
+      </div>
 
       <!-- Submit button row -->
-      <div class="row">
-        <div class="col-12">
-          <button type="submit" class="btn btn-md btn-primary" @click.prevent="checkForm">Save</button>
+      <div class="card" v-if="formStage > 3">
+        <div class="card-body">
+          <button type="submit" class="btn btn-block btn-md btn-primary" @click.prevent="checkForm">Save & Set Price</button>
         </div>
       </div>
 
@@ -108,7 +120,7 @@ import _ from "lodash";
         showMedia: false,
         helpModal: false,
         media: this.$store.state.constants.taxonomy.media,
-        medium: "physical",
+        medium: null,
         mediumLocked: false,
         limits: {
           title: 200,
@@ -134,7 +146,7 @@ import _ from "lodash";
         this.$store.dispatch("myItemStore/fetchMyItem", this.itemId).then((item) => {
           this.item = item;
           if (this.item) {
-            this.created = moment(this.item.created).format();
+            this.created = moment(this.item.created).format("LLLL");
             this.item.owner = this.myProfile.username;
           } else {
             this.$notify({type: 'error', title: 'Update Item', text: 'Unable to find this - please check your selling list in case its been sold?'});
@@ -160,6 +172,22 @@ import _ from "lodash";
           files = this.item.images;
         }
         return files;
+      },
+      formStage() {
+        let stage = 0;
+        if (this.medium === "digital" || this.medium === "physical") {
+          stage = 1;
+        }
+        if (this.item.title && this.item.title.length > 0 && this.item.description && this.item.description.length > 0) {
+          stage = 2;
+        }
+        if (this.item.keywords && this.item.keywords.length > 0) {
+          stage = 3;
+        }
+        if (this.item.images && this.item.images.length > 0) {
+          stage = 4;
+        }
+        return stage;
       }
     },
     methods: {
@@ -289,4 +317,7 @@ import _ from "lodash";
   #itemForm .form-group {
     margin-bottom: 1rem;
   }
+.active {
+  border: 1pt solid blue;
+}
 </style>

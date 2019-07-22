@@ -165,7 +165,7 @@ const myArtworksStore = {
     addToAuction({ commit }, artwork) {
       return new Promise((resolve, reject) => {
         store
-          .dispatch("myAuctionsStore/addItem", artwork)
+          .dispatch("myAuctionStore/addItem", artwork)
           .then(() => {
             notify.debug({
               title: "Sell Via Auction",
@@ -196,7 +196,7 @@ const myArtworksStore = {
           myArtwork => myArtwork.id === data.itemId
         )[0];
         store
-          .dispatch("myAuctionsStore/removeItem", {
+          .dispatch("myAuctionStore/removeItem", {
             itemId: data.itemId,
             auctionId: data.auctionId
           })

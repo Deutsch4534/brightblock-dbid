@@ -20,6 +20,10 @@
         <img class="my-5" v-else-if="item.type === 'image'" :src="item.url"/>
         <div class="ml-5" v-else-if="item.type === 'o-list-item'"><b class="pb-2">-</b> {{item.text}}</div>
       </div>
+      <div>
+        <p class="mb-3" v-html="body"></p>
+      </div>
+
 
       <mdb-row v-for="(topic, index) of topics" :key="index">
         <mdb-col col="12">

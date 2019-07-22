@@ -1,6 +1,6 @@
 <template>
 <div class="">
-  <mdb-navbar expand="medium" color="grey lighten-1" style="min-height: 54px;" dark>
+  <mdb-navbar expand="medium" color="blue-grey lighten-3" style="min-height: 54px;" dark>
     <mdb-navbar-toggler>
       <mdb-navbar-nav style="font-weight: 500;">
           <a v-if="includeTab('notifications')" @click.prevent="showTab('notifications')" class="nav-link navbar-link" :class="activeTab === 'notifications' ? 'text-light font-weight-bolder' : 'text-dark'">Notifications<i class="fas fa-check text-success ml-2" v-if="validEmailInfo"></i><i class="fas fa-times text-danger ml-2" v-else></i></a>

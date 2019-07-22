@@ -4,19 +4,18 @@
     <span class="sr-only">Loading...</span>
   </div>
 </div>
-<div id="my-app-element" class="container bg-spinner" v-else>
-  <mdb-navbar expand="medium" color="danger" dark>
+<div id="my-app-element" class="container mt-4" v-else>
+  <mdb-navbar expand="medium" color="blue-grey lighten-1" dark>
     <mdb-navbar-brand>
       <span class="text-white" style="font-weight: 500">Selling</span>
     </mdb-navbar-brand>
     <mdb-navbar-toggler >
       <mdb-navbar-nav right class="text-light">
-          <router-link class="nav-link navbar-link btn btn-primary" to="/my-item/upload" :class="activeTab === 2 ? 'text-light font-weight-bolder' : 'text-dark'">New Listing</router-link>
-          <router-link class="nav-link navbar-link btn btn-primary" to="/my-items" :class="activeTab === 3 ? 'text-light font-weight-bolder' : 'text-dark'">Listings</router-link>
-          <router-link class="nav-link navbar-link btn btn-primary" to="/my-orders" :class="activeTab === 5 ? 'text-light font-weight-bolder' : 'text-dark'">Purchases</router-link>
-          <router-link class="nav-link navbar-link btn btn-primary" :to="myItemUrl" v-if="activeTab === 4" :class="activeTab === 4 ? 'text-light font-weight-bolder' : 'text-dark'">{{listingLabel}}</router-link>
-          <router-link class="nav-link navbar-link btn btn-primary" to="/seller-info" :class="activeTab === 1 ? 'text-light font-weight-bolder' : 'text-dark'" v-if="sellerInfoNeeded">Seller Info <span class="text-danger">*</span></router-link>
-          <router-link class="nav-link navbar-link btn btn-primary" to="/seller-info" :class="activeTab === 1 ? 'text-white font-weight-bolder' : 'text-dark'" v-else>Seller Info</router-link>
+          <router-link class="nav-link navbar-link btn" to="/my-item/upload" :class="activeTab === 2 ? 'btn-grey text-white font-weight-bolder' : 'btn-light text-dark'">New Listing</router-link>
+          <router-link class="nav-link navbar-link btn" to="/my-items" :class="activeTab >= 3 ? 'btn-grey text-white font-weight-bolder' : 'btn-light text-dark'">My Listings</router-link>
+          <!-- <router-link class="nav-link navbar-link btn" :to="myItemUrl" v-if="activeTab === 4" :class="activeTab === 4 ? 'btn-grey text-white font-weight-bolder' : 'btn-light text-dark'">{{listingLabel}}</router-link> -->
+          <router-link class="nav-link navbar-link btn" to="/seller-info" :class="activeTab === 1 ? 'btn-grey text-white font-weight-bolder' : 'btn-light text-dark'" v-if="!validAddressInfo">Information Required <i class="fas fa-times text-warning ml-0"></i></router-link>
+          <router-link class="nav-link navbar-link btn" to="/seller-info" :class="activeTab === 1 ? 'btn-grey text-white font-weight-bolder' : 'btn-light text-dark'" v-else>My Information <i class="fas fa-check text-success ml-0"></i></router-link>
       </mdb-navbar-nav>
     </mdb-navbar-toggler>
   </mdb-navbar>
@@ -25,17 +24,14 @@
       <div v-if="activeTab === 1" style="min-height: 50vh;">
         <seller-info :myProfile="myProfile"/>
       </div>
-      <div class="bg-card p-4" v-if="activeTab === 2">
+      <div class="bg-card p-4 mb-4" v-if="activeTab === 2">
         <item-upload-form :formTitle="'New Item'" :itemId="itemId" :mode="'upload'" :myProfile="myProfile"/>
       </div>
-      <div class="d-flex justify-content-start bg-card p-4" v-if="activeTab === 3">
-        <my-items :formTitle="'Listings'" :myProfile="myProfile"/>
+      <div class="d-flex justify-content-start bg-card" v-if="activeTab === 3">
+        <my-items :formTitle="'Listings'" :myProfile="myProfile" :itemAction="itemAction"/>
       </div>
       <div class="bg-card" v-if="activeTab === 4">
         <my-item :itemId="itemId" :myProfile="myProfile" :itemAction="itemAction"/>
-      </div>
-      <div class="bg-card" v-if="activeTab === 5">
-        <my-orders :myProfile="myProfile" :itemAction="itemAction"/>
       </div>
     </div>
     <div v-else>
@@ -48,7 +44,6 @@
 <script>
 import SellerInfo from "./components/selling/SellerInfo";
 import ItemUploadForm from "./components/myItem/ItemUploadForm";
-import MyOrders from "./components/orders/MyOrders";
 import MyItems from "./components/myItem/MyItems";
 import MyItem from "./components/myItem/MyItem";
 import { mdbSpinner } from 'mdbvue';
@@ -59,7 +54,7 @@ export default {
   name: "Sell",
   bodyClass: "index-page",
   components: {
-    mdbSpinner, SellerInfo, ItemUploadForm, MyItems, MyItem, MyOrders,
+    mdbSpinner, SellerInfo, ItemUploadForm, MyItems, MyItem,
     mdbNavbar, mdbNavbarBrand, mdbNavbarToggler, mdbNavbarNav, mdbNavItem, mdbDropdown, mdbDropdownMenu, mdbDropdownToggle, mdbInput, mdbDropdownItem
   },
   data() {
@@ -70,7 +65,6 @@ export default {
       itemAction: "manage",
       itemId: null,
       activeTab: 1,
-      sellerInfoNeeded: false,
       myProfile: null,
       assetHash: null
     };
@@ -121,6 +115,9 @@ export default {
       if (routeName === "seller-info") {
         this.activeTab = 1;
         this.listingLabel = "Seller Info"
+      } else if (routeName === "sell") {
+        this.activeTab = 2;
+        this.listingLabel = "Create"
       } else if (routeName === "my-item-upload") {
         this.activeTab = 2;
         this.listingLabel = "Create"
@@ -131,6 +128,10 @@ export default {
         this.listingLabel = "Update"
       } else if (routeName === "my-items") {
         this.activeTab = 3;
+        this.listingLabel = "Listings"
+      } else if (routeName === "unsold" || routeName === "buying" || routeName === "selling") {
+        this.activeTab = 3;
+        this.itemAction = routeName;
         this.listingLabel = "Listings"
       } else if (routeName === "my-item-register") {
         this.activeTab = 4;
@@ -149,10 +150,10 @@ export default {
         this.listingLabel = "Manage Item"
         this.itemAction = "manage"
         this.activeTab = 4;
-      } else if (routeName === "my-orders") {
-        this.listingLabel = "Purchases"
-        this.itemAction = "purchase-orders"
-        this.activeTab = 5;
+      } else if (routeName === "my-order") {
+        this.listingLabel = "Purchase"
+        this.itemAction = "my-order"
+        this.activeTab = 4;
       }
       this.loading = false;
     }
@@ -160,6 +161,10 @@ export default {
   computed: {
     loggedIn() {
       return (this.myProfile) ? this.myProfile.loggedIn : false;
+    },
+    validAddressInfo() {
+      let validity = this.$store.getters["myAccountStore/getProfileValidity"];
+      return validity.emailValid && validity.shippingValid && validity.bitcoinValid;
     },
     myItemUrl() {
       return `/my-items/${this.itemId}`;
@@ -169,7 +174,7 @@ export default {
 </script>
 <style scoped>
 .btn {
-  font-size: 0.7rem;
+  font-size: 1.1rem;
   padding: 4px 10px;
   margin: 2px 3px;
   text-transform: capitalize;

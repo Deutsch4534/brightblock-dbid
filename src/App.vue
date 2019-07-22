@@ -5,7 +5,7 @@
 </div>
 <div id="app" class="container-fluid m-0 p-0" v-else>
   <div id="fb-root"></div>
-  <notifications position="bottom left" style="width: 600px;"/>
+  <notifications position="bottom center" width="60%" />
   <router-view name="header"/>
   <main class="main py-0">
     <router-view/>
@@ -57,4 +57,34 @@
 .main {
   min-height: 100vh;
 }
+.my-notes {
+  padding: 60px;
+  margin: 0 5px 5px;
+  font-size: 12px;
+  color: #ffffff;
+  border-left: 5px solid #187FE7;
+}
+
+.my-notes .notification-title {
+  background-color: #efebe9;
+}
+
+.my-notes .notification-content {
+}
+
+.my-notes .warn {
+  background: #ffb648;
+  border-left-color: #f48a06;
+}
+
+.my-notes.error {
+  background: #ff7043;
+  border-left-color: #f48a06;
+}
+
+.my-notes .success {
+  background: #ff7043;
+  border-left-color: #42A85F;
+}
+
 </style>

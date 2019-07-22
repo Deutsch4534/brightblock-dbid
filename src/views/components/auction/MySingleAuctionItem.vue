@@ -119,7 +119,7 @@ export default {
       return a;
     },
     item() {
-      let item = this.$store.getters["myAuctionsStore/myAuctionItem"](this.auctionId, this.itemId);
+      let item = this.$store.getters["myAuctionStore/myAuctionItem"](this.auctionId, this.itemId);
       return (item) ? item : {};
     }
   }

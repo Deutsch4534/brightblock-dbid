@@ -13,7 +13,7 @@ import assetStore from "./assetStore";
 import lightningStore from "./lightningStore";
 import ethStore from "./ethStore";
 import onlineAuctionsStore from "./onlineAuctionsStore";
-import myAuctionsStore from "./myAuctionsStore";
+import myAuctionStore from "./myAuctionStore";
 import contentStore from "./contentStore";
 import galleryStore from "./galleryStore";
 import xhrService from "@/services/xhrService";
@@ -32,7 +32,7 @@ const store = new Vuex.Store({
     artworkSearchStore: artworkSearchStore,
     conversionStore: conversionStore,
     ethStore: ethStore,
-    myAuctionsStore: myAuctionsStore,
+    myAuctionStore: myAuctionStore,
     onlineAuctionsStore: onlineAuctionsStore,
     assetStore: assetStore,
     lightningStore: lightningStore,

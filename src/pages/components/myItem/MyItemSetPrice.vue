@@ -33,19 +33,14 @@
         </div>
       </div>
       <div v-else class="mb-3">
-        <h4 v-if="mySaleType === 'direct'">Sell via: buy now</h4>
-        <h4 v-if="mySaleType === 'auction'">Sell via: bidding</h4>
+        <p v-if="mySaleType === 'direct'">Sell via: buy now</p>
+        <p v-else-if="mySaleType === 'auction'">Sell via: bidding</p>
+        <p v-else>Choose sale type...</p>
       </div>
 
       <div class="d-flex justify-content-between mb-4">
-        <mdb-btn type="button" color="white" size="sm" class="btn-rounded btn-block mr-3"
-                 value="direct" v-model="mySaleType" @click.native="mySaleType = 'direct'" :active="mySaleType === 'direct'" required>
-          Buy Now (Fixed Price)
-        </mdb-btn>
-        <mdb-btn type="button" color="white" size="sm" class="btn-rounded btn-block ml-3"
-                 value="auction" v-model="mySaleType" @click.native="mySaleType = 'auction'" :active="mySaleType === 'auction'" required>
-          Via Bidding
-        </mdb-btn>
+        <div class="mb-3" style="width: 49.5%"><span style="text-transform: capitalize;" v-model="mySaleType" @click="mySaleType = 'direct'" :class="(mySaleType === 'direct') ? 'btn btn-block teal lighten-1 text-white' : 'btn btn-block btn-white'" required><span class="d-flex justify-content-between"><span>Buy Now</span> <i class="mt-1 ml-2 fas fa-angle-down"></i></span></span></div>
+        <div class="mb-3" style="width: 49.5%"><span style="text-transform: capitalize;" v-model="mySaleType" @click="mySaleType = 'auction'" :class="(mySaleType === 'auction') ? 'btn btn-block teal lighten-1 text-white' : 'btn btn-block btn-white'" required><span class="d-flex justify-content-between"><span>Via Bidding</span> <i class="mt-1 ml-2 fas fa-angle-down"></i></span></span></div>
       </div>
 
       <div v-if="mySaleType === 'direct'">
@@ -66,7 +61,7 @@
           <p class="d-flex justify-content-end text-muted small mt-1">{{valueInBitcoin(amount)}} Btc / {{valueInEther(amount)}} Eth</p>
         </div>
       </div>
-      <div v-else>
+      <div v-else-if="mySaleType === 'auction'">
       <div class="d-flex" v-if="isAuctions && mySalePlace === 'auctionplace'">
         <div class="col-md-12">
           <mdb-popover trigger="click" :options="{placement: 'top'}">
@@ -129,7 +124,7 @@
           </div>
           <a @click.prevent="" slot="reference">Increment {{currencySymbol}}</a>
         </mdb-popover>
-        <input type="number" step="0.01" class="form-control" id="vc-increment" placeholder="increment value" v-model="increment" required min="1">
+        <input type="number" step="0.1" class="form-control" id="vc-increment" placeholder="increment value" v-model="increment" required>
         <div class="invalid-feedback">
           Bidding increment is required.
         </div>
@@ -155,7 +150,7 @@
       </div>
     </div>
 
-    <div class="col-md-12">
+    <div class="col-md-12" v-if="mySaleType">
       <mdb-popover trigger="click" :options="{placement: 'top'}">
         <div class="popover">
           <div class="popover-header">Currency</div>
@@ -175,7 +170,16 @@
       <p class="d-flex justify-content-end text-muted small mt-1">{{conversionMessage}}</p>
     </div>
 
-    <div class="d-flex justify-content-start">
+    <div class="form-group mb-3">
+      <mdb-alert color="danger" v-if="errors.length" :key="errors.length" class="w-100">
+        <h6 class="alert-heading">Please correct the following;</h6>
+        <hr>
+        <ul class="list-unstyled small">
+          <li v-for="(error) in errors" :key="error" v-bind:error="error">{{ error }}</li>
+        </ul>
+      </mdb-alert>
+    </div>
+    <div class="d-flex justify-content-start" v-if="mySaleType">
       <button class="btn btn-primary btn-sm mr-4">Save</button>
       <button class="btn btn-primary btn-sm" @click.prevent="removeFromSale()">Reset</button>
     </div>
@@ -216,7 +220,7 @@ export default {
   data() {
     return {
       errors: [],
-      mySaleType: "direct",
+      mySaleType: null,
       mySalePlace: "marketplace",
       loading: true,
       auctionId: -1,
@@ -229,7 +233,7 @@ export default {
     };
   },
   mounted() {
-    this.$store.dispatch("myAuctionsStore/fetchMyAuctions").then(() => {
+    this.$store.dispatch("myAuctionStore/fetchMyAuctions").then(() => {
       this.loading = false;
     });
     let prefs = this.$store.getters["myItemStore/getMyPreferences"].fiatCurrency;
@@ -237,10 +241,15 @@ export default {
     if (this.item.saleData.fiatCurrency) {
       this.currency = this.item.saleData.fiatCurrency;
     }
-    // this.mySaleType = (this.item.saleData.soid === 2) ? 'direct'  : 'auction',
+    if (this.item.saleData.soid === 1) {
+      this.mySaleType = "direct";
+    } else if (this.item.saleData.soid === 2) {
+      this.mySaleType = "auction";
+    }
     this.auctionId = this.item.saleData.auctionId;
     if (this.item.saleData.soid === 2) {
       this.mySaleType = "auction";
+      this.biddingEnds = moment(this.item.saleData.biddingEnds).toISOString();
     }
     this.auctionId = this.item.saleData.auctionId;
     this.amount = this.item.saleData.amount;
@@ -248,19 +257,30 @@ export default {
     this.increment = this.item.saleData.increment;
     this.openingBid = (this.item.saleData.openingBid) ? this.item.saleData.openingBid : 0;
     if (this.item.saleData.biddingEnds) {
-      this.biddingEnds = moment(this.item.saleData.biddingEnds).format();
+      this.biddingEnds = moment(this.item.saleData.biddingEnds).toISOString();
     } else {
       let dd = moment({}).add(2, "weeks");
       dd.hour(10);
       dd.minute(0);
-      this.biddingEnds = dd.add(2, "days").format();
+      this.biddingEnds = dd.add(2, "days").toISOString();
     }
   },
   computed: {
     canAuction() {
-      let auctions = this.$store.getters["myAuctionsStore/myAuctionsFuture"];
+      let auctions = this.$store.getters["myAuctionStore/myAuctionsFuture"];
       let cs = this.$store.getters["myItemStore/canSell"](this.item.id);
       return cs && auctions && auctions.length > 0;
+    },
+
+    biddingEndsDisplay() {
+      let bd;
+      if (this.item.saleData.biddingEnds) {
+        bd = moment(this.item.saleData.biddingEnds).format("LLLL");
+      }
+      if (this.biddingEnds) {
+        bd = moment(this.biddingEnds).format("LLLL");
+      }
+      return bd;
     },
 
     isSelling() {
@@ -273,7 +293,7 @@ export default {
 
     auctions() {
       try {
-        return this.$store.getters["myAuctionsStore/myAuctionsFuture"];
+        return this.$store.getters["myAuctionStore/myAuctionsFuture"];
       } catch (e) {
         return [];
       }
@@ -281,7 +301,7 @@ export default {
 
     isAuctions() {
       try {
-        return this.$store.getters["myAuctionsStore/myAuctionsFuture"].length > 0;
+        return this.$store.getters["myAuctionStore/myAuctionsFuture"].length > 0;
       } catch (e) {
         return false;
       }

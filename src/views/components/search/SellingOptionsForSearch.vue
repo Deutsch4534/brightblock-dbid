@@ -94,7 +94,7 @@ export default {
       }
     },
     canManageAuction() {
-      let auction = this.$store.getters["myAuctionsStore/myAuction"](
+      let auction = this.$store.getters["myAuctionStore/myAuction"](
         this.artwork.saleData.auctionId
       );
       if (!auction) return false;

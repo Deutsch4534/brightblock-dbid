@@ -19,7 +19,37 @@ if (workbox) {
   );
 
   workbox.routing.registerRoute(
-    new RegExp('/.*'),
+    new RegExp('/sell.*'),
+    new workbox.strategies.CacheFirst({
+      cacheName: 'radicle-cache',
+      plugins: [
+        new workbox.cacheableResponse.Plugin({
+          statuses: [0, 200],
+        }),
+        new workbox.expiration.Plugin({
+          maxAgeSeconds: 60 * 60 * 24 * 365,
+        }),
+      ],
+    }),
+  );
+
+  workbox.routing.registerRoute(
+    new RegExp('/'),
+    new workbox.strategies.CacheFirst({
+      cacheName: 'radicle-cache',
+      plugins: [
+        new workbox.cacheableResponse.Plugin({
+          statuses: [0, 200],
+        }),
+        new workbox.expiration.Plugin({
+          maxAgeSeconds: 60 * 60 * 24 * 365,
+        }),
+      ],
+    }),
+  );
+
+  workbox.routing.registerRoute(
+    new RegExp('/buy.*'),
     new workbox.strategies.CacheFirst({
       cacheName: 'radicle-cache',
       plugins: [

@@ -176,7 +176,7 @@ export default {
       if (!this.artwork.saleData) {
         return "-";
       }
-      let auction = this.$store.getters["myAuctionsStore/myAuction"](
+      let auction = this.$store.getters["myAuctionStore/myAuction"](
         this.artwork.saleData.auctionId
       );
       if (auction) {
@@ -188,7 +188,7 @@ export default {
 
     auctions() {
       try {
-        return this.$store.getters["myAuctionsStore/myAuctionsFuture"];
+        return this.$store.getters["myAuctionStore/myAuctionsFuture"];
       } catch (e) {
         return [];
       }

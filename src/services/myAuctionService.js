@@ -1,19 +1,18 @@
 import { getFile, putFile } from "blockstack";
 import moment from "moment";
-import settings from "./settings";
 import _ from "lodash";
 import searchIndexService from "./searchIndexService";
 
-const myAuctionsService = {
+const auctionsRootFileName = "auctions_v01.json";
+
+const myAuctionService = {
   setAuctionsRootFile: function(rootFile) {
-    const auctionsRootFileName = settings.auctionsRootFileName;
     return putFile(auctionsRootFileName, JSON.stringify(rootFile), {
       encrypt: false
     });
   },
 
   getAuctionsRootFile: function(success, failure) {
-    const auctionsRootFileName = settings.auctionsRootFileName;
     getFile(auctionsRootFileName, { decrypt: false })
       .then(function(file) {
         if (!file) {
@@ -53,7 +52,7 @@ const myAuctionsService = {
   },
 
   getMyAuctions: function(success, failure) {
-    myAuctionsService.getAuctionsRootFile(
+    myAuctionService.getAuctionsRootFile(
       function(rootFile) {
         success(rootFile.records);
       },
@@ -67,7 +66,7 @@ const myAuctionsService = {
   },
 
   getMyAuction: function(auctionId, success, failure) {
-    myAuctionsService.getAuctionsRootFile(
+    myAuctionService.getAuctionsRootFile(
       function(rootFile) {
         let index = _.findIndex(rootFile.records, function(o) {
           return o.auctionId === auctionId;
@@ -84,14 +83,14 @@ const myAuctionsService = {
   },
 
   updateAuction: function(auction, success, failure) {
-    myAuctionsService.getAuctionsRootFile(
+    myAuctionService.getAuctionsRootFile(
       function(rootFile) {
         let index = _.findIndex(rootFile.records, function(o) {
           return o.auctionId === auction.auctionId;
         });
         if (index > -1) {
           rootFile.records.splice(index, 1, auction);
-          myAuctionsService.setAuctionsRootFile(rootFile).then(function() {
+          myAuctionService.setAuctionsRootFile(rootFile).then(function() {
             if (auction.privacy === "private") {
               searchIndexService.removeRecord("id", auction.auctionId);
             } else {
@@ -113,14 +112,14 @@ const myAuctionsService = {
   },
 
   deleteMyAuction: function(auctionId, success, failure) {
-    myAuctionsService.getAuctionsRootFile(
+    myAuctionService.getAuctionsRootFile(
       function(rootFile) {
         let index = _.findIndex(rootFile.records, function(o) {
           return o.auctionId === auctionId;
         });
         if (index > -1) {
           rootFile.records.splice(index, 1);
-          myAuctionsService.setAuctionsRootFile(rootFile).then(function() {
+          myAuctionService.setAuctionsRootFile(rootFile).then(function() {
             searchIndexService.removeRecord("id", auctionId).then(() => {
               success(auctionId);
             });
@@ -139,10 +138,10 @@ const myAuctionsService = {
   },
 
   uploadAuction: function(auction, success, failure) {
-    myAuctionsService.getAuctionsRootFile(
+    myAuctionService.getAuctionsRootFile(
       function(rootFile) {
         rootFile.records.splice(0, 0, auction);
-        myAuctionsService.setAuctionsRootFile(rootFile).then(function() {
+        myAuctionService.setAuctionsRootFile(rootFile).then(function() {
           if (auction.privacy === "public") {
             searchIndexService.addRecord("auction", auction);
           }
@@ -156,7 +155,7 @@ const myAuctionsService = {
   },
 
   reindex: function(success, failure) {
-    myAuctionsService.getAuctionsRootFile(
+    myAuctionService.getAuctionsRootFile(
       function() {
         searchIndexService.indexUser().then(message => {
           console.log(message);
@@ -174,7 +173,7 @@ const myAuctionsService = {
 
   makePublic: function(auction, success, failure) {
     auction.privacy = "public";
-    myAuctionsService.updateAuction(
+    myAuctionService.updateAuction(
       auction,
       function() {
         success("Auction is public");
@@ -190,7 +189,7 @@ const myAuctionsService = {
 
   makePrivate: function(auction, success, failure) {
     auction.privacy = "private";
-    myAuctionsService.updateAuction(
+    myAuctionService.updateAuction(
       auction,
       function() {
         success("Auction is private");
@@ -204,4 +203,4 @@ const myAuctionsService = {
     );
   }
 };
-export default myAuctionsService;
+export default myAuctionService;

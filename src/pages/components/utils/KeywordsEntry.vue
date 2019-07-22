@@ -1,6 +1,6 @@
 <template>
 <div class="form-group mb-4">
-  <input id="input-keywords" type="text" class="form-control" placeholder="Comma separated list of tags and keywords" v-model="keywordNames" v-on:keydown.13.prevent="hitOne($event)">
+  <input id="input-keywords" type="text" class="form-control" placeholder="Comma separated keywords - hit return to add more.." v-model="keywordNames" v-on:keydown.13.prevent="hitOne($event)">
 </div>
 </template>
 

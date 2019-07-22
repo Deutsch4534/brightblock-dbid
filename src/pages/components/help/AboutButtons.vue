@@ -2,7 +2,7 @@
   <div class="container">
     <div class="d-flex flex-wrap justify-content-between">
       <div class="" v-for="(ans, index) in answers" :key="index">
-        <span><a class="btn btn-sm text-nowrap btn-rounded" :class="btnColor()" style="min-width: 180px;" @click="showAnswer(ans.slug, index)">{{ans.slug.split("-").join(" ")}}</a></span>
+        <span><a class="btn btn-sm bg-light text-nowrap btn-rounded" :class="btnColor()" style="min-width: 180px; background: #fff !important;" @click="showAnswer(ans.slug, index)">{{ans.slug.split("-").join(" ")}}</a></span>
       </div>
     </div>
   </div>
@@ -39,7 +39,7 @@
       btnColor() {
         //let def = "btn-outline-primary";
         let index = Math.floor(Math.random() * Math.floor(7));
-        return "btn-outline-" + this.colors[index];
+        return "btn-outline-" + this.colors[0];
       }
     }
   }

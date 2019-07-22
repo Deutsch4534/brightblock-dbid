@@ -21,7 +21,8 @@
       <router-link :to="registerUrl" title="Registered on blockchain" class="text-primary border-right px-1" :class="itemAction === 'register' ? 'text-success' : ''" v-else><i class="far fa-registered"></i></router-link>
       <router-link :to="coaUrl" title="certificate of authenticity" class="text-primary border-right px-1" :class="itemAction === 'coa' ? 'text-success' : ''" v-if="canCertificate"><i class="fas fa-certificate"></i></router-link>
       <a @click="deleteItem(item.id)" title="Delete item" class="text-primary border-right px-1" :class="itemAction === 'delete' ? 'text-success' : ''" v-if="debugMode"><i class="far fa-trash-alt"></i></a>
-      <router-link :to="myItemUrl" title="Open item" class="text-primary border-right px-1"  :class="itemAction === 'manage' ? 'text-success' : ''"><i class="far fa-folder-open"></i></router-link>
+      <!-- <router-link :to="myItemUrl" title="Open item" class="text-primary border-right px-1"  :class="itemAction === 'manage' ? 'text-success' : ''"><i class="far fa-folder-open"></i></router-link> -->
+      <router-link v-if="itemAction !== 'listing'" :to="myItemsUrl" title="My listings" class="text-primary border-right px-1"  :class="itemAction === 'listing' ? 'text-success' : ''"><i class="fas fa-list"></i></router-link>
       <mdb-popover trigger="click" :options="{placement: 'top'}">
         <div class="popover">
           <div class="popover-header">
@@ -34,7 +35,8 @@
               <li><i class="fas fa-gavel"></i> - set buy now / bidding data</li>
               <li><i class="far fa-registered"></i> - register ownership on the blockchain</li>
               <li><i class="fas fa-certificate"></i> - generate certificates of authenticity</li>
-              <li><i class="far fa-folder-open"></i> - open item management page</li>
+              <!-- <li><i class="far fa-folder-open"></i> - open item management page</li> -->
+              <li><i class="fas fa-list"></i> - back to my listings</li>
             </ul>
           </div>
         </div>
@@ -66,7 +68,9 @@ export default {
   data() {
     return {};
   },
-  mounted() {},
+  mounted() {
+    console.log(this.itemAction);
+  },
   methods: {
     deleteItem() {
       this.$emit("delete");
@@ -81,9 +85,9 @@ export default {
     },
     created() {
       if (this.item.created) {
-        return moment(this.item.created).format("YYYY-MM-DD");
+        return moment(this.item.created).format("LLLL");
       }
-      return moment(this.item.id).format("DD/MMM/YYYY");
+      return moment(this.item.id).format("LLLL");
     },
     debugMode() {
       return this.$store.state.constants.debugMode;
@@ -103,6 +107,9 @@ export default {
     },
     myItemUrl() {
       return `/my-items/${this.item.id}`;
+    },
+    myItemsUrl() {
+      return `/my-items`;
     },
     coaUrl() {
       return `/my-item/coa/${this.item.id}`;

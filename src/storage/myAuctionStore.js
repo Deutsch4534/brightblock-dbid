@@ -2,12 +2,12 @@
 import _ from "lodash";
 import notify from "@/notify";
 import biddingUtils from "@/services/biddingUtils";
-import myAuctionsService from "@/services/myAuctionsService";
+import myAuctionService from "@/services/myAuctionService";
 import peerToPeerService from "@/services/peerToPeerService";
 import store from "@/storage/store";
 import moment from "moment";
 
-const myAuctionsStore = {
+const myAuctionStore = {
   namespaced: true,
   state: {
     myAuctions: []
@@ -89,9 +89,9 @@ const myAuctionsStore = {
         auction.messages = [];
       }
       auction.messages.splice(0, 0, data);
-      store.commit("myAuctionsStore/addMyAuction", auction);
+      store.commit("myAuctionStore/addMyAuction", auction);
       data.peer = store.getters["onlineAuctionsStore/getAdministrator"](data.auctionId);
-      store.dispatch("myAuctionsStore/updateAuction", auction).then(() => {
+      store.dispatch("myAuctionStore/updateAuction", auction).then(() => {
         peerToPeerService.sendPeerSignal({
           type: "wa-message-update",
           data: data
@@ -107,7 +107,7 @@ const myAuctionsStore = {
         return;
       }
       biddingUtils.addBid(auction, data.itemId, data.bid);
-      store.dispatch("myAuctionsStore/updateAuction", auction).then(() => {
+      store.dispatch("myAuctionStore/updateAuction", auction).then(() => {
         let myProfile = store.getters["myAccountStore/getMyProfile"];
         data.username = myProfile.username;
         data.peer = store.getters["onlineAuctionsStore/getAdministrator"](data.auctionId);
@@ -129,7 +129,7 @@ const myAuctionsStore = {
       auction.items[index].paused = true;
       auction.items[index].finished = true;
       data.peer = store.getters["onlineAuctionsStore/getAdministrator"](data.auctionId);
-      store.dispatch("myAuctionsStore/updateAuction", auction).then(() => {
+      store.dispatch("myAuctionStore/updateAuction", auction).then(() => {
         peerToPeerService.sendPeerSignal({
           type: "wa-item-selling",
           data: data
@@ -142,7 +142,7 @@ const myAuctionsStore = {
         auction => auction.auctionId === data.auctionId
       )[0];
       biddingUtils.pauseBidding(auction, data.itemId);
-      store.dispatch("myAuctionsStore/updateAuction", auction).then(() => {
+      store.dispatch("myAuctionStore/updateAuction", auction).then(() => {
         peerToPeerService.sendPeerSignal({
           type: "wa-item-pause",
           data: data
@@ -155,7 +155,7 @@ const myAuctionsStore = {
         auction => auction.auctionId === data.auctionId
       )[0];
       biddingUtils.unpauseBidding(auction, data.itemId);
-      store.dispatch("myAuctionsStore/updateAuction", auction).then(() => {
+      store.dispatch("myAuctionStore/updateAuction", auction).then(() => {
         data.peer = store.getters["onlineAuctionsStore/getAdministrator"](data.auctionId);
         peerToPeerService.sendPeerSignal({
           type: "wa-item-unpause",
@@ -181,7 +181,7 @@ const myAuctionsStore = {
   },
   actions: {
     deleteMyAuction({ commit, state }, auctionId) {
-      myAuctionsService.deleteMyAuction(
+      myAuctionService.deleteMyAuction(
         auctionId,
         function(result) {
           let myAuctions = state.myAuctions;
@@ -234,7 +234,7 @@ const myAuctionsStore = {
           auction.items.push(auctionItem);
           commit("addMyAuction", auction);
           store
-            .dispatch("myAuctionsStore/updateAuction", auction)
+            .dispatch("myAuctionStore/updateAuction", auction)
             .then(auction => {
               let myProfile = store.getters["myAccountStore/getMyProfile"];
               peerToPeerService.sendPeerSignal({
@@ -276,7 +276,7 @@ const myAuctionsStore = {
           auction.items.splice(index, 1);
           commit("addMyAuction", auction);
           store
-            .dispatch("myAuctionsStore/updateAuction", auction)
+            .dispatch("myAuctionStore/updateAuction", auction)
             .then(auction => {
               let myProfile = store.getters["myAccountStore/getMyProfile"];
               peerToPeerService.sendPeerSignal({
@@ -296,7 +296,7 @@ const myAuctionsStore = {
     },
 
     fetchMyAuctions({ commit }) {
-      myAuctionsService.getMyAuctions(
+      myAuctionService.getMyAuctions(
         function(auctions) {
           commit("myAuctions", auctions);
         },
@@ -314,7 +314,7 @@ const myAuctionsStore = {
         if (auctions.length === 1) {
           resolve(auctions[0]);
         } else {
-          myAuctionsService.getMyAuction(
+          myAuctionService.getMyAuction(
             auctionId,
             function(auction) {
               commit("addMyAuction", auction);
@@ -331,7 +331,7 @@ const myAuctionsStore = {
 
     makePublic({ commit }, auction) {
       return new Promise(resolve => {
-        myAuctionsService.makePublic(
+        myAuctionService.makePublic(
           auction,
           function(auction) {
             commit("addMyAuction", auction);
@@ -347,7 +347,7 @@ const myAuctionsStore = {
 
     makePrivate({ commit }, auction) {
       return new Promise(resolve => {
-        myAuctionsService.makePrivate(
+        myAuctionService.makePrivate(
           auction,
           function(auction) {
             commit("addMyAuction", auction);
@@ -363,7 +363,7 @@ const myAuctionsStore = {
 
     uploadAuction({ commit }, auction) {
       return new Promise(resolve => {
-        myAuctionsService.uploadAuction(
+        myAuctionService.uploadAuction(
           auction,
           function(auction) {
             commit("addMyAuction", auction);
@@ -379,7 +379,7 @@ const myAuctionsStore = {
 
     updateAuction({ commit }, auction) {
       return new Promise(resolve => {
-        myAuctionsService.updateAuction(
+        myAuctionService.updateAuction(
           auction,
           function(auction) {
             commit("addMyAuction", auction);
@@ -394,4 +394,4 @@ const myAuctionsStore = {
     }
   }
 };
-export default myAuctionsStore;
+export default myAuctionStore;

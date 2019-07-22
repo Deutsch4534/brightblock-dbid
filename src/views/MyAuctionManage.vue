@@ -113,7 +113,7 @@ export default {
   mounted() {
     this.auctionId = Number(this.$route.params.auctionId);
     this.$store.dispatch("myArtworksStore/fetchMyArtworks");
-    this.$store.dispatch("myAuctionsStore/fetchMyAuction", this.auctionId).then(auction => {
+    this.$store.dispatch("myAuctionStore/fetchMyAuction", this.auctionId).then(auction => {
       this.$store.dispatch("myAccountStore/fetchMyAccount").then(myProfile => {
         this.profile = myProfile;
         try {
@@ -131,23 +131,23 @@ export default {
       return utils.dt_Offset(date);
     },
     deleteAuction() {
-      this.$store.dispatch("myAuctionsStore/deleteMyAuction", this.auctionId);
+      this.$store.dispatch("myAuctionStore/deleteMyAuction", this.auctionId);
       this.$router.push("/my-artworks");
     },
     makePublic() {
-      let auction = this.$store.getters["myAuctionsStore/myAuction"](this.auctionId);
+      let auction = this.$store.getters["myAuctionStore/myAuction"](this.auctionId);
       if (!auction.items || auction.items.length < 1) {
         this.$notify({type: 'warn', title: 'Manage Auction', text: auction.title + " can't be published until it includes some sale items."});
         return;
       }
       auction.privacy = "public";
-      this.$store.dispatch("myAuctionsStore/makePublic", auction);
+      this.$store.dispatch("myAuctionStore/makePublic", auction);
       this.$notify({type: 'info', title: 'Manage Auction', text: auction.title + " has been published."});
     },
     makePrivate() {
-      let auction = this.$store.getters["myAuctionsStore/myAuction"](this.auctionId);
+      let auction = this.$store.getters["myAuctionStore/myAuction"](this.auctionId);
       auction.privacy = "private";
-      this.$store.dispatch("myAuctionsStore/makePrivate", auction);
+      this.$store.dispatch("myAuctionStore/makePrivate", auction);
       this.$notify({type: 'info', title: 'Manage Auction', text: auction.title + " is now private and cannot be found in searches etc."});
     },
     closeModal: function() {
@@ -167,9 +167,9 @@ export default {
     },
     deactivateBidding() {
       this.modalContent = "Removing item from ring...";
-      let auction = this.$store.getters["myAuctionsStore/myAuction"](this.auctionId);
+      let auction = this.$store.getters["myAuctionStore/myAuction"](this.auctionId);
       biddingUtils.makeItemActive(auction, null);
-      this.$store.dispatch("myAuctionsStore/updateAuction", auction).then(() => {
+      this.$store.dispatch("myAuctionStore/updateAuction", auction).then(() => {
         let myProfile = this.$store.getters["myAccountStore/getMyProfile"];
         peerToPeerService.sendPeerSignal({
           type: "wa-item-activate",
@@ -184,9 +184,9 @@ export default {
     },
     activateBidding(itemId) {
       this.modalContent = "Putting this item into the ring...";
-      let auction = this.$store.getters["myAuctionsStore/myAuction"](this.auctionId);
+      let auction = this.$store.getters["myAuctionStore/myAuction"](this.auctionId);
       biddingUtils.makeItemActive(auction, itemId);
-      this.$store.dispatch("myAuctionsStore/updateAuction", auction).then(() => {
+      this.$store.dispatch("myAuctionStore/updateAuction", auction).then(() => {
         let myProfile = this.$store.getters["myAccountStore/getMyProfile"];
         peerToPeerService.sendPeerSignal({
           type: "wa-item-activate",
@@ -246,7 +246,7 @@ export default {
       return auction ? utils.dt_Offset(serverTime, auction.startDate) : "?";
     },
     auction() {
-      let auction = this.$store.getters["myAuctionsStore/myAuction"](this.auctionId);
+      let auction = this.$store.getters["myAuctionStore/myAuction"](this.auctionId);
       if (!auction || !auction.auctionId) {
         auction = {
           items: []
@@ -262,7 +262,7 @@ export default {
     },
     hammerItem() {
       let hammerItem;
-      let auction = this.$store.getters["myAuctionsStore/myAuction"](this.auctionId);
+      let auction = this.$store.getters["myAuctionStore/myAuction"](this.auctionId);
       if (auction && auction.items) {
         hammerItem = auction.items.find(item => item.inplay);
       }
@@ -271,7 +271,7 @@ export default {
       }
     },
     onlineAuctionUrl() {
-      let auction = this.$store.getters["myAuctionsStore/myAuction"](
+      let auction = this.$store.getters["myAuctionStore/myAuction"](
         this.auctionId
       );
       if (auction) {

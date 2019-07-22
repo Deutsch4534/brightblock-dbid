@@ -240,9 +240,9 @@ export default {
     },
     created() {
       if (this.artwork.created) {
-        return moment(this.artwork.created).format("YYYY-MM-DD");
+        return moment(this.artwork.created).format("LLLL");
       }
-      return moment(this.artwork.id).format("DD/MMM/YYYY");
+      return moment(this.artwork.id).format("LLLL");
     },
     debugMode() {
       return this.$store.state.constants.debugMode;

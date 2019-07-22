@@ -1,13 +1,13 @@
 <template>
-<div v-if="!loading">
-  <div class="mx-md-5 mb-3" v-if="buyerConfirmations > 3">
-    <div class="mb-3"><h5>Please ship to:</h5></div>
-    <div class="mb-1"><strong>{{buyer.did}}</strong></div>
-    <address-view :address="myProfile.auxiliaryProfile.shippingAddress" />
+<div>
+  <div class="mx-md-5">
+    <div class="d-flex justify-content-start mb-3">We have detected your payment.</div>
+    <div class="d-flex justify-content-start mb-3" v-if="buyerConfirmations > 2"><a @click.prevent="showContactSeller = !showContactSeller"><u>Contact seller</u></a></div>
   </div>
-  <div class="mx-md-5" v-if="buyerConfirmations < 6">
+  <div class="mx-md-5">
+    <!-- <div class="d-flex justify-content-start text-muted">Note: If the seller fails to send you your goods you will be given a full refund!</div> -->
     <div class="d-flex justify-content-between text-muted">
-      <div>Confirmations {{buyerConfirmations}} / 6</div>
+      <div>Confirmations {{buyerConfirmations}} / 6 (apprx 1 hour)</div>
       <div class="text-muted"><a :href="buyerBlockchainUrl" target="_blank">Check chain <i class="fas fa-external-link-alt"></i></a></div>
     </div>
   </div>
@@ -15,30 +15,27 @@
 </template>
 
 <script>
+import { mdbBtn } from "mdbvue";
 import bitcoinService from "brightblock-lib/src/services/bitcoinService";
 import moment from "moment";
-import AddressView from "@/pages/components/user-settings/AddressView";
+import ContactSeller from "@/pages/components/orders/ContactSeller";
 
 // noinspection JSUnusedGlobalSymbols
 export default {
-  name: "ShippingRequired",
+  name: "Rendezvous",
   components: {
-    AddressView
+    mdbBtn
   },
   props: {
     assetHash: null,
-    myProfile: null
+    item: null
   },
   data() {
     return {
-      loading: true,
+      showContactSeller: false,
     };
   },
   mounted() {
-    let purchaseCycle = this.$store.getters["assetStore/getCurrentPurchaseCycleByHash"](this.assetHash);
-    this.$store.dispatch("userProfilesStore/fetchShippingDetails", {username: this.myProfile.username, buyer: purchaseCycle.buyer.did}).then(() => {
-      this.loading = false;
-    });
   },
   computed: {
     buyerBlockchainUrl() {
@@ -54,10 +51,6 @@ export default {
       let purchaseCycle = this.$store.getters["assetStore/getCurrentPurchaseCycleByHash"](this.assetHash);
       return purchaseCycle.buyer.chainData.confirmations;
     },
-    buyer() {
-      let purchaseCycle = this.$store.getters["assetStore/getCurrentPurchaseCycleByHash"](this.assetHash);
-      return purchaseCycle.buyer;
-    },
     network() {
       let purchaseCycle = this.$store.getters["assetStore/getCurrentPurchaseCycleByHash"](this.assetHash);
       if (purchaseCycle.buyer.chainData.bitcoinMethod) {
@@ -66,7 +59,7 @@ export default {
       if (purchaseCycle.buyer.chainData.lightningMethod) {
         return "lightning";
       }
-      return;
+      return "unknown";
     },
   },
   methods: {

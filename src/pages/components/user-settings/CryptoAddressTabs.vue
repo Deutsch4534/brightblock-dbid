@@ -1,23 +1,21 @@
 <template>
 <div class="">
-  <mdb-navbar expand="medium" color="grey darken-1" class="text-white" style="min-height: 54px;" dark>
-    <mdb-navbar-toggler>
-      <mdb-navbar-nav>
-          <a @click.prevent="showTab('bitcoin')" class="nav-link navbar-link" :class="activeTab === 'bitcoin' ? 'text-light font-weight-bolder' : 'text-dark'">Bitcoin<i class="fas fa-check text-success ml-2" v-if="paymentAddress('bitcoin')"></i><i class="fas fa-times text-danger ml-2" v-else></i></a>
-          <a @click.prevent="showTab('lightning')" class="nav-link navbar-link" :class="activeTab === 'lightning' ? 'text-light font-weight-bolder' : 'text-dark'">Lightning<i class="fas fa-check text-success ml-2" v-if="paymentAddress('lightning')"></i></a>
-          <a @click.prevent="showTab('stacks')" class="nav-link navbar-link" :class="activeTab === 'stacks' ? 'text-light font-weight-bolder' : 'text-dark'">Stacks<i class="fas fa-check text-success ml-2" v-if="paymentAddress('stacks')"></i></a>
-      </mdb-navbar-nav>
-    </mdb-navbar-toggler>
-  </mdb-navbar>
-  <div class="">
-    <div v-if="activeTab === 'bitcoin'" class="bg-card p-4">
-      <bitcoin-address :buyer="buyer" :activeTab="activeTab" @paymentNetworkUpdate="paymentNetworkUpdate"/>
-    </div>
-    <div v-else-if="activeTab === 'lightning'" class="bg-card p-4">
-      <lightning-address :buyer="buyer" :activeTab="activeTab" @paymentNetworkUpdate="paymentNetworkUpdate"/>
-    </div>
-    <div v-else-if="activeTab === 'stacks'" class="bg-card p-4">
-      <stacks-address :buyer="buyer" :activeTab="activeTab" @paymentNetworkUpdate="paymentNetworkUpdate"/>
+  <div class="d-flex justify-content-start py-5">
+    <ul class="list-group mr-5">
+      <a @click.prevent="showTab('bitcoin')" class="list-group-item justify-content-between d-flex align-items-center list-group-item-action" :class="activeTab === 'bitcoin' ? 'active text-light font-weight-bolder' : 'text-dark'">Bitcoin<i class="fas fa-check text-success ml-2" v-if="paymentAddress('bitcoin')"></i><i class="fas fa-times text-danger ml-2" v-else></i></a>
+      <a @click.prevent="showTab('lightning')" class="list-group-item justify-content-between d-flex align-items-center list-group-item-action" :class="activeTab === 'lightning' ? ' active text-light font-weight-bolder' : 'text-dark'">Lightning<i class="fas fa-check text-success ml-2" v-if="paymentAddress('lightning')"></i></a>
+      <a @click.prevent="showTab('stacks')" class="list-group-item justify-content-between d-flex align-items-center list-group-item-action" :class="activeTab === 'stacks' ? ' active text-light font-weight-bolder' : 'text-dark'">Stacks<i class="fas fa-check text-success ml-2" v-if="paymentAddress('stacks')"></i></a>
+    </ul>
+    <div class="">
+      <div v-if="activeTab === 'bitcoin'" class="bg-card">
+        <bitcoin-address :buyer="buyer" :activeTab="activeTab" @paymentNetworkUpdate="paymentNetworkUpdate"/>
+      </div>
+      <div v-else-if="activeTab === 'lightning'" class="bg-card">
+        <lightning-address :buyer="buyer" :activeTab="activeTab" @paymentNetworkUpdate="paymentNetworkUpdate"/>
+      </div>
+      <div v-else-if="activeTab === 'stacks'" class="bg-card">
+        <stacks-address :buyer="buyer" :activeTab="activeTab" @paymentNetworkUpdate="paymentNetworkUpdate"/>
+      </div>
     </div>
   </div>
 </div>
@@ -28,13 +26,15 @@ import BitcoinAddress from "./BitcoinAddress";
 import LightningAddress from "./LightningAddress";
 import StacksAddress from "./StacksAddress";
 import { mdbContainer, mdbNavbar, mdbNavbarBrand, mdbNavbarToggler, mdbNavbarNav, mdbNavItem, mdbDropdown, mdbDropdownMenu, mdbDropdownToggle, mdbInput, mdbDropdownItem } from 'mdbvue';
+import { mdbListGroup, mdbListGroupItem } from 'mdbvue';
 
 // noinspection JSUnusedGlobalSymbols
 export default {
   name: "CryptoAddressTabs",
   components: {
     BitcoinAddress, LightningAddress, StacksAddress,
-    mdbContainer, mdbNavbar, mdbNavbarBrand, mdbNavbarToggler, mdbNavbarNav, mdbNavItem, mdbDropdown, mdbDropdownMenu, mdbDropdownToggle, mdbInput, mdbDropdownItem
+    mdbContainer, mdbNavbar, mdbNavbarBrand, mdbNavbarToggler, mdbNavbarNav, mdbNavItem, mdbDropdown, mdbDropdownMenu, mdbDropdownToggle, mdbInput, mdbDropdownItem,
+    mdbListGroup, mdbListGroupItem
   },
   props: {
     buyer: false,
@@ -88,4 +88,8 @@ export default {
 };
 </script>
 <style scoped>
+.list-group-item.active {
+  background-color: #607d8b;
+  border-color: #607d8b;
+}
 </style>

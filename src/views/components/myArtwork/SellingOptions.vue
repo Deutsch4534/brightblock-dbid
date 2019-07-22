@@ -91,7 +91,7 @@ export default {
       return this.artwork.saleData.soid === 2 && this.artwork.saleData.reserve > 0 && this.artwork.saleData.increment > 0;
     },
     canManageAuction() {
-      let auction = this.$store.getters["myAuctionsStore/myAuction"](
+      let auction = this.$store.getters["myAuctionStore/myAuction"](
         this.artwork.saleData.auctionId
       );
       if (!auction) return false;

@@ -144,8 +144,9 @@ const itemSearchStore = {
       });
       if (!item.images) {
         item.images = [];
+        //dataUrl: require("@/assets/img/logo/dB_256x256_light_transparent.png"),
         let image = {
-          dataUrl: require("@/assets/img/logo/dB_256x256_light_transparent.png"),
+          dataUrl: require("@/assets/img/thumb_pre.png"),
           saleData: {
             soid: 0
           }

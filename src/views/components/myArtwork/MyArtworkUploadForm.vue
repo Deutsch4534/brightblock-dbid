@@ -225,7 +225,7 @@ import KeywordsView from "@/views/components/utils/KeywordsView";
             this.artwork = artwork;
             this.medium = artwork.medium;
             if (this.artwork) {
-              this.created = moment(this.artwork.created).format();
+              this.created = moment(this.artwork.created).format("LLLL");
               if (artwork.galleryId) {
                 this.galleryId = artwork.galleryId;
               }

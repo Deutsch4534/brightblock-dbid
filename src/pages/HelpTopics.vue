@@ -56,7 +56,7 @@
         return {
           "margin-top": "0px",
           "background-repeat": "no-repeat",
-          "background-size": "135px",
+          "background-size": "255px",
           "background-image": `url(https://prismic-io.s3.amazonaws.com/dbid%2F16f8e705-50e4-48d4-9e59-d436156729ca_generic_+banner_+back.png)`,
           "background-position": "center 30%",
         };
@@ -66,9 +66,9 @@
         return {
           "margin-top": "0px",
           "background-repeat": "no-repeat",
-          "background-size": "135px",
+          "background-size": "255px",
           "background-image": `url(https://prismic-io.s3.amazonaws.com/dbid%2F16f8e705-50e4-48d4-9e59-d436156729ca_generic_+banner_+back.png)`,
-          "background-position": "center 50%",
+          "background-position": "center 60%",
         };
       },
     },

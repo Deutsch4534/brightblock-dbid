@@ -5,16 +5,24 @@
 <div class="" v-else-if="problem">
   <div>Problem loading asset - please reload page..</div>
 </div>
+<div class="" v-else-if="!countdown">
+  <div>Bidding has ended..</div>
+</div>
 <div class="" v-else>
-  <div class="bg-warning text-white">Valid for: {{validForCalc}}</div>
+  <div class="d-flex justify-content-between">
+    <a v-if="isMeWinning" class="btn btn-sm teal lighten-1 text-white mx-0" @click.prevent="placeBid(bidding.nextBid)">Place Bid  {{bidding.fiatSymbol}} {{bidding.nextBid}} (<i class="fab fa-btc"></i>  {{bidding.nextBidBtc}})</a>
+    <a v-else-if="isMeBidding" class="btn btn-sm btn-danger text-white mx-0" @click.prevent="placeBid(bidding.nextBid)">Place Bid  {{bidding.fiatSymbol}} {{bidding.nextBid}} (<i class="fab fa-btc"></i>  {{bidding.nextBidBtc}})</a>
+    <a v-else class="btn btn-sm btn-primary text-white mx-0" @click.prevent="placeBid(bidding.nextBid)">Place Bid  {{bidding.fiatSymbol}} {{bidding.nextBid}} (<i class="fab fa-btc"></i>  {{bidding.nextBidBtc}})</a>
+    <a class="btn btn-sm btn-warning mx-0" @click.prevent="placeBid(bidding.nextBid)">{{countdown}}</a>
+  </div>
   <div v-if="biddingEnabled">
     <div class="d-flex align-items-start flex-column text-muted">
       <div v-if="myItem">Your Item</div>
-      <div class="bg-light mb-3 p-2" style="font-size: 0.8rem;" :class="(bidding.reserveMet) ? 'text-success' : 'text-danger'" :title="(bidding.reserveMet) ? 'Selling' : 'Not Selling - reserve not met'">
-        Current Bid:  {{bidding.fiatSymbol}} {{bidding.currentBid}} <span class="ml-4">(<i class="fab fa-btc"></i>  {{bidding.currentBidBtc}})</span>
+      <div v-if="bidding.reserveMet" class="bg-light mb-3 py-2 mx-0 text-teal lighten-1" style="font-size: 0.8rem;"  :title="'Selling'">
+        Current bid meets the reserve
       </div>
-      <div class="">
-        <a class="btn btn-sm btn-primary text-white m-0" @click.prevent="placeBid(bidding.nextBid)">Place Bid  {{bidding.fiatSymbol}} {{bidding.nextBid}} (<i class="fab fa-btc"></i>  {{bidding.nextBidBtc}})</a>
+      <div v-else class="bg-light mb-3 py-2 mx-0" style="font-size: 0.8rem;"  :title="'Not Selling - reserve not met'">
+        Current bid is under the reserve
       </div>
     </div>
   </div>
@@ -24,6 +32,7 @@
 <script>
 import moneyUtils from "@/services/moneyUtils";
 import moment from "moment";
+import utils from "@/services/utils";
 
 // noinspection JSUnusedGlobalSymbols
 export default {
@@ -43,12 +52,7 @@ export default {
         return {};
       }
     },
-    asset: {
-      type: Object,
-      default() {
-        return {};
-      }
-    },
+    assetHash: null,
   },
   data() {
     return {
@@ -60,10 +64,10 @@ export default {
   },
   mounted() {
     console.log(this.item);
-    this.startCountdown();
     let purchaseCycle = this.$store.getters["assetStore/getCurrentPurchaseCycleByHash"](this.assetHash);
     if (!purchaseCycle || !purchaseCycle.bidding) {
-      this.$store.dispatch("assetStore/initialisePayment", {bidding: true, asset: this.asset, item: this.item}).then(asset => {
+      let asset = this.$store.getters["assetStore/getAssetByHash"](this.assetHash);
+      this.$store.dispatch("assetStore/initialisePayment", {bidding: true, asset: asset, item: this.item}).then(asset => {
         if (asset) {
           this.$emit("startPayment", asset);
           this.loading = false;
@@ -84,9 +88,9 @@ export default {
           this.$notify({type: 'warn', title: 'Bidding Rules', text: 'Not allowed to bid on your own item.'});
           return;
         }
-        this.$store.dispatch("assetStore/placeBid", {assetHash: this.asset.assetHash, bidAmount: bidAmount, bidder: this.myProfile.username}).then(asset => {
+        this.$store.dispatch("assetStore/placeBid", {assetHash: this.assetHash, bidAmount: bidAmount, bidder: this.myProfile.username}).then(asset => {
           if (asset) {
-            this.$emit("startPayment", asset);
+            // this.$emit("startPayment", asset);
           } else {
             this.$notify({type: 'error', title: 'Place Order', text: 'Unable to place the order at present.'});
           }
@@ -94,49 +98,15 @@ export default {
       } else {
         this.$notify({type: 'warn', title: 'Login Required', text: 'Please login to continue.'});
       }
-    },
-    startCountdown() {
-      let $self = this;
-      let purchaseCycle = $self.$store.getters["assetStore/getCurrentPurchaseCycleByHash"](this.asset.assetHash);
-      let asset = this.asset;
-      if (!purchaseCycle) {
-        return;
-      }
-      let biddingEnds = this.item.saleData.biddingEnds;
-      let countdown = setInterval(function() {
-        if (asset.status !== 3 || purchaseCycle.buyer.chainData.txid) {
-          clearInterval(countdown);
-        }
-        if (purchaseCycle.buyer.chainData.txid) {
-          clearInterval(countdown);
-        } else {
-          let now = moment({}).valueOf();
-          let diff = ((biddingEnds - now) / 1000);
-          $self.validFor = diff;
-          let expired = $self.validFor < 0;
-          if (expired) {
-            $self.biddingEnded = true;
-            clearInterval(countdown);
-          }
-        }
-      }, 1000);
     }
   },
   computed: {
     itemUrl() {
       return `/items/${this.item.id}`;
     },
-    validForCalc() {
-      let diff = Math.round(this.validFor);
-      let mm = Math.floor(diff / 60);
-      if (mm < 10) {
-        mm = "0" + mm;
-      }
-      let ss = diff % 60;
-      if (ss < 10) {
-        ss = "0" + ss;
-      }
-      return mm + " m " + ss + " s";
+    countdown() {
+      let serverTime = this.$store.getters["serverTime"];
+      return utils.dt_Offset(serverTime, this.item.saleData.biddingEnds);
     },
     myItemSetPriceUrl() {
       return `/my-item/set-price/${this.item.id}`;
@@ -148,9 +118,17 @@ export default {
       let saleData = this.item.saleData;
       return saleData.soid === 2 && saleData.reserve > 0;
     },
+    isMeWinning() {
+      let isMeWinning = this.$store.getters["assetStore/isMeWinning"]({username: this.myProfile.username, assetHash: this.assetHash});
+      return isMeWinning;
+    },
+    isMeBidding() {
+      let isMeBidding = this.$store.getters["assetStore/isMeBidding"]({username: this.myProfile.username, assetHash: this.assetHash});
+      return isMeBidding;
+    },
     bidding() {
       let data = {
-        assetHash: this.asset.assetHash,
+        assetHash: this.assetHash,
         saleData: this.item.saleData,
       }
       let bidding = this.$store.getters["assetStore/getCurrentBiddingData"](data);

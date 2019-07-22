@@ -25,20 +25,11 @@
     </div>
   </div>
   <div class="my-4" v-if="showCategories">
-    <!--
-    <div class="d-flex justify-content-start">
-      <span class="mr-4 text-white d-none d-sm-none d-md-block" style="position:relative; top: 7px;">Advanced Search Options</span>
-      <select class="text-black browser-default custom-select custom-select-md mb-3 ml-4" v-model="medium" style="width:150px;" v-on:change="findByMedium">
-        <option>Type</option>
-        <option v-for="(medium) in filters.media" :key="medium.value" :value="medium.value">{{medium.label}}</option>
-      </select>
+    <div class="text-capitalise mr-2 pb-2 border-top border-bottom" style="font-size: 0.9rem;">
+      <span v-for="(category, index) in getCategory1Population" :key="index" class="ml-2 mt-2 p-1" :class="(filterCategory && filterCategory.name === category.name) ? 'badge text-dark badge-grey ' : 'badge badge-light'"><a style="text-decoration: capitalise;" v-html="category.name" @click.prevent="findByKeyword(category)"></a> <sup class="text-dark">{{category.hits}}</sup></span>
     </div>
-    -->
-    <div class="text-capitalise mr-2 text-center">
-      <span v-for="(category, index) in getCategory1Population" :key="index" class="badge badge-pill text-dark ml-2 mt-2 p-2" :class="(filterCategory && filterCategory.name === category.name) ? 'badge-warning' : 'badge-light'"><a style="text-decoration: capitalise;" v-html="category.name" @click.prevent="findByKeyword(category)"></a> <sup class="text-dark">{{category.hits}}</sup></span>
-    </div>
-    <div class="text-capitalise mr-2 text-center">
-      <span v-for="(category, index) in level2Categories" :key="index" class="badge badge-pill badge-warning ml-2 mt-2 p-2"><a style="text-decoration: capitalise;" v-html="category.name" @click.prevent="findByKeyword(category)"></a> <sup class="text-primary">{{category.hits}}</sup></span>
+    <div v-if="filterCategory" class="text-capitalise mr-2 pb-2 border-bottom" style="font-size: 0.9rem;">
+      <span v-for="(category, index) in level2Categories" :key="index" class="badge badge- text-dark ml-2 mt-2 p-1"><a style="text-decoration: capitalise;" v-html="category.name" @click.prevent="findByKeyword(category)"></a> <sup class="text-primary">{{category.hits}}</sup></span>
     </div>
   </div>
 </div>

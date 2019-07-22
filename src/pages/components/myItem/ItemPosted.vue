@@ -26,7 +26,7 @@ export default {
     },
     getDate() {
       if (this.created) {
-        return moment(this.created).format("MM-DD-YY");
+        return moment(this.created).format("LLLL");
       }
       return;
     },

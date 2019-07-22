@@ -77,14 +77,14 @@ export default {
     this.loading = false;
   },
   computed: {
-    validShippingInfo() {
-      let validity = this.$store.getters["myAccountStore/getProfileValidity"];
-      return validity.shippingValid;
-    },
   },
   methods: {
     addressChange: function() {
       // this.$emit("addressUpdate", this.address);
+    },
+    validShippingInfo() {
+      let validity = this.$store.getters["myAccountStore/getProfileValidity"];
+      return validity.shippingValid;
     },
     cancel: function() {
       this.$emit("cancelAddress");

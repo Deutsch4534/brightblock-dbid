@@ -9,21 +9,21 @@
     <div class="d-flex align-items-center flex-column text-muted">
       <div class="" style="font-size: 0.8rem;"><span v-html="sellingBuyNowFiat"></span></div>
       <div class="" style="font-size: 0.8rem;"><i class="fab fa-btc"></i> <span v-html="sellingBuyNowBtc"></span></div>
-      <div class=""><router-link :to="myItemSetPriceUrl" class="btn btn-sm btn-success text-white m-0">Change Price</router-link></div>
+      <!-- <div class=""><router-link :to="myItemSetPriceUrl" class="btn btn-sm btn-teal lighten-1 text-white m-0">Edit</router-link></div> -->
     </div>
   </div>
   <div v-else-if="buyNowEnabled">
     <div class="d-flex align-items-center flex-column text-muted">
       <div class="" style="font-size: 0.8rem;"><span v-html="sellingBuyNowFiat"></span></div>
       <div class="" style="font-size: 0.8rem;"><i class="fab fa-btc"></i> <span v-html="sellingBuyNowBtc"></span></div>
-      <div class=""><router-link :to="itemUrl" class="btn btn-sm btn-success text-white m-0">Buy Now</router-link></div>
+      <!-- <div class=""><router-link :to="itemUrl" class="btn btn-sm btn-teal lighten-1 text-white m-0">Buy Now</router-link></div> -->
     </div>
   </div>
   <div v-else-if="sellingAuction">
     <div class="d-flex align-items-center flex-column text-muted">
       <div class="" style="font-size: 0.8rem;"><span v-html="sellingAuctionFiat"></span></div>
       <div class="" style="font-size: 0.8rem;"><i class="fab fa-btc"></i> <span v-html="sellingAuctionBtc"></span></div>
-      <div class=""><router-link :to="itemUrl" class="btn btn-sm btn-success text-white m-0">Place Bid</router-link></div>
+      <!-- <div class=""><router-link :to="itemUrl" class="btn btn-sm btn-teal lighten-1 text-white m-0">Place Bid</router-link></div> -->
     </div>
   </div>
   <div v-else>
@@ -142,7 +142,7 @@ export default {
       }
     },
     canManageAuction() {
-      let auction = this.$store.getters["myAuctionsStore/myAuction"](
+      let auction = this.$store.getters["myAuctionStore/myAuction"](
         this.item.saleData.auctionId
       );
       if (!auction) return false;

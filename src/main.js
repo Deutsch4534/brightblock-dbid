@@ -22,7 +22,7 @@ Vue.config.productionTip = false;
 
 Vue.use(Router);
 Vue.use(Vuex);
-Vue.use(Notifications);
+Vue.use(Notifications, {closeOnClick: true, duration: 6000});
 Vue.use(Datetime);
 Vue.use(PrismicVue, {
   endpoint: "https://dbid.prismic.io/api/v2",
@@ -47,17 +47,14 @@ const app = new Vue({
       store.dispatch("contentStore/fetchTaxonomy").then(() => {
         store.dispatch("itemSearchStore/searchCategoryPopulations");
       });
-
-      let profile = this.$store.getters["myAccountStore/getMyProfile"];
-      if (profile.loggedIn) {
-        store.dispatch("fetchServerTime");
-      }
       store.dispatch("conversionStore/fetchConversionData");
     });
   },
   beforeCreate () {
     store.commit("constants", CONSTANTS);
-    store.dispatch("myAccountStore/fetchMyAccount");
+    store.dispatch("myAccountStore/fetchMyAccount").then(profile => {
+      store.dispatch("fetchServerTime");
+    });
   }
 });
 app.$mount("#app");

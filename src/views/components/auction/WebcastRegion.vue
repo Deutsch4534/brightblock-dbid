@@ -48,7 +48,7 @@ export default {
   computed: {
     hammerItem() {
       let hammerItem;
-      let auction = this.$store.getters["myAuctionsStore/myAuction"](this.auctionId);
+      let auction = this.$store.getters["myAuctionStore/myAuction"](this.auctionId);
       if (!auction) {
         auction = this.$store.getters["onlineAuctionsStore/onlineAuction"](this.auctionId);
       }

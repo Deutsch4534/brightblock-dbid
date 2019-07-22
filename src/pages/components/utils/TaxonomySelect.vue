@@ -1,20 +1,19 @@
 <template>
 
 <div class="">
-<div class=" mb-3"><h5>Categories, Keywords and Tags <sup class="text-danger">*</sup></h5></div>
-  <div class="mb-3 px-5">Selected: [{{chosen.length}}]</div>
-  <div class="mb-3 px-5">
-    <a class="badge badge-pill badge-light text-dark mr-3 p-2 mt-1" v-for="(keyword, index) in chosen" :key="index" @click.prevent="unchoose(keyword)">
-      <span v-html="keyword.name" class="mr-2"></span> <i class="fas fa-backspace"></i>
-    </a>
-  </div>
+  <div class=" mb-3"><h5>Categories and Keywords <sup class="text-danger">*</sup></h5></div>
   <div class="">
-    <mdb-select class="px-5" v-model="level1Categories" @change="change1($event)"/>
-    <mdb-select class="px-5" v-model="level2Categories" v-if="level1" @change="change2($event)"/>
-    <mdb-select class="px-5" v-model="level3Categories" v-if="level2 && level3Categories.length > 1" @change="change3($event)"/>
+    <mdb-select class="" v-model="level1Categories" @change="change1($event)"/>
+    <mdb-select class="" v-model="level2Categories" v-if="level1" @change="change2($event)"/>
+    <mdb-select class="" v-model="level3Categories" v-if="level2 && level3Categories.length > 1" @change="change3($event)"/>
   </div>
-  <div class="form-group mb-3 px-5">
+  <div class="form-group mb-3" v-if="level2">
     <keywords-entry @keywords="keywords"/>
+  </div>
+  <div>
+    <a class="badge badge-pill badge-light text-dark mr-3 p-2 mt-1" v-for="(keyword, index) in chosen" :key="index" @click.prevent="unchoose(keyword)">
+      <span v-html="keyword.name" class="mr-2"></span> <i class="fas fa-times mt-1 text-danger" style="font-size: 0.8rem;"></i>
+    </a>
   </div>
 </div>
 </template>
@@ -140,4 +139,7 @@ export default {
 };
 </script>
 <style>
+.card {
+  margin-bottom: 5px;
+}
 </style>

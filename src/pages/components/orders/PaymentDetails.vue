@@ -2,8 +2,8 @@
 <div class="">
   <div class="">
     <div class="d-flex justify-content-between">
-      <div><button class="btn btn-success" @click="rechooseNetwork()"><i class="fas fa-angle-left"></i> Back</button></div>
-      <div><button class="btn btn-warning" @click="rechooseNetwork()">Valid for: {{validForCalc}}</button></div>
+      <div><button class="btn teal lighten-1 text-white" @click="rechooseNetwork()"><i class="fas fa-angle-left"></i> Back</button></div>
+      <div><span class="btn deep-orange lighten-1 text-white">Valid for: {{validForCalc}}</span></div>
     </div>
     <div class="d-flex justify-content-center">
       <div class="text-capitalize">
@@ -34,7 +34,7 @@
       <img class="mx-auto " :src="qrImage" alt="'scan qr code'" width="auto">
     </div>
     <div class="d-flex p-2 text-light  justify-content-center" v-if="network !== 'opennode'">
-      <a :href="paymentUri" class="btn btn-primary text-uppercase mr-3">Open in wallet <i class="fas fa-external-link-alt"></i></a>
+      <a :href="lightningPaymentUri" class="btn btn-primary text-uppercase mr-3">Open in wallet <i class="fas fa-external-link-alt"></i></a>
       <a class="btn btn-primary text-uppercase ml-3" @click.prevent="copyAddress">Copy <i class="fas fa-clone ml-4"></i></a>
     </div>
 
@@ -70,6 +70,7 @@ export default {
       bitcoinUri: null,
       lightningUri: null,
       paymentUri: null,
+      invoice: null
     };
   },
   mounted() {
@@ -77,7 +78,14 @@ export default {
     this.lightningUri = bitcoinService.getLightningUri(this.asset);
     this.paymentUri = this.bitcoinUri;
     if (this.network === "lightning") {
-      this.paymentUri = this.lightningUri;
+      let purchaseCycle = this.$store.getters["assetStore/getCurrentPurchaseCycleByHash"](this.assetHash);
+      this.paymentUri = purchaseCycle.buyer.chainData.paymentRequest;
+      this.$store.dispatch("lightningStore/fetchDecodedInvoice", this.paymentUri).then((result) => {
+        if (result && result.paymentHash) {
+          this.invoice = result;
+        }
+      });
+
     }
     this.addQrCode("qrcode1", this.paymentUri);
   },
@@ -90,6 +98,9 @@ export default {
         return qrImage;
       }
       return image1;
+    },
+    lightningPaymentUri() {
+      return "lightning:" + this.paymentUri;
     },
     asset() {
       let asset = this.$store.getters["assetStore/getAssetByHash"](this.assetHash);

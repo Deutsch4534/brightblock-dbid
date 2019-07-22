@@ -103,11 +103,11 @@ const peerToPeerService = {
       return;
     }
     if (event.type === "signal:wa-message-send-adm") {
-      peerToPeerService.vueStorage.commit("myAuctionsStore/messageEvent", data);
+      peerToPeerService.vueStorage.commit("myAuctionStore/messageEvent", data);
     } else if (event.type === "signal:wa-message-update") {
       peerToPeerService.vueStorage.commit("onlineAuctionsStore/messageEvent", data);
     } else if (event.type === "signal:wa-bid-send-adm") {
-      peerToPeerService.vueStorage.commit("myAuctionsStore/sendBidEvent", data);
+      peerToPeerService.vueStorage.commit("myAuctionStore/sendBidEvent", data);
     } else if (event.type === "signal:wa-bid-receive") {
       peerToPeerService.vueStorage.commit("onlineAuctionsStore/receiveBidEvent", data);
     } else if (event.type === "signal:wa-item-pause") {

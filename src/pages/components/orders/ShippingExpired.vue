@@ -1,13 +1,8 @@
 <template>
 <div>
-  <div class="d-flex justify-content-center">
-    <h4>Purchase Cancelled by Buyer</h4>
-  </div>
-  <div class="mx-md-5 mb-3">
-    <p>The buyer changed their mind</p>
-  </div>
-  <div class="mx-md-5 mb-3">
-    <p><router-link :to="myItemUrl"><u>Manage this item</u></router-link></p>
+  <div class="d-flex justify-content-start mb-3">The buyer has changed their mind.</div>
+  <div class="">
+    <p><router-link :to="myItemUrl" class="btn btn-primary text-white">Manage item</router-link></p>
   </div>
 </div>
 </template>

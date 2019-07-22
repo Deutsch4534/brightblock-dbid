@@ -81,14 +81,14 @@ export default {
         username: myProfile.username,
         auctionId: this.auctionId
       };
-      this.$store.commit("myAuctionsStore/messageEvent", messageData);
+      this.$store.commit("myAuctionStore/messageEvent", messageData);
 
       let data = {
         username: myProfile.username,
         auctionId: this.auctionId,
         itemId: this.item.itemId
       };
-      this.$store.commit("myAuctionsStore/unpauseItemEvent", data);
+      this.$store.commit("myAuctionStore/unpauseItemEvent", data);
     },
     pauseBidding() {
       let myProfile = this.$store.getters["myAccountStore/getMyProfile"];
@@ -98,14 +98,14 @@ export default {
         username: myProfile.username,
         auctionId: this.auctionId
       };
-      this.$store.commit("myAuctionsStore/messageEvent", messageData);
+      this.$store.commit("myAuctionStore/messageEvent", messageData);
 
       let data = {
         username: myProfile.username,
         auctionId: this.auctionId,
         itemId: this.item.itemId
       };
-      this.$store.commit("myAuctionsStore/pauseItemEvent", data);
+      this.$store.commit("myAuctionStore/pauseItemEvent", data);
     },
     bid(amount) {
       let $self = this;
@@ -124,7 +124,7 @@ export default {
         this.auctionId
       );
       if (this.admin) {
-        this.$store.commit("myAuctionsStore/sendBidEvent", data);
+        this.$store.commit("myAuctionStore/sendBidEvent", data);
       } else {
         data.peer = this.$store.getters["onlineAuctionsStore/getAdministrator"](this.auctionId);
         peerToPeerService.sendPeerSignal({

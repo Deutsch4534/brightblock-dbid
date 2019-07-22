@@ -179,10 +179,10 @@ export default {
       });
     }
     if (this.auctionId) {
-      this.$store.dispatch("myAuctionsStore/fetchMyAuction", this.auctionId).then((auction) => {
+      this.$store.dispatch("myAuctionStore/fetchMyAuction", this.auctionId).then((auction) => {
         this.auction = auction;
-        this.startDate = moment(auction.startDate).format();
-        this.endDate = moment(auction.endDate).format();
+        this.startDate = moment(auction.startDate).format("LLLL");
+        this.endDate = moment(auction.endDate).format("LLLL");
         this.loaded = true;
       });
     } else {
@@ -191,7 +191,7 @@ export default {
       dd.hour(10);
       dd.minute(0);
       this.startDate = dd.format();
-      this.endDate = dd.add(2, "days").format();
+      this.endDate = dd.add(2, "days").format("LLLL");
       this.loaded = true;
     }
   },
@@ -232,7 +232,7 @@ export default {
       if (this.mode === "update") {
         this.auction.auctionId = this.auctionId;
         this.$store
-          .dispatch("myAuctionsStore/updateAuction", this.auction)
+          .dispatch("myAuctionStore/updateAuction", this.auction)
           .then(auction => {
             this.auction = auction;
             this.$router.push("/my-auctions/manage/" + auction.auctionId);
@@ -240,7 +240,7 @@ export default {
       } else {
         this.auction.auctionId = moment({}).valueOf();
         this.$store
-          .dispatch("myAuctionsStore/uploadAuction", this.auction)
+          .dispatch("myAuctionStore/uploadAuction", this.auction)
           .then(auction => {
             this.auction = auction;
             this.$router.push("/my-auctions/manage/" + auction.auctionId);

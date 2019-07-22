@@ -46,10 +46,10 @@ export default {
     };
   },
   created() {
-    this.$store.dispatch("myAuctionsStore/fetchMyAuctions");
+    this.$store.dispatch("myAuctionStore/fetchMyAuctions");
   },
   mounted() {
-    this.$store.dispatch("myAuctionsStore/fetchMyAuctions").then((myAuctions) => {
+    this.$store.dispatch("myAuctionStore/fetchMyAuctions").then((myAuctions) => {
       this.$store.dispatch("myAccountStore/fetchMyAccount").then((myProfile) => {
         if (myProfile) {
           this.enabled = myProfile.showAdmin;
@@ -68,16 +68,16 @@ export default {
   },
   computed: {
     myAuctionsFuture() {
-      return this.$store.getters["myAuctionsStore/myAuctionsFuture"];
+      return this.$store.getters["myAuctionStore/myAuctionsFuture"];
     },
     myAuctionsPast() {
-      return this.$store.getters["myAuctionsStore/myAuctionsPast"];
+      return this.$store.getters["myAuctionStore/myAuctionsPast"];
     },
     myAuctionsFutureCount() {
-      return this.$store.getters["myAuctionsStore/myAuctionsFutureCount"];
+      return this.$store.getters["myAuctionStore/myAuctionsFutureCount"];
     },
     myAuctionsPastCount() {
-      return this.$store.getters["myAuctionsStore/myAuctionsPastCount"];
+      return this.$store.getters["myAuctionStore/myAuctionsPastCount"];
     }
   }
 };

@@ -33,7 +33,7 @@ export default {
   methods: {
     purchaseCycleEnded() {
       let purchaseCycle = this.$store.getters["assetStore/getCurrentPurchaseCycleByHash"](this.assetHash);
-      return moment(purchaseCycle.created).format();
+      return moment(purchaseCycle.created).format("LLLL");
     },
     cancelOrder() {
       this.$store.dispatch("assetStore/cancelPurchase", this.assetHash);

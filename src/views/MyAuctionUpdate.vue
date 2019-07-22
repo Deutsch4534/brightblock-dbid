@@ -33,7 +33,7 @@ export default {
       }
       if (this.enabled) {
         this.auctionId = Number(this.$route.params.auctionId);
-        this.$store.dispatch("myAuctionsStore/fetchMyAuction", this.auctionId).then(auction => {
+        this.$store.dispatch("myAuctionStore/fetchMyAuction", this.auctionId).then(auction => {
           this.loading = false;
         });
       } else {

@@ -1,5 +1,5 @@
 <template>
-<div>
+<div v-if="paymentDetected">
   <div class="mx-md-5">
     <div class="d-flex justify-content-start mb-3">Wey hey - you have a potential buyer!</div>
     <div class="d-flex justify-content-start mb-3">Once their payment is confirmed we will display shipping details for you to send the goods.</div>
@@ -15,6 +15,12 @@
     <div class="d-flex justify-content-start text-muted">Note: If the payment fails for any reason the item will remain listed!</div>
   </div>
   -->
+</div>
+<div v-else>
+  <div class="mx-md-5">
+    <div class="d-flex justify-content-start mb-3">Someone is considering buying this item.</div>
+    <div class="d-flex justify-content-start mb-3">We will let you know when they have paid and show you next steps.</div>
+  </div>
 </div>
 </template>
 
@@ -49,6 +55,15 @@ export default {
     buyerConfirmations() {
       let purchaseCycle = this.$store.getters["assetStore/getCurrentPurchaseCycleByHash"](this.assetHash);
       return purchaseCycle.buyer.chainData.confirmations;
+    },
+    paymentDetected() {
+      let purchaseCycle = this.$store.getters["assetStore/getCurrentPurchaseCycleByHash"](this.assetHash);
+      let method = purchaseCycle.buyer.chainData.method;
+      let txid = purchaseCycle.buyer.chainData.txid;
+      let confirmations = purchaseCycle.buyer.chainData.confirmations;
+      let settled = purchaseCycle.buyer.chainData.settled;
+      let payment = txid || settled;
+      return payment;
     },
     shippingAddress() {
       let purchaseCycle = this.$store.getters["assetStore/getCurrentPurchaseCycleByHash"](this.assetHash);

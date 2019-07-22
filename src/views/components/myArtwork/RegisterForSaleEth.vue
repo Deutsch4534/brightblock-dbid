@@ -103,12 +103,12 @@ export default {
   },
   computed: {
     canAuction() {
-      let auctions = this.$store.getters["myAuctionsStore/myAuctionsFuture"];
+      let auctions = this.$store.getters["myAuctionStore/myAuctionsFuture"];
       let cs = this.$store.getters["myArtworksStore/canSell"](this.artwork.id);
       return cs && auctions && auctions.length > 0;
     },
     auctions() {
-      return this.$store.getters["myAuctionsStore/myAuctionsFuture"];
+      return this.$store.getters["myAuctionStore/myAuctionsFuture"];
     },
 
     valueInBitcoin() {

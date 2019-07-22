@@ -2,7 +2,7 @@ import Router from "vue-router";
 
 import Index from "./pages/Index.vue";
 import Sell from "./pages/Sell.vue";
-import PurchaseOrder from "./pages/PurchaseOrder.vue";
+// import PurchaseOrder from "./pages/PurchaseOrder.vue";
 import ItemDetails from "./pages/ItemDetails.vue";
 import HelpTopics from "./pages/HelpTopics";
 import Contact from "./pages/Contact.vue";
@@ -211,9 +211,27 @@ const router = new Router({
       meta: { requiresAuth: true }
     },
     {
+      path: "/my-unsold",
+      name: "unsold",
+      components: { default: Sell, header: Navbar, footer: Footer },
+      meta: { requiresAuth: true }
+    },
+    {
+      path: "/my-selling",
+      name: "selling",
+      components: { default: Sell, header: Navbar, footer: Footer },
+      meta: { requiresAuth: true }
+    },
+    {
+      path: "/my-buying",
+      name: "buying",
+      components: { default: Sell, header: Navbar, footer: Footer },
+      meta: { requiresAuth: true }
+    },
+    {
       path: "/my-orders/:assetHash",
       name: "my-order",
-      components: { default: PurchaseOrder, header: Navbar, footer: Footer },
+      components: { default: Sell, header: Navbar, footer: Footer },
       meta: { requiresAuth: true }
     },
 

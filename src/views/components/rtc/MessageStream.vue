@@ -33,7 +33,7 @@ export default {
     messages() {
       let auction = {};
       if (this.admin) {
-        auction = this.$store.getters["myAuctionsStore/myAuction"](
+        auction = this.$store.getters["myAuctionStore/myAuction"](
           this.auctionId
         );
       } else {
@@ -57,7 +57,7 @@ export default {
       };
       this.message = "";
       if (this.admin) {
-        this.$store.commit("myAuctionsStore/messageEvent", data);
+        this.$store.commit("myAuctionStore/messageEvent", data);
       } else {
         data.peer = this.$store.getters["onlineAuctionsStore/getAdministrator"](this.auctionId);
         peerToPeerService.sendPeerSignal({

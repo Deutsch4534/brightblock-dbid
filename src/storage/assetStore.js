@@ -71,7 +71,7 @@ const assetStore = {
       if (fiatRate) symbol = fiatRate["symbol"];
       let nextBidBtc = moneyUtils.valueInBitcoin(nextBid, fiatRate);
       let currentBidBtc = moneyUtils.valueInBitcoin(currentBid, fiatRate);
-      let reserveMet = currentBid < data.saleData.reserve;
+      let reserveMet = (currentBid && data.saleData.reserve) ? currentBid < data.saleData.reserve : false;
       return {
         fiatCurrency: data.saleData.fiatCurrency,
         fiatSymbol: symbol,
@@ -82,12 +82,39 @@ const assetStore = {
         reserveMet: reserveMet
       };
     },
+    getCurrentBidList: state => assetHash => {
+      let purchaseCycle = store.getters["assetStore/getCurrentPurchaseCycleByHash"](assetHash);
+      if (purchaseCycle.bidding.bids) {
+        return purchaseCycle.bidding.bids;
+      }
+      return [];
+    },
+    isMeWinning: state => data => {
+      let purchaseCycle = store.getters["assetStore/getCurrentPurchaseCycleByHash"](data.assetHash);
+      let bids = purchaseCycle.bidding.bids;
+      if (bids && bids.length > 0) {
+        return data.username === bids[bids.length - 1].bidder;
+      }
+      return false;
+    },
+    isMeBidding: state => data => {
+      let purchaseCycle = store.getters["assetStore/getCurrentPurchaseCycleByHash"](data.assetHash);
+      let bids = purchaseCycle.bidding.bids;
+      if (!bids) {
+        return false;
+      }
+      let index = _.findIndex(bids, function(bid) {
+        return data.username === bid.bidder;
+      });
+      return index > -1;
+    },
     getAssets: state => {
       return state.assets;
     },
     getAssetsBuying: state => did => {
       let assets = [];
-      _.forEach(state.assets, function(asset) {
+      let filtered = state.assets.filter(asset => asset.status > 0);
+      _.forEach(filtered, function(asset) {
         if (asset.purchaseCycles) {
           let purchaseCycle = asset.purchaseCycles[(asset.purchaseCycles.length - 1)];
           if (purchaseCycle.buyer && purchaseCycle.buyer.did === did) {
@@ -99,7 +126,8 @@ const assetStore = {
     },
     getAssetsSelling: state => did => {
       let assets = [];
-      _.forEach(state.assets, function(asset) {
+      let filtered = state.assets.filter(asset => asset.status > 0);
+      _.forEach(filtered, function(asset) {
         if (asset.purchaseCycles) {
           let purchaseCycle = asset.purchaseCycles[(asset.purchaseCycles.length - 1)];
           if (purchaseCycle.seller && purchaseCycle.seller.did === did) {
@@ -327,6 +355,10 @@ const assetStore = {
     lookupAssetsByBuyer({ commit, state, getters}) {
       return new Promise(resolve => {
         let myProfile = store.getters["myAccountStore/getMyProfile"];
+        if (!myProfile || !myProfile.username) {
+          resolve();
+          return;
+        }
         bitcoinService.lookupAssetsByBuyer(myProfile.username).then(assets => {
           if (assets) {
             commit("addAssets", assets);

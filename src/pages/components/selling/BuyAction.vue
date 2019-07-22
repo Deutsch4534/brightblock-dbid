@@ -2,7 +2,7 @@
 <div class="">
   <div v-if="myItem">
     <div class="d-flex align-items-start flex-column text-muted mb-3">
-      <div class="mb-2"><router-link :to="myItemSetPriceUrl" class="btn btn-sm btn-success text-white m-0">Change Price</router-link></div>
+      <div class="mb-2"><router-link :to="myItemSetPriceUrl" class="btn btn-sm teal lighten-1 text-white m-0">Change Price</router-link></div>
       <div class="" style="font-size: 0.8rem;">
         <span class="mr-2" v-html="sellingBuyNowFiat"></span>
         / <span class="ml-2" v-html="sellingBuyNowBtc"></span>
@@ -11,7 +11,7 @@
   </div>
   <div v-else-if="buyNowEnabled">
     <div class="d-flex align-items-start flex-column text-muted">
-      <div class="mb-2"><a class="btn btn-sm btn-success text-white m-0" @click.prevent="buyNow">Buy Now</a></div>
+      <div class="mb-2"><a class="btn btn-sm teal lighten-1 text-white m-0" @click.prevent="buyNow">Buy Now</a></div>
       <div class="" style="font-size: 0.8rem;">
         <span class="mr-2" v-html="sellingBuyNowFiat"></span>
         / <span class="ml-2" v-html="sellingBuyNowBtc"></span>
@@ -45,12 +45,7 @@ export default {
         return {};
       }
     },
-    asset: {
-      type: Object,
-      default() {
-        return {};
-      }
-    },
+    assetHash: null
   },
   data() {
     return {
@@ -61,10 +56,10 @@ export default {
   methods: {
     buyNow() {
       if (this.myProfile.loggedIn) {
-        this.$store.dispatch("assetStore/initialisePayment", {asset: this.asset, item: this.item}).then(asset => {
+        let asset = this.$store.getters["assetStore/getAssetByHash"](this.assetHash);
+        this.$store.dispatch("assetStore/initialisePayment", {asset: asset, item: this.item}).then(asset => {
           if (asset) {
             this.$router.push("/my-orders/" + asset.assetHash);
-            //this.$emit("startPayment", asset);
           } else {
             this.$notify({type: 'error', title: 'Place Order', text: 'Unable to place the order at present.'});
           }
@@ -147,7 +142,7 @@ export default {
       return this.item.saleData.soid === 2 && this.item.saleData.reserve > 0 && this.item.saleData.increment > 0;
     },
     canManageAuction() {
-      let auction = this.$store.getters["myAuctionsStore/myAuction"](
+      let auction = this.$store.getters["myAuctionStore/myAuction"](
         this.item.saleData.auctionId
       );
       if (!auction) return false;

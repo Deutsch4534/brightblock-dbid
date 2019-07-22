@@ -1,41 +1,22 @@
 <template>
-<div id="my-app-element" class="my-4 container">
-  <mdb-navbar expand="medium" color="danger" style="min-height: 54px;" dark v-if="iamseller">
-    <mdb-navbar-toggler>
-      <mdb-navbar-brand>
-        <span style="font-weight: 500">
-          Selling: {{item.title}}
-        </span>
-      </mdb-navbar-brand>
-      <mdb-navbar-nav right class="text-light">
-        <router-link class="nav-link navbar-link btn btn-primary" to="/my-item/upload">New Listing</router-link>
-        <router-link class="nav-link navbar-link btn btn-primary" to="/my-items">Listings</router-link>
-        <router-link class="nav-link navbar-link btn btn-primary" to="/my-orders">Purchases</router-link>
-        <a v-if="activeTab === 'buyer-info'" class="nav-link navbar-link btn btn-primary" @click.prevent="buyerInfo = !buyerInfo">Back</a>
-        <a v-else class="nav-link navbar-link btn btn-primary" @click.prevent="buyerInfo = !buyerInfo">Seller Info <i class="fas fa-check text-success ml-2" v-if="validAddressInfo"></i><i class="fas fa-times text-danger ml-2" v-else></i></a>
-        <a v-if="assetStatus === 3" class="nav-link navbar-link btn btn-primary" @click.prevent="cancelOrderSeller(assetHash)">Cancel Order</a>
-      </mdb-navbar-nav>
-    </mdb-navbar-toggler>
-  </mdb-navbar>
-  <mdb-navbar expand="medium" color="success" style="min-height: 54px;" dark v-else>
-    <mdb-navbar-toggler>
-      <mdb-navbar-brand>
-        <span style="font-weight: 500">
-          Buying: {{item.title}}
-        </span>
-      </mdb-navbar-brand>
-      <mdb-navbar-nav right class="text-light">
-        <router-link class="nav-link navbar-link btn btn-primary" to="/my-item/upload">New Listing</router-link>
-        <router-link class="nav-link navbar-link btn btn-primary" to="/my-items">Listings</router-link>
-        <router-link class="nav-link navbar-link btn btn-primary" to="/my-orders">Purchases</router-link>
-        <a v-if="activeTab === 'buyer-info'" class="nav-link navbar-link btn btn-primary" @click.prevent="buyerInfo = !buyerInfo">Back</a>
-        <a v-else class="nav-link navbar-link btn btn-primary" @click.prevent="buyerInfo = !buyerInfo">Buyer Info <i class="fas fa-check text-success ml-2" v-if="validAddressInfo"></i><i class="fas fa-times text-danger ml-2" v-else></i></a>
-        <a v-if="assetStatus === 3" class="nav-link navbar-link btn btn-primary" @click.prevent="cancelOrder(assetHash)">Cancel Order</a>
-      </mdb-navbar-nav>
-    </mdb-navbar-toggler>
-  </mdb-navbar>
+<div id="my-app-element" class="mt-4">
   <div class="bg-card mb3">
-    <order-details v-if="activeTab !== 'buyer-info'" class="p-3" :item="item" :purchaseCycle="purchaseCycle" style="background-color:  #bdbdbd;"/>
+    <order-details v-if="activeTab !== 'buyer-info'" class="p-3 mx-5" :item="item" :purchaseCycle="purchaseCycle" style="background-color:  #bdbdbd;"/>
+    <mdb-navbar expand="medium" color="light" style="min-height: 54px;" class="mx-5">
+      <mdb-navbar-toggler>
+        <mdb-navbar-brand color="text-grey">
+          <span style="font-weight: 500;">
+            <span v-if="iamseller">Selling: {{item.title}}</span>
+            <span v-else>Buying: {{item.title}}</span>
+          </span>
+        </mdb-navbar-brand>
+        <mdb-navbar-nav right class="">
+          <router-link v-if="iamseller" class="nav-link navbar-link btn" to="/my-selling">Back</router-link>
+          <router-link v-else class="nav-link navbar-link btn" to="/my-buying">Back</router-link>
+          <span v-if="!iamseller && asset.status < 4"><a class="nav-link navbar-link btn" @click.prevent="cancelOrder(assetHash)">Cancel Order</a></span>
+        </mdb-navbar-nav>
+      </mdb-navbar-toggler>
+    </mdb-navbar>
     <div class="bg-light mb-5 p-4">
       <div class="d-flex justify-content-center">
         <div class="d-flex justify-content-center text-capitalize">
@@ -184,7 +165,7 @@ export default {
       } else if (purchaseCycle.buyer.chainData.lightningMethod) {
         return "Lightning";
       }
-      return "Network"
+      return "";
     },
     purchaseCycle() {
       let purchaseCycle = this.$store.getters["assetStore/getCurrentPurchaseCycleByHash"](this.assetHash);
@@ -347,7 +328,7 @@ export default {
 </script>
 <style scoped>
 .btn {
-  font-size: 0.7rem;
+  font-size: 1.1rem;
   padding: 4px 10px;
   margin: 2px 3px;
   text-transform: capitalize;

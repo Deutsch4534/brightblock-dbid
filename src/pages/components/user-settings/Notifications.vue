@@ -8,8 +8,7 @@
   </div>
   <div class="row">
     <div class="col-md-12">
-      <p class="text-muted">Allow other users to contact you about items your selling.</p>
-      <p class="text-muted">Contact details are stored in your storage.</p>
+      <p class="text-muted">Allow other users to contact you about items your buying and selling.</p>
     </div>
   </div>
   <div class="row my-3">
@@ -35,6 +34,7 @@
           <input type="email" :style="(showCode) ? 'border: 1pt solid red;' : 'border: 1pt solid green;'" class="form-control" id="vc-email" placeholder="email address" v-model="newEmail" required>
         </div>
         <button v-if="!showCode" class="btn btn-primary btn-sm"><a @click="checkEmailForm($event)">Send Code</a></button>
+        <button v-if="!showCode" class="btn btn-primary btn-sm"><a @click="reset($event)">Reset</a></button>
       </form>
     </div>
   </div>
@@ -43,7 +43,8 @@
       <div class="col-md-12">
         <form v-on:submit.prevent="" class="">
           <input type="text" class="m-0 form-control" id="vc-code" placeholder="enter code" v-model="code" required v-on:keyup.13="checkCode($event)">
-          <a class="btn btn-primary btn-sm text-white" @click.prevent="checkCode($event)">Verify Code</a>
+          <a class="ml-0 btn btn-primary btn-sm text-white" @click.prevent="checkCode($event)">Verify Code</a>
+          <button class="btn btn-primary btn-sm"><a @click="reset($event)">Reset</a></button>
         </form>
       </div>
     </div>
@@ -156,6 +157,12 @@ export default {
       } else {
         this.sendCode();
       }
+    },
+    reset(event) {
+      let myProfile = this.$store.getters["myAccountStore/getMyProfile"];
+      this.allowUse = myProfile.auxiliaryProfile.emailAddress.allowUse;
+      this.newEmail = this.auxiliaryProfile.emailAddress.email;
+      this.showCode = false;
     },
   }
 };

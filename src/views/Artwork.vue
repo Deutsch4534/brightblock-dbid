@@ -163,9 +163,9 @@ export default {
     },
     created() {
       if (this.artwork.created) {
-        return moment(this.artwork.created).format("DD/MMM/YYYY");
+        return moment(this.artwork.created).format("LLLL");
       }
-      return moment(this.artwork.id).format("DD/MMM/YYYY");
+      return moment(this.artwork.id).format("LLLL");
     },
     keywords() {
       if (this.artwork.keywords) {
