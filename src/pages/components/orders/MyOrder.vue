@@ -18,11 +18,13 @@
       </mdb-navbar-toggler>
     </mdb-navbar>
     <div class="bg-light mb-5 p-4">
+      <!--
       <div class="d-flex justify-content-center">
         <div class="d-flex justify-content-center text-capitalize">
           <h4>{{networkName}}&nbsp;<span class="text-danger">{{bitcoinConfig.chain}}</span>&nbsp;network</h4>
         </div>
       </div>
+      -->
       <div class="p-4" v-if="activeTab === 'payment-expired'">
         <payment-expired :assetHash="asset.assetHash" :itemId="item.id"/>
       </div>

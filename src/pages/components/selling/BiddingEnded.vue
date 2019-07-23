@@ -2,13 +2,8 @@
 <div class="" v-if="loading">
   <div class="bg-warning text-white">Loading..</div>
 </div>
-<div class="" v-else-if="problem">
-  <div>Problem loading asset - please reload page..</div>
-</div>
-<div class="" v-else-if="!countdown">
-  <div>Bidding has ended..</div>
-</div>
 <div class="" v-else>
+  <a class="btn btn-sm btn-primary text-white m-0">Bidding has ended on this item!</a>
   <div class="d-flex justify-content-between">
     <a v-if="isMeWinning" class="btn btn-sm teal lighten-1 text-white mx-0" @click.prevent="placeBid(bidding.nextBid)">Place Bid  {{bidding.fiatSymbol}} {{bidding.nextBid}} (<i class="fab fa-btc"></i>  {{bidding.nextBidBtc}})</a>
     <a v-else-if="isMeBidding" class="btn btn-sm btn-danger text-white mx-0" @click.prevent="placeBid(bidding.nextBid)">Place Bid  {{bidding.fiatSymbol}} {{bidding.nextBid}} (<i class="fab fa-btc"></i>  {{bidding.nextBidBtc}})</a>
@@ -33,10 +28,11 @@
 import moneyUtils from "@/services/moneyUtils";
 import moment from "moment";
 import utils from "@/services/utils";
+import UnderOffer from "@/pages/components/selling/UnderOffer";
 
 // noinspection JSUnusedGlobalSymbols
 export default {
-  name: "BidAction",
+  name: "BiddingEnded",
   components: {
   },
   props: {
@@ -56,10 +52,7 @@ export default {
   },
   data() {
     return {
-      validFor: null,
       biddingEnded: null,
-      loading: true,
-      problem: false
     };
   },
   mounted() {
@@ -73,7 +66,6 @@ export default {
           this.loading = false;
         } else {
           this.loading = false;
-          this.problem = true;
           this.$notify({type: 'error', title: 'Place Order', text: 'Unable to place the order at present.'});
         }
       });

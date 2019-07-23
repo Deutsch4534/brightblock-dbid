@@ -1,19 +1,19 @@
 <template>
 <div class="">
-  <div class="d-flex justify-content-start py-5">
-    <ul class="list-group mr-5">
+  <div class="d-flex justify-content-start pt-5">
+    <ul class="list-group">
       <a @click.prevent="showTab('bitcoin')" class="list-group-item justify-content-between d-flex align-items-center list-group-item-action" :class="activeTab === 'bitcoin' ? 'active text-light font-weight-bolder' : 'text-dark'">Bitcoin<i class="fas fa-check text-success ml-2" v-if="paymentAddress('bitcoin')"></i><i class="fas fa-times text-danger ml-2" v-else></i></a>
       <a @click.prevent="showTab('lightning')" class="list-group-item justify-content-between d-flex align-items-center list-group-item-action" :class="activeTab === 'lightning' ? ' active text-light font-weight-bolder' : 'text-dark'">Lightning<i class="fas fa-check text-success ml-2" v-if="paymentAddress('lightning')"></i></a>
       <a @click.prevent="showTab('stacks')" class="list-group-item justify-content-between d-flex align-items-center list-group-item-action" :class="activeTab === 'stacks' ? ' active text-light font-weight-bolder' : 'text-dark'">Stacks<i class="fas fa-check text-success ml-2" v-if="paymentAddress('stacks')"></i></a>
     </ul>
     <div class="">
-      <div v-if="activeTab === 'bitcoin'" class="bg-card">
+      <div v-if="activeTab === 'bitcoin'" class="bg-card px-5">
         <bitcoin-address :buyer="buyer" :activeTab="activeTab" @paymentNetworkUpdate="paymentNetworkUpdate"/>
       </div>
-      <div v-else-if="activeTab === 'lightning'" class="bg-card">
+      <div v-else-if="activeTab === 'lightning'" class="bg-card px-5">
         <lightning-address :buyer="buyer" :activeTab="activeTab" @paymentNetworkUpdate="paymentNetworkUpdate"/>
       </div>
-      <div v-else-if="activeTab === 'stacks'" class="bg-card">
+      <div v-else-if="activeTab === 'stacks'" class="bg-card px-5">
         <stacks-address :buyer="buyer" :activeTab="activeTab" @paymentNetworkUpdate="paymentNetworkUpdate"/>
       </div>
     </div>

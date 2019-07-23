@@ -19,7 +19,7 @@
 <script>
 import moment from "moment";
 import { mdbLightbox, mdbCarousel, mdbCarouselItem, mdbCarouselCaption } from 'mdbvue';
-import MediaContainer from "@/views/components/utils/MediaContainer";
+import MediaContainer from "@/pages/components/utils/MediaContainer";
 
 export default {
   name: "ItemImageListView",

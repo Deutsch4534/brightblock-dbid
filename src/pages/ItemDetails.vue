@@ -11,20 +11,20 @@
     </div>
   </div>
   <div class="my-4" v-else>
-    <mdb-navbar expand="medium" color="blue-grey lighten-1" dark style="min-height: 54px;">
+    <mdb-navbar class="navbar-expand-sm" color="blue-grey lighten-1" dark style="min-height: 54px;">
       <mdb-navbar-toggler>
         <mdb-navbar-brand>
           <span style="font-weight: 500">
-            Buy: {{item.title}}
+            Buying
           </span>
         </mdb-navbar-brand>
       </mdb-navbar-toggler>
     </mdb-navbar>
-    <div class="d-flex bg-card p-4">
-      <div class="col-lg-5 col-xl-4 mb-4">
+    <div class="row mx-0 bg-card p-4">
+      <div class="col-md-4 col-sm-12 pt-3">
         <item-image-list-view :item="item"/>
       </div>
-      <div class="col-lg-7 col-xl-7 ml-xl-4 mb-4">
+      <div class="col-md-8 col-sm-12  pt-3">
         <h4 class="mb-3" v-html="item.title"></h4>
         <p class="mb-3" v-html="item.description"></p>
         <div class="d-flex text-muted justify-content-between mb-3">
@@ -44,7 +44,7 @@
           <bid-action :item="item" :assetHash="assetHash" :myProfile="myProfile" @continueBidding="continueBidding"/>
         </div>
         <div v-else-if="activeTab === 'ended-bidding'">
-          <a class="btn btn-sm btn-primary text-white m-0">Bidding has ended on this item!</a>
+          <bidding-ended :item="item" :assetHash="assetHash" :myProfile="myProfile"/>
         </div>
         <div v-else-if="activeTab === 'bidding-started'">
           <bid-action :item="item" :assetHash="assetHash" :myProfile="myProfile" @continueBidding="continueBidding"/>
@@ -73,7 +73,8 @@ import NotSelling from "@/pages/components/selling/NotSelling";
 import UnderOffer from "@/pages/components/selling/UnderOffer";
 
 import BuyAction from "@/pages/components/selling/BuyAction";
-import BidAction from "@/pages/components/selling/BidAction";
+import BidAction from "@/pages/components/selling/BiddingEnded";
+import BiddingEnded from "@/pages/components/selling/BidAction";
 import SettingsTabs from "@/pages/components/user-settings/SettingsTabs";
 import { mdbSpinner } from 'mdbvue';
 import { mdbNavbar, mdbNavbarBrand, mdbNavbarToggler, mdbNavbarNav, mdbNavItem, mdbDropdown, mdbDropdownMenu, mdbDropdownToggle, mdbInput, mdbDropdownItem } from 'mdbvue';
@@ -83,7 +84,7 @@ export default {
   name: "ItemDetails",
   components: {
     mdbSpinner,
-    BidAction, SettingsTabs, DescriptionContainer, ItemImageListView, BuyAction, NotSelling, UnderOffer,
+    BiddingEnded, BidAction, SettingsTabs, DescriptionContainer, ItemImageListView, BuyAction, NotSelling, UnderOffer,
     mdbNavbar, mdbNavbarBrand, mdbNavbarToggler, mdbNavbarNav, mdbNavItem, mdbDropdown, mdbDropdownMenu, mdbDropdownToggle, mdbInput, mdbDropdownItem
   },
   props: {

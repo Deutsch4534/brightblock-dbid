@@ -2,6 +2,7 @@ import _ from "lodash";
 import store from "@/storage/store";
 import bitcoinService from "brightblock-lib/src/services/bitcoinService";
 import myAccountService from "@/services/myAccountService";
+import myAuctionService from "@/services/myAuctionService";
 import utils from "@/services/utils";
 import moneyUtils from "@/services/moneyUtils";
 import moment from "moment";
@@ -63,7 +64,7 @@ const assetStore = {
       let purchaseCycle = store.getters["assetStore/getCurrentPurchaseCycleByHash"](data.assetHash);
       let currentBid = data.saleData.openingBid;
       if (purchaseCycle.bidding && purchaseCycle.bidding.bids.length > 0) {
-        currentBid = purchaseCycle.bidding.bids[purchaseCycle.bidding.bids.length - 1];
+        currentBid = purchaseCycle.bidding.bids[purchaseCycle.bidding.bids.length - 1].amount;
       }
       let nextBid = currentBid + data.saleData.increment;
       let fiatRate = store.getters["conversionStore/getFiatRate"](data.saleData.fiatCurrency);
@@ -71,7 +72,10 @@ const assetStore = {
       if (fiatRate) symbol = fiatRate["symbol"];
       let nextBidBtc = moneyUtils.valueInBitcoin(nextBid, fiatRate);
       let currentBidBtc = moneyUtils.valueInBitcoin(currentBid, fiatRate);
-      let reserveMet = (currentBid && data.saleData.reserve) ? currentBid < data.saleData.reserve : false;
+      let reserveMet = false;
+      if (currentBid && data.saleData.reserve) {
+        reserveMet = currentBid >= data.saleData.reserve;
+      }
       return {
         fiatCurrency: data.saleData.fiatCurrency,
         fiatSymbol: symbol,
@@ -307,25 +311,8 @@ const assetStore = {
     },
     placeBid({ commit, state, getters}, data) {
       return new Promise(resolve => {
-        let item = data.item;
-        let asset = data.asset;
-        store.dispatch("userProfilesStore/fetchUserProfile", { username: item.owner }, { root: true }).then(profile => {
-          let seller = profile;
-          let buyer = store.getters["myAccountStore/getMyProfile"];
-          let fiatRate = store.getters["conversionStore/getFiatRate"](item.saleData.fiatCurrency);
-          let otherData = {
-            fiatRate: fiatRate,
-            buyer: buyer,
-            gallerist: null,
-            seller: seller,
-            creator: null,
-          };
-          let purchaseCycle = utils.initialisePurchaseCycle(item, otherData);
-          if (!asset.purchaseCycles) {
-            asset.purchaseCycles = [];
-          }
-          asset.purchaseCycles.push(purchaseCycle);
-          bitcoinService.getPaymentAddress(asset).then(asset => {
+        myAuctionService.placeSingleItemBid(data, function(auctions) {
+          bitcoinService.placeBid(data).then(asset => {
             commit("addAsset", asset);
             resolve(asset);
           })

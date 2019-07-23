@@ -23,13 +23,13 @@
         <router-link :to="itemUrl" title="show bidding details"><i class="far fa-clock" :class="(countdown === 'bidding ended' ? 'text-danger' : 'text-success')"></i> <span style="line-height: 0.5rem; font-size: 0.8rem;">{{countdown}}</span></router-link>
       </div>
       <div>
-        <router-link v-if="myItem" class="mr-2" :to="itemUrl" title="show buy now details"><i class="far fa-eye"></i></router-link>
-        <router-link :to="myItemEditUrl" title="edit item"><i class="far fa-edit"></i></router-link>
+        <router-link v-if="myItem" :to="myItemEditUrl" title="edit item"><i class="fas fa-pencil-alt"></i></router-link>
+        <router-link class="mr-2" :to="itemUrl" title="show buy now details"><i class="far fa-eye"></i></router-link>
       </div>
     </div>
     <div v-else class="d-flex justify-content-between text-dark" style="font-size: 1.1rem;">
-      <router-link v-if="myItem" class="mr-2" :to="itemUrl" title="show buy now details"><i class="far fa-eye"></i></router-link>
-      <router-link :to="myItemEditUrl" title="edit item"><i class="far fa-edit"></i></router-link>
+      <router-link v-if="myItem" :to="myItemEditUrl" title="edit item"><i class="fas fa-pencil-alt"></i></router-link>
+      <router-link :to="itemUrl" title="show buy now details"><i class="far fa-eye"></i></router-link>
     </div>
   </mdb-card-footer>
 </mdb-card>

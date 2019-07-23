@@ -56,7 +56,7 @@
 
 <script>
 import { mdbContainer, mdbRow, mdbCol, mdbBtn, mdbIcon, mdbInput, mdbTextarea, mdbCard, mdbCardBody } from 'mdbvue';
-import ConfirmationModal from "@/views/components/utils/ConfirmationModal";
+import ConfirmationModal from "@/pages/components/utils/ConfirmationModal";
 import axios from "axios";
 
 export default {

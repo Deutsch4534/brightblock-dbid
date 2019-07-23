@@ -51,6 +51,24 @@ const myAuctionService = {
       });
   },
 
+  placeSingleItemBid: function(bidData, success, failure) {
+    myAuctionService.getAuctionsRootFile(function(rootFile) {
+      if (!rootFile.bidding) {
+        rootFile.bidding = [];
+      }
+      rootFile.bidding.push(bidData);
+      myAuctionService.setAuctionsRootFile(rootFile).then(function() {
+        success(rootFile);
+      });
+    },
+    function() {
+      failure({
+        ERR_CODE: "AUCTIONS_2",
+        message: "Error fetching auctions root file!"
+      });
+    });
+  },
+
   getMyAuctions: function(success, failure) {
     myAuctionService.getAuctionsRootFile(
       function(rootFile) {
