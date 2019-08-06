@@ -1,10 +1,10 @@
 import { getFile } from "blockstack";
-import settings from "./settings";
+import { CONSTANTS } from "@/storage/constants";
 
 const auctionSearchService = {
   getUsersOnlineAuction: function(username) {
     return new Promise((resolve, reject) => {
-      const auctionsRootFileName = settings.auctionsRootFileName;
+      const auctionsRootFileName = CONSTANTS.auctionsRootFileName;
       getFile(auctionsRootFileName, { decrypt: false, username: username })
         .then(function(file) {
           if (file) {

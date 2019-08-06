@@ -131,6 +131,7 @@ import _ from "lodash";
         contentModel3: {
           title: null,
           errorMessage: "",
+          qualityMessage: "Good quality images make the sale - <a href='/help/topics/tips-for-taking-images' target='_blank'><u>see this guide for help!</u></a>",
           popoverBody: "Images for potential buyers to see your item from different angles.<br/><br/>Up to 5 (100kb or less) images.",
         },
         parentalError: null,

@@ -1,4 +1,4 @@
-import settings from "./settings";
+import { CONSTANTS } from "@/storage/constants";
 import xhrService from "./xhrService";
 import Web3 from "web3";
 const abi = require("./abi/ArtMarket");
@@ -162,7 +162,7 @@ const ethereumService = {
   fetchClientState: function(success, failure) {
     xhrService
       .makeDirectCall(
-        settings.ethGatewayUrl + "/api/ethereum/client"
+        CONSTANTS.ethGatewayUrl + "/api/ethereum/client"
       )
       .then(function(response) {
         let clientState = response.details;
@@ -176,7 +176,7 @@ const ethereumService = {
   loadContract: function(contractAddress) {
     xhrService
       .makeDirectCall(
-        settings.ethGatewayUrl +
+        CONSTANTS.ethGatewayUrl +
           "/api/ethereum/load/" +
           contractAddress
       )
@@ -190,7 +190,7 @@ const ethereumService = {
   subscribeBlockchainEvents: function(success, failure) {
     xhrService
       .makeDirectCall(
-        settings.ethGatewayUrl +
+        CONSTANTS.ethGatewayUrl +
           "/api/ethereum" +
           "/subscribe/blocks"
       )
@@ -204,7 +204,7 @@ const ethereumService = {
   fetchBlockchainItems: function(success, failure) {
     xhrService
       .makeDirectCall(
-        settings.ethGatewayUrl + "/api/ethereum/fetch"
+        CONSTANTS.ethGatewayUrl + "/api/ethereum/fetch"
       )
       .then(function(response) {
         success(response.details);
@@ -216,7 +216,7 @@ const ethereumService = {
   fetchBlockchainItem: function(data, success) {
     xhrService
       .makeDirectCall(
-        settings.ethGatewayUrl +
+        CONSTANTS.ethGatewayUrl +
           "/api/ethereum" +
           "/fetch/" +
           data.timestamp
@@ -228,7 +228,7 @@ const ethereumService = {
   deployContract: function(regData, success, failure) {
     xhrService
       .makeDirectCall(
-        settings.ethGatewayUrl + "/api/ethereum/deploy"
+        CONSTANTS.ethGatewayUrl + "/api/ethereum/deploy"
       )
       .then(function(response) {
         success(response.details);

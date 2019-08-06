@@ -104,7 +104,6 @@
 <script>
 import searchIndexService from "@/services/searchIndexService";
 import { mdbContainer, mdbRow, mdbCol, mdbInput, mdbTextarea, mdbBtn, mdbIcon, mdbModal, mdbModalHeader, mdbModalBody, mdbModalFooter } from 'mdbvue';
-import artworkSearchService from "@/services/artworkSearchService";
 
 export default {
   name: "SearchDappsTab",
@@ -161,24 +160,12 @@ export default {
         .then(dappsResults => {
           this.dappsResults = dappsResults;
           dappsResults.forEach(function(result) {
-            $self.fetchArtworkFile(result);
+            //$self.fetchItemFile(result);
           });
         })
         .catch(e => {
           console.log("Unable to contact search index.", e);
         });
-    },
-
-    fetchArtworkFile: function(searchResult) {
-      artworkSearchService.userArtwork(Number(searchResult.id), searchResult.owner,
-        function(artwork) {
-          searchResult.image = artwork.artwork[0].dataUrl;
-        },
-        function(error) {
-          console.log("Error querying in admin for recent artworks: ", error);
-          searchResult.artwork = error;
-        }
-      );
     },
 
     fetchAllDappsIndex: function() {

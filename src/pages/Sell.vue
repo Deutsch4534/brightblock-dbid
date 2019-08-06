@@ -86,7 +86,7 @@ export default {
           btcaddr = myProfile.publicKeyData.rxAddressList[0].address;
         }
         if (btcaddr) {
-          this.$store.dispatch("bitcoinStore/checkAddress", btcaddr).then((result) => {
+          this.$store.dispatch("assetStore/checkAddress", btcaddr).then((result) => {
             if (!result) {
               this.$router.push({ path: "/seller-info" });
             } else {

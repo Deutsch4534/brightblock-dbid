@@ -1,6 +1,6 @@
 import SockJS from "sockjs-client";
 import Stomp from "@stomp/stompjs";
-import settings from "./settings";
+import { CONSTANTS } from "@/storage/constants";
 import xhrService from "./xhrService";
 import myAccountService from "./myAccountService";
 
@@ -9,13 +9,13 @@ const collaborationService = {
     data.sender = myAccountService.myBlockstackId();
     data.type = "artwork";
     data.domain = location.hostname;
-    let endPoint = settings.commsUrl + "/send-to";
+    let endPoint = CONSTANTS.commsUrl + "/comms/send-to";
     xhrService.makePostCall(endPoint, data).then(function(response) {
       if (success) success(response.data.details);
     });
   },
   subscribeCollaborationNews: function() {
-    let socket = new SockJS(settings.commsUrl + "/collab");
+    let socket = new SockJS(CONSTANTS.commsUrl + "/comms/collab");
     let stompClient = Stomp.over(socket);
     stompClient.debug = null;
     let connectSuccess = function() {

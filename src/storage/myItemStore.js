@@ -64,6 +64,7 @@ const myItemStore = {
     },
     editable: (state, getters) => id => {
       let item = getters.myItem(id);
+      if (!id || !item) return false;
       let userProfile = store.getters["myAccountStore/getMyProfile"];
       return userProfile.username === item.owner;
     },
@@ -333,16 +334,6 @@ const myItemStore = {
               if (blockchainItem && blockchainItem.itemIndex > -1) {
                 if (!myItem.bcitem) {
                   myItem.bcitem = {};
-                }
-                if (store.state.constants.featureEthereum) {
-                  myItem.bcitem.status = "registered";
-                  let fiatRate = store.getters["conversionStore/getFiatRate"](myItem.saleData.fiatCurrency);
-                  let ethToBtc = store.getters["conversionStore/getCryptoRate"]("eth_btc");
-                  moneyUtils.convertPrices(myItem, blockchainItem, fiatRate, ethToBtc);
-                  if (blockchainItem.blockstackId && myItem.owner !== blockchainItem.blockstackId) {
-                    myItem.owner = blockchainItem.blockstackId;
-                    store.dispatch("myItemStore/updateItem", {item: myItem, updateProvData: false});
-                  }
                 }
                 commit("addMyItem", myItem);
               } else {

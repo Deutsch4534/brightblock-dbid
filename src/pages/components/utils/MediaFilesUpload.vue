@@ -2,8 +2,8 @@
 <!-- droppable area 1 -->
 
 <div class="m-0">
-  <p>Good quality images make the sale - <a href="/help/topics/tips-for-taking-images" target="_blank"><u>see this guide for help!</u></a></p>
-  <p class="text-muted">Up to {{limit}} images each up to {{sizeLimit}} Kb in size.</p>
+  <p v-if="!readonly && contentModel.qualityMessage" v-html="contentModel.qualityMessage"></p>
+  <p v-if="!readonly" class="text-muted"><small>Up to {{limit}} files each up to {{sizeLimit}} Kb in size.</small></p>
   <mdb-popover trigger="click" :options="{placement: 'top'}" v-if="contentModel.title">
     <div class="popover">
       <div class="popover-header">
@@ -17,7 +17,7 @@
       <mdb-icon far icon="question-circle"/>
     </a>
   </mdb-popover>
-  <div class="mt-2">
+  <div class="mt-2  mx-0" v-if="!readonly">
     <div class="invalid-feedback d-block" v-if="showError">
       {{contentModel.errorMessage}}
     </div>
@@ -28,8 +28,8 @@
       {{internalError}}
     </div>
     <!-- Drop area -->
-    <div class="row mb-3">
-      <div class="col-8 mx-0">
+    <div class="row mb-3 ">
+      <div class="col-8 mx-0 ">
         <div class="load-item" v-if="checkQuantity">
           <div class="drop-area" @drop.prevent="loadMediaObjects" @dragover.prevent>
             <p class="drop-label">Drop file</p>
@@ -47,7 +47,7 @@
   </div>
   <!--
   <div class="row border-bottom pb-2">
-    <div v-for="(file, index) in mediaObjects" :key="index" :file="file" class="col-md-4 p-2 border-bottom border">
+    <div v-for="(file, index) in mediaObjects" :key="index" :file="file" class="col-md-6 p-2 border-bottom border">
       <img :src="missing" alt="Card image cap" class="img-fluid" v-if="ispdf(file)">
       <img :src="file.dataUrl" alt="Card image cap" class="img-fluid mb-2" style="max-height: 350px;" v-else-if="isImage(file)">
       <div class="row" id="video-demo-container" v-else-if="isVideo(file)">
@@ -73,28 +73,27 @@
   </div>
   -->
 
-  <div class="container">
-    <div class="row">
-      <div class="col-md-3 mx-0" sm="4" v-for="(file, index) in mediaObjects" :key="index" :file="file">
-        <mdb-card narrow>
-          <div class="view view-cascade overlay" v-if="ispdf(file)">
-            <img class="card-img-top" :src="missing" alt="Card image cap" style="height: 200px;">
-            <a href="#!">
-              <div class="mask rgba-white-slight waves-effect waves-light"></div>
-            </a>
-          </div>
-          <div class="view view-cascade overlay" v-else-if="isImage(file)">
-            <img class="card-img-top" :src="file.dataUrl" alt="Card image cap" style="height: 200px;">
-            <a href="#!">
-              <div class="mask rgba-white-slight waves-effect waves-light"></div>
-            </a>
-          </div>
-          <mdb-card-body cascade>
-            <h5 class="d-flex justify-content-between teal-text pb-2 pt-1" style="height: 70px;"><strong><small>{{file.name}}</small></strong> <a @click.prevent="clearMediaObject(file.size)"><i class="fas fa-times mt-1 text-danger" style="font-size: 0.8rem;"></i></a> </h5>
-            <mdb-card-text>{{file.size}} bytes</mdb-card-text>
-          </mdb-card-body>
-        </mdb-card>
-      </div>
+  <div class="row">
+    <div class="col-md-6 mx-0 mb-3" sm="12" v-for="(file, index) in mediaObjects" :key="index" :file="file">
+      <mdb-card wide>
+        <div class="view view-cascade overlay" v-if="ispdf(file)">
+          <img class="card-img-top" :src="missing" alt="Card image cap">
+          <a href="#!">
+            <div class="mask rgba-white-slight waves-effect waves-light"></div>
+          </a>
+        </div>
+        <div class="view view-cascade overlay" v-else-if="isImage(file)">
+          <img class="card-img-top" :src="file.dataUrl" alt="Card image cap" style="height: auto;">
+          <a href="#!">
+            <div class="mask rgba-white-slight waves-effect waves-light"></div>
+          </a>
+        </div>
+        <mdb-card-body cascade>
+          <h5 v-if="!readonly" class="d-flex justify-content-end teal-text" style="height: auto;"><a @click.prevent="clearMediaObject(file.size)"><i class="fas fa-times mt-1 text-danger" style="font-size: 0.8rem;"></i></a> </h5>
+          <mdb-card-text><strong><small>{{file.name}}</small></strong></mdb-card-text>
+          <mdb-card-text><strong><small>{{file.size}} bytes</small></strong></mdb-card-text>
+        </mdb-card-body>
+      </mdb-card>
     </div>
   </div>
 
@@ -116,6 +115,11 @@ export default {
   },
   props: {
     showError: {
+      type: Boolean,
+      default: () => (false),
+      required: false
+    },
+    readonly: {
       type: Boolean,
       default: () => (false),
       required: false
@@ -155,7 +159,7 @@ export default {
     return {
       mediaObjects: [],
       internalError: null,
-      missing: require("@/assets/img/missing/missing.png"),
+      missing: require("@/assets/img/pdf-holding.png"),
     };
   },
   created() {

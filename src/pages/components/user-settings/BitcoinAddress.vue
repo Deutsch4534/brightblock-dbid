@@ -124,7 +124,7 @@ export default {
       if (bitcoinAddress && bitcoinAddress.indexOf(" ") > -1) {
         bitcoinAddress = bitcoinAddress.trim();
       }
-      this.$store.dispatch("bitcoinStore/checkAddress", bitcoinAddress).then((result) => {
+      this.$store.dispatch("assetStore/checkAddress", bitcoinAddress).then((result) => {
         if (result) {
           this.removedAddress = false;
           this.addQrCode(bitcoinAddress);

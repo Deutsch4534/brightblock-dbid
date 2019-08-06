@@ -1,7 +1,7 @@
 import axios from "axios";
 import _ from "lodash";
-import settings from "./settings";
 import myAccountService from "./myAccountService";
+import { CONSTANTS } from "@/storage/constants";
 
 /**
  *  The service is a client to the brightblock sever side grpc client.
@@ -30,13 +30,13 @@ const searchIndexService = {
         // throw new Error("Keywords need to be an array to be indexed in search.");
         indexable.keywords = [];
       }
-      let saleType = settings.taxonomy.saleTypes[0];
+      let saleType = CONSTANTS.taxonomy.saleTypes[0];
       if (indexable.saleData) {
-        let index = _.findIndex(settings.taxonomy.saleTypes, function(o) {
+        let index = _.findIndex(CONSTANTS.taxonomy.saleTypes, function(o) {
           return o.soid === indexable.saleData.soid;
         });
         if (index > -1) {
-          saleType = settings.taxonomy.saleTypes[index];
+          saleType = CONSTANTS.taxonomy.saleTypes[index];
         }
       }
       indexable.metaData = {
@@ -196,7 +196,7 @@ const searchIndexService = {
   makePostCall: function(command, data) {
     let callInfo = {
       method: "post",
-      url: settings.searchUrl + command,
+      url: CONSTANTS.searchUrl + command,
       headers: {
         "Content-Type": "application/json"
       }
@@ -218,7 +218,7 @@ const searchIndexService = {
   makeGetCall: function(command, args) {
     let callInfo = {
       method: "get",
-      url: settings.searchUrl + command,
+      url: CONSTANTS.searchUrl + command,
       headers: {
         "Content-Type": "application/json"
       }

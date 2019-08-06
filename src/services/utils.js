@@ -1,6 +1,6 @@
 import SHA256 from "crypto-js/sha256";
 import _ from "lodash";
-import settings from "./settings";
+import { CONSTANTS } from "@/storage/constants";
 import moment from "moment";
 import bitcoin from "bitcoinjs-lib";
 import bitcoinMessage from "bitcoinjs-message";
@@ -81,7 +81,7 @@ const utils = {
   },
 
   initialisePurchaseCycle: function(item, otherData) {
-    let invoiceRates = settings.invoiceRates;
+    let invoiceRates = CONSTANTS.invoiceRates;
     let includeArtist = item.artist && item.artist !== item.owner;
     let amounts = utils.getAmounts(otherData.fiatRate, invoiceRates, item.saleData, item.gallerist, includeArtist);
     let residuals = [];

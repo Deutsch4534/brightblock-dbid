@@ -37,19 +37,6 @@
     <div class="col-md-10"><mdb-btn class="btn teal lighten-1" @click="togglePowerUser">{{powerUserLabel}}</mdb-btn></div>
   </div>
 
-  <h3>Feature Settings</h3>
-  <div class="row">
-    <div class="col-md-2">Bitcoin:</div>
-    <div class="col-md-10"><mdb-btn class="btn teal lighten-1" @click="toggleBtcFeature">{{btcModeLabel}}</mdb-btn></div>
-  </div>
-  <div class="row">
-    <div class="col-md-2">Ethereum:</div>
-    <div class="col-md-10"><mdb-btn class="btn teal lighten-1" @click="toggleEthFeature">{{ethModeLabel}}</mdb-btn></div>
-  </div>
-  <div class="row">
-    <div class="col-md-2">Auctions:</div>
-    <div class="col-md-10"><mdb-btn class="btn teal lighten-1" @click="toggleAuctionsFeature">{{auctionsModeLabel}}</mdb-btn></div>
-  </div>
 
   <h3>Gaia Test Settings</h3>
   <div class="row">
@@ -84,35 +71,6 @@
     <div class="col-md-10">{{ constants.apiKey }}</div>
   </div>
 
-  <h3>Ethereum Settings</h3>
-  <div class="row">
-    <div class="col-md-2">Contract API:</div>
-    <div class="col-md-10">{{ clientState.contractAddress }}</div>
-  </div>
-  <div class="row">
-    <div class="col-md-2">Load Contract:</div>
-    <div class="col-md-10">
-      <div>
-        <input v-model="contractAddress" class="form-control" placeholder="Drop contract address here: 0x..." v-on:keyup.13="loadContract"></input>
-      </div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-2">Client:</div>
-    <div class="col-md-10">{{ clientState.client }}</div>
-  </div>
-  <div class="row">
-    <div class="col-md-2">Meta Mask:</div>
-    <div class="col-md-10">{{ clientState.metaMaskNetwork.networkId }} ({{ clientState.metaMaskNetwork.networkName }})</div>
-  </div>
-  <div class="row">
-    <div class="col-md-2">Expected:</div>
-    <div class="col-md-10">{{ networkExpected }}</div>
-  </div>
-  <div class="row">
-    <div class="col-md-2">Items Registered:</div>
-    <div class="col-md-10">{{ clientState.numbItems }}</div>
-  </div>
 </div>
 </template>
 
@@ -272,10 +230,6 @@ export default {
     }
   },
   computed: {
-    clientState() {
-      let clientState = this.$store.state.ethStore.clientState;
-      return clientState;
-    },
     debugMode() {
       let debugMode = this.$store.state.constants.debugMode;
       return debugMode;
@@ -291,30 +245,6 @@ export default {
     debugModeLabel() {
       let debugMode = this.$store.getters["isDebugMode"];
       if (debugMode) {
-        return "on";
-      } else {
-        return "off";
-      }
-    },
-    auctionsModeLabel() {
-      let fa = this.$store.state.constants.featureAuctions;
-      if (fa) {
-        return "on";
-      } else {
-        return "off";
-      }
-    },
-    ethModeLabel() {
-      let fa = this.$store.state.constants.featureEthereum;
-      if (fa) {
-        return "on";
-      } else {
-        return "off";
-      }
-    },
-    btcModeLabel() {
-      let fa = this.$store.state.constants.featureBitcoin;
-      if (fa) {
         return "on";
       } else {
         return "off";

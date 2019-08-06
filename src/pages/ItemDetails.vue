@@ -74,7 +74,7 @@ import UnderOffer from "@/pages/components/selling/UnderOffer";
 
 import BuyAction from "@/pages/components/selling/BuyAction";
 import BidAction from "@/pages/components/selling/BiddingEnded";
-import BiddingEnded from "@/pages/components/selling/BidAction";
+import BiddingEnded from "@/pages/components/selling/BiddingEnded";
 import SettingsTabs from "@/pages/components/user-settings/SettingsTabs";
 import { mdbSpinner } from 'mdbvue';
 import { mdbNavbar, mdbNavbarBrand, mdbNavbarToggler, mdbNavbarNav, mdbNavItem, mdbDropdown, mdbDropdownMenu, mdbDropdownToggle, mdbInput, mdbDropdownItem } from 'mdbvue';
@@ -159,25 +159,23 @@ export default {
       }
       let asset = this.$store.getters["assetStore/getAssetByHash"](this.assetHash);
       let purchaseCycle = this.$store.getters["assetStore/getCurrentPurchaseCycleByHash"](this.assetHash);
-      if (this.buyerInfo) {
-        return "buyer-info";
-      }
       let activeTab = "not-selling";
       if (this.item.saleData.soid === 1) {
         activeTab = "start-buying";
       } else if (this.item.saleData.soid === 2) {
-        let now = moment({}).valueOf();
-        if (this.item.saleData.biddingEnds < now) {
-          activeTab = "ended-bidding";
-        } else {
-          activeTab = "start-bidding";
-        }
+        activeTab = "start-bidding";
       }
-      if (asset && asset.status > 0) {
+      if (asset && purchaseCycle && asset.status > 0) {
         activeTab = "under-offer";
         let biddingStarted = (purchaseCycle && purchaseCycle.bidding);
         if (biddingStarted) {
           activeTab = "bidding-started";
+          if (purchaseCycle.bidding.saleData.soid === 2) {
+            let now = moment({}).valueOf();
+            if (this.item.saleData.biddingEnds < now) {
+              activeTab = "ended-bidding";
+            }
+          }
         } else {
           let username = this.myProfile.username
           if (username === purchaseCycle.buyer.did) {

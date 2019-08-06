@@ -123,11 +123,18 @@ export default {
     this.$store.dispatch("assetStore/subscribeAssetPurchaseNews", this.myProfile);
     let asset = this.$store.getters["assetStore/getAssetByHash"](this.assetHash);
     let purchaseCycle = this.$store.getters["assetStore/getCurrentPurchaseCycleByHash"](this.assetHash);
-    if (this.myProfile.username === purchaseCycle.buyer.did) {
-      this.whoami = "buyer";
-      this.$store.dispatch("myAccountStore/addRelationship", purchaseCycle.seller.did);
-    } else if (this.myProfile.username === purchaseCycle.seller.did) {
-      this.whoami = "seller";
+    if (purchaseCycle.bidding) {
+      let meWon = this.$store.getters["assetStore/isMeWon"]({username: this.myProfile.username, assetHash: this.assetHash});
+      if (meWon) {
+        this.whoami = "buyer";
+      }
+    } else {
+      if (this.myProfile.username === purchaseCycle.buyer.did) {
+        this.whoami = "buyer";
+        this.$store.dispatch("myAccountStore/addRelationship", purchaseCycle.seller.did);
+      } else if (this.myProfile.username === purchaseCycle.seller.did) {
+        this.whoami = "seller";
+      }
     }
     if (this.whoami === "nobody") {
       this.$notify({type: 'warn', title: 'Purchasing', text: 'Sending m you back home as you don\'t belong here.'});

@@ -16,7 +16,8 @@
       <buy-sell-tabs :myProfile="myProfile" :activeTab="currentItemAction" style="width: 100%;"/>
       <my-item-manage class="p-4" v-if="itemAction === 'manage'" :item="item" :asset="asset" :myProfile="myProfile"/>
       <my-item-update class="p-4" v-else-if="itemAction === 'update'" :formTitle="'New Item'" :item="item" :mode="'upload'" :asset="asset" :myProfile="myProfile"/>
-      <my-item-register class="p-4" v-else-if="itemAction === 'register'" :itemId="item.id" :asset="asset" :myProfile="myProfile"/>
+      <my-item-reregister class="p-4" v-else-if="itemAction === 'register' && isRegistered" :itemId="item.id" :assetHash="asset.assetHash" :myProfile="myProfile"/>
+      <my-item-register class="p-4" v-else-if="itemAction === 'register' && !isRegistered" :itemId="item.id" :assetHash="asset.assetHash" :myProfile="myProfile"/>
       <my-item-coa class="p-4" v-else-if="itemAction === 'coa'" :item="item" :asset="asset" :myProfile="myProfile"/>
       <my-item-set-price class="p-4" v-else-if="itemAction === 'set-price'" :item="item" :asset="asset" :myProfile="myProfile"/>
       <my-order class="mb-4" v-else-if="itemAction === 'my-order'" :myProfile="myProfile" :assetHash="asset.assetHash" :item="item"/>
@@ -28,6 +29,7 @@
 <script>
 import MyItemUpdate from "./MyItemUpdate";
 import MyItemRegister from "./MyItemRegister";
+import MyItemReregister from "./MyItemReregister";
 import MyItemManage from "./MyItemManage";
 import MyItemCoa from "./MyItemCoa";
 import MyItemSetPrice from "./MyItemSetPrice";
@@ -42,7 +44,7 @@ export default {
   name: "MyItem",
   bodyClass: "index-page",
   components: {
-    BuySellTabs, MyOrder, MyItemManage, MyItemRegister, MyItemCoa, MyItemSetPrice, MyItemUpdate,
+    MyItemReregister, BuySellTabs, MyOrder, MyItemManage, MyItemRegister, MyItemCoa, MyItemSetPrice, MyItemUpdate,
     mdbContainer,
     mdbRow,
     mdbCard,
@@ -85,6 +87,11 @@ export default {
         }
       }
       return this.itemAction;
+    },
+    isRegistered() {
+      let asset = this.$store.getters["assetStore/getAssetByHash"](this.asset.assetHash);
+      if (!asset || !asset.assetRegistrationTx) return false;
+      return true;
     },
   },
   methods: {

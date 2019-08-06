@@ -2,7 +2,7 @@ import OT from "@opentok/client";
 import xhrService from "./xhrService";
 import utils from "./utils";
 import notify from "@/notify";
-import settings from "./settings";
+import { CONSTANTS } from "@/storage/constants";
 
 /**
  *  The service is a client to the brightblock sever.
@@ -141,7 +141,7 @@ const peerToPeerService = {
   },
   start: function() {
     peerToPeerService.session = OT.initSession(
-      settings.apiKey,
+      CONSTANTS.apiKey,
       peerToPeerService.tokbox.sessionId
     );
     peerToPeerService.session.on({

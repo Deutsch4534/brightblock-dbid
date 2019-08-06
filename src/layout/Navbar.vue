@@ -41,7 +41,6 @@ import AccountLinks from "@/layout/AccountLinks";
 import AccountLinksXs from "@/layout/AccountLinksXs";
 import PortfolioLinks from "@/layout/PortfolioLinks";
 import UploadLinks from "@/layout/UploadLinks";
-import artworkSearchService from "@/services/artworkSearchService";
 import myAccountService from "@/services/myAccountService";
 import LoginTabModal from "@/pages/components/user-settings/LoginTabModal";
 import { mdbContainer, mdbNavbar, mdbNavbarBrand, mdbNavbarToggler, mdbNavbarNav, mdbNavItem, mdbDropdown, mdbDropdownMenu, mdbDropdownToggle, mdbInput, mdbDropdownItem } from 'mdbvue';
@@ -126,15 +125,7 @@ export default {
     },
     closeModal: function() {
       this.showModal = false;
-    },
-    doSearch() {
-      let qString = this.query;
-      if (!this.query || this.query.length === 0) {
-        qString = "*";
-      }
-      artworkSearchService.newQuery(this.$store, {field: "title", query: qString});
-      this.$router.push("/search?query=" + qString);
-    },
+    }
   },
   mounted() {
   },

@@ -191,7 +191,6 @@
 <script>
 import notify from "@/notify";
 import moment from "moment";
-import ethereumService from "@/services/ethereumService";
 import moneyUtils from "@/services/moneyUtils";
 import { mdbPopover, mdbIcon, mdbCardBody, mdbCardTitle, mdbCardText, mdbBtn } from "mdbvue";
 import { mdbBtnGroup, mdbContainer, mdbRow, mdbCol, mdbAlert } from 'mdbvue';

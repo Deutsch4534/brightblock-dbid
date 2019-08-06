@@ -60,24 +60,28 @@ const assetStore = {
       }
       return purchaseCycle;
     },
-    getCurrentBiddingData: state => data => {
-      let purchaseCycle = store.getters["assetStore/getCurrentPurchaseCycleByHash"](data.assetHash);
-      let currentBid = data.saleData.openingBid;
+    getCurrentBiddingData: state => assetHash => {
+      let purchaseCycle = store.getters["assetStore/getCurrentPurchaseCycleByHash"](assetHash);
+      if (!purchaseCycle) {
+        return;
+      }
+      let saleData = purchaseCycle.bidding.saleData;
+      let currentBid = saleData.openingBid;
       if (purchaseCycle.bidding && purchaseCycle.bidding.bids.length > 0) {
         currentBid = purchaseCycle.bidding.bids[purchaseCycle.bidding.bids.length - 1].amount;
       }
-      let nextBid = currentBid + data.saleData.increment;
-      let fiatRate = store.getters["conversionStore/getFiatRate"](data.saleData.fiatCurrency);
+      let nextBid = currentBid + saleData.increment;
+      let fiatRate = store.getters["conversionStore/getFiatRate"](saleData.fiatCurrency);
       let symbol = "";
       if (fiatRate) symbol = fiatRate["symbol"];
       let nextBidBtc = moneyUtils.valueInBitcoin(nextBid, fiatRate);
       let currentBidBtc = moneyUtils.valueInBitcoin(currentBid, fiatRate);
       let reserveMet = false;
-      if (currentBid && data.saleData.reserve) {
-        reserveMet = currentBid >= data.saleData.reserve;
+      if (currentBid && saleData.reserve) {
+        reserveMet = currentBid >= saleData.reserve;
       }
       return {
-        fiatCurrency: data.saleData.fiatCurrency,
+        fiatCurrency: saleData.fiatCurrency,
         fiatSymbol: symbol,
         nextBid: nextBid,
         nextBidBtc: nextBidBtc,
@@ -93,8 +97,20 @@ const assetStore = {
       }
       return [];
     },
-    isMeWinning: state => data => {
+    isMeWinningOrWon: state => data => {
       let purchaseCycle = store.getters["assetStore/getCurrentPurchaseCycleByHash"](data.assetHash);
+      let bids = purchaseCycle.bidding.bids;
+      if (bids && bids.length > 0) {
+        return data.username === bids[bids.length - 1].bidder;
+      }
+      return false;
+    },
+    isMeWon: state => data => {
+      let purchaseCycle = store.getters["assetStore/getCurrentPurchaseCycleByHash"](data.assetHash);
+      let now = moment({}).valueOf();
+      if (purchaseCycle.bidding.saleData.biddingEnds > now) {
+        return false;
+      }
       let bids = purchaseCycle.bidding.bids;
       if (bids && bids.length > 0) {
         return data.username === bids[bids.length - 1].bidder;
@@ -231,6 +247,20 @@ const assetStore = {
         }
       });
     },
+    checkAddress({ commit, state }, bitcoinAddress) {
+      return new Promise(resolve => {
+        bitcoinService.checkAddress({address: bitcoinAddress}).then(result => {
+          if (result) {
+            resolve(true);
+          } else {
+            resolve(false);
+          }
+        })
+          .catch(() => {
+            resolve(false);
+          });
+      });
+    },
     subscribeAssetPurchaseNews({ commit, state, getters}, myProfile) {
       return new Promise(resolve => {
         bitcoinService.subscribeAssetPurchaseNews(function(assets) {
@@ -335,6 +365,32 @@ const assetStore = {
         })
           .catch(() => {
             // server error
+            resolve();
+          });
+      });
+    },
+    registerAsset({ commit }, asset) {
+      return new Promise(resolve => {
+        bitcoinService.registerAsset(asset).then(asset => {
+          if (asset && asset.assetRegistrationTx) {
+            commit("addAsset", asset);
+          }
+          resolve(asset);
+        })
+          .catch(() => {
+            resolve();
+          });
+      });
+    },
+    unregisterAsset({ commit }, asset) {
+      return new Promise(resolve => {
+        bitcoinService.unregisterAsset(asset).then(asset => {
+          if (asset && asset.assetRegistrationTx) {
+            commit("addAsset", asset);
+          }
+          resolve(asset);
+        })
+          .catch(() => {
             resolve();
           });
       });

@@ -125,7 +125,7 @@ export default {
       return saleData.soid === 2 && saleData.reserve > 0;
     },
     isMeWinning() {
-      let isMeWinning = this.$store.getters["assetStore/isMeWinning"]({username: this.myProfile.username, assetHash: this.assetHash});
+      let isMeWinning = this.$store.getters["assetStore/isMeWinningOrWon"]({username: this.myProfile.username, assetHash: this.assetHash});
       return isMeWinning;
     },
     isMeBidding() {
@@ -133,12 +133,8 @@ export default {
       return isMeBidding;
     },
     bidding() {
-      let data = {
-        assetHash: this.assetHash,
-        saleData: this.item.saleData,
-      }
-      let bidding = this.$store.getters["assetStore/getCurrentBiddingData"](data);
-      return bidding;
+      let bidding = this.$store.getters["assetStore/getCurrentBiddingData"](this.assetHash);
+      return (bidding) ? bidding : {};
     }
   }
 };

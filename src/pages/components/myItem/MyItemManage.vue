@@ -21,7 +21,6 @@
 <script>
 import utils from "@/services/utils";
 import notify from "@/notify";
-import ethereumService from "@/services/ethereumService";
 import ConfirmationModal from "../utils/ConfirmationModal";
 import DeleteItemModal from "./DeleteItemModal";
 import DescriptionContainer from "@/pages/components/utils/DescriptionContainer";
