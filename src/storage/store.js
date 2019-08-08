@@ -13,6 +13,7 @@ import onlineAuctionsStore from "./onlineAuctionsStore";
 import myAuctionStore from "./myAuctionStore";
 import contentStore from "./contentStore";
 import xhrService from "@/services/xhrService";
+import { API_CONSTANTS } from "@/api-constants";
 
 Vue.use(Vuex);
 
@@ -31,6 +32,7 @@ const store = new Vuex.Store({
   },
   state: {
     constants: {},
+    apiConstants: {},
     serverTime: {}
   },
   getters: {
@@ -47,6 +49,9 @@ const store = new Vuex.Store({
     },
     constants(state) {
       state.constants = CONSTANTS;
+    },
+    apiConstants(state) {
+      state.apiConstants = API_CONSTANTS;
     },
     toggleDebugMode(state) {
       state.constants.debugMode = !state.constants.debugMode;

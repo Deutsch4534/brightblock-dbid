@@ -2,6 +2,7 @@ import axios from "axios";
 import _ from "lodash";
 import myAccountService from "./myAccountService";
 import { CONSTANTS } from "@/storage/constants";
+import { API_CONSTANTS } from "@/api-constants";
 
 /**
  *  The service is a client to the brightblock sever side grpc client.
@@ -196,7 +197,7 @@ const searchIndexService = {
   makePostCall: function(command, data) {
     let callInfo = {
       method: "post",
-      url: CONSTANTS.searchUrl + command,
+      url: API_CONSTANTS.searchUrl + command,
       headers: {
         "Content-Type": "application/json"
       }
@@ -218,7 +219,7 @@ const searchIndexService = {
   makeGetCall: function(command, args) {
     let callInfo = {
       method: "get",
-      url: CONSTANTS.searchUrl + command,
+      url: API_CONSTANTS.searchUrl + command,
       headers: {
         "Content-Type": "application/json"
       }

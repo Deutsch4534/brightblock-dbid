@@ -101,7 +101,7 @@ export default {
         siteName: "dbidio",
         siteLogo: siteLogo,
       }
-      let endPoint = this.$store.state.constants.ethGatewayUrl + "/api/convert/coa";
+      let endPoint = this.$store.state.apiConstants.ethGatewayUrl + "/api/convert/coa";
       xhrService.makePostCall(endPoint, data).then((response) => {
         $self.downloadLink = $self.getPdfLink(item);
         // $self.$emit('updateCoa', response.data);
@@ -110,7 +110,7 @@ export default {
       });
     },
     getPdfLink: function(item) {
-      let url = this.$store.state.constants.ethGatewayUrl + "/api/getpdf/";
+      let url = this.$store.state.apiConstants.ethGatewayUrl + "/api/getpdf/";
       if (item) {
         let title = item.title;
         title = title.replace(/\s/g, '_');

@@ -12,19 +12,19 @@
   <h3>API Settings</h3>
   <div class="row">
     <div class="col-md-2">Shape Shift:</div>
-    <div class="col-md-10">{{ constants.shapeShiftUrl }}</div>
+    <div class="col-md-10">{{ apiConstants.shapeShiftUrl }}</div>
   </div>
   <div class="row">
     <div class="col-md-2">Gaia Hub:</div>
-    <div class="col-md-10">{{ constants.gaiaHubUrl }}</div>
+    <div class="col-md-10">{{ apiConstants.gaiaHubUrl }}</div>
   </div>
   <div class="row">
     <div class="col-md-2">Search:</div>
-    <div class="col-md-10">{{ constants.searchUrl }}</div>
+    <div class="col-md-10">{{ apiConstants.searchUrl }}</div>
   </div>
   <div class="row">
     <div class="col-md-2">Eth Gateway:</div>
-    <div class="col-md-10">{{ constants.ethGatewayUrl }}</div>
+    <div class="col-md-10">{{ apiConstants.ethGatewayUrl }}</div>
   </div>
 
   <h3>Debug Settings</h3>
@@ -100,7 +100,7 @@ export default {
     };
   },
   created() {
-    this.gaiaHubUrl = this.$store.state.constants.gaiaHubUrl;
+    this.gaiaHubUrl = this.$store.state.apiConstants.gaiaHubUrl;
     this.network = ethereumService.getNetworkType();
     this.networkExpected = this.$store.state.constants.networkExpected;
     let hubConfig = localStorage.getItem("blockstack-gaia-hub-config");
@@ -252,6 +252,9 @@ export default {
     },
     constants() {
       return this.$store.state.constants;
+    },
+    apiConstants() {
+      return this.$store.state.apiConstants;
     },
     localComputed() {
       return "hi there!";

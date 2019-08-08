@@ -126,7 +126,7 @@ export default {
   },
   computed: {
     searchUrl() {
-      return this.$store.state.constants.searchUrl;
+      return this.$store.state.apiConstants.searchUrl;
     },
     domain() {
       return location.hostname;

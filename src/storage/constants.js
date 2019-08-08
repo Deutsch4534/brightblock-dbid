@@ -1,48 +1,15 @@
 const dev = location.origin.indexOf("localhost") > -1;
-const staging = (location.origin.indexOf("staging") > -1 || location.origin.indexOf("tdbid") > -1 || location.origin.indexOf("tart") > -1 || location.origin.indexOf("8081") > -1);
-const switched = false;
-var gatewayUrl = "http://localhost:8191";
-var gaiaHubUrl = "http://localhost:8195";
-var searchUrl = "http://localhost:8193";
-var commsUrl = "http://localhost:8197";
-if (!dev) {
-  if (switched) {
-    if (staging) {
-      gatewayUrl = "https://tapi.radiclesociety.org";
-      searchUrl = "https://tindex.radiclesociety.org";
-      gaiaHubUrl = "https://tgaia.radiclesociety.org";
-      commsUrl = "https://tcomms.radiclesociety.org";
-    } else {
-      gatewayUrl = "https://api.radiclesociety.org";
-      searchUrl = "https://index.radiclesociety.org";
-      gaiaHubUrl = "https://gaia.radiclesociety.org";
-      commsUrl = "https://comms.radiclesociety.org";
-    }
-  } else if (!switched) {
-    if (staging) {
-      gatewayUrl = "https://api-staging.brightblock.org";
-      searchUrl = "https://search-staging.brightblock.org";
-      gaiaHubUrl = "https://gaia.brightblock.org";
-      commsUrl = "https://api-staging.brightblock.org";
-    } else {
-      gatewayUrl = "https://api.brightblock.org";
-      gaiaHubUrl = "https://gaia.brightblock.org";
-      searchUrl = "https://search.brightblock.org";
-      commsUrl = "https://api.brightblock.org";
-    }
-  }
-}
 
 export const CONSTANTS = {
   apiKey: "46171452",
   nodeEnv: (dev) ? "development" : "production",
   environment: (dev) ? "development" : "production",
-  shapeShiftUrl: "https://shapeshift.io",
-  ethGatewayUrl: gatewayUrl,
-  btcGatewayUrl: gatewayUrl,
-  gaiaHubUrl: gaiaHubUrl,
-  searchUrl: searchUrl,
-  commsUrl: commsUrl,
+  // shapeShiftUrl: "https://shapeshift.io",
+  // ethGatewayUrl: gatewayUrl,
+  // btcGatewayUrl: gatewayUrl,
+  // gaiaHubUrl: gaiaHubUrl,
+  // searchUrl: searchUrl,
+  // commsUrl: commsUrl,
   taxonomy: {
     keywords: ["contemporary", "modern", "outsider", "political", "bauhaus", "impressionism", "noir", "cartoon", "illustration", "grafitti"],
     media: [

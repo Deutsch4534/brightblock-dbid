@@ -73,7 +73,7 @@ const conversionStore = {
     },
     fetchShapeShiftCryptoRate: function({ commit }, pair) {
       return new Promise(resolve => {
-        const url = store.state.constants.shapeShiftUrl + "/rate/" + pair;
+        const url = store.state.apiConstants.shapeShiftUrl + "/rate/" + pair;
         xhrService.makeDirectCall(url).then(function(cryptoRate) {
           commit("setCryptoRate", cryptoRate);
           resolve(cryptoRate);

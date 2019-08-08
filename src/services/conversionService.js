@@ -1,10 +1,10 @@
 import SockJS from "sockjs-client";
 import Stomp from "@stomp/stompjs";
-import { CONSTANTS } from "@/storage/constants";
+import { API_CONSTANTS } from "@/api-constants";
 
 const conversionService = {
   subscribeExchangeRateNews: function() {
-    let socket = new SockJS(CONSTANTS.ethGatewayUrl + "/exchanges");
+    let socket = new SockJS(API_CONSTANTS.ethGatewayUrl + "/exchanges");
     let stompClient = Stomp.over(socket);
     stompClient.debug = null;
     let connectSuccess = function() {

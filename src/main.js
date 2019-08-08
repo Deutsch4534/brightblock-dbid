@@ -12,6 +12,7 @@ import PrismicVue from "prismic-vue";
 import linkResolver from "./prismic/linkResolver";
 
 import { CONSTANTS } from "@/storage/constants";
+import { API_CONSTANTS } from "@/api-constants";
 import Datetime from "vue-datetime";
 // You need a specific loader for CSS files
 import "vue-datetime/dist/vue-datetime.css";
@@ -52,6 +53,7 @@ const app = new Vue({
   },
   beforeCreate () {
     store.commit("constants", CONSTANTS);
+    store.commit("apiConstants", API_CONSTANTS);
     store.dispatch("myAccountStore/fetchMyAccount").then(profile => {
       store.dispatch("fetchServerTime");
     });
