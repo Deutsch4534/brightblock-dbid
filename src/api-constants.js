@@ -1,6 +1,6 @@
 const dev = location.origin.indexOf("localhost") > -1;
-const staging = (location.origin.indexOf("staging") > -1 || location.origin.indexOf("tdbid") > -1 || location.origin.indexOf("tart") > -1 || location.origin.indexOf("8081") > -1);
-const switched = false;
+const staging = (location.origin.indexOf("staging") > -1 || !location.origin.indexOf("tdbid") > -1 || !location.origin.indexOf("tart") > -1 || location.origin.indexOf("8081") > -1);
+const switched = true;
 var btcGatewayUrl = "http://localhost:8191";
 var ethGatewayUrl = "http://localhost:8191";
 var staxGatewayUrl = "http://localhost:8191";
