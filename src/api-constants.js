@@ -1,5 +1,5 @@
 const dev = location.origin.indexOf("localhost") > -1;
-const staging = (location.origin.indexOf("staging") > -1 || !location.origin.indexOf("tdbid") > -1 || !location.origin.indexOf("tart") > -1 || location.origin.indexOf("8081") > -1);
+const production = (location.origin.indexOf("tdbid") > -1 || location.origin.indexOf("tart") > -1);
 const switched = true;
 var btcGatewayUrl = "http://localhost:8191";
 var ethGatewayUrl = "http://localhost:8191";
@@ -11,7 +11,7 @@ var lndGatewayUrlAlice = "localhost:10011";
 var lndGatewayUrlBob = "localhost:10012";
 if (!dev) {
   if (switched) {
-    if (staging) {
+    if (!production) {
       btcGatewayUrl = "https://tapi.radiclesociety.org";
       ethGatewayUrl = "https://tapi.radiclesociety.org";
       staxGatewayUrl = "https://tapi.radiclesociety.org";
@@ -31,7 +31,7 @@ if (!dev) {
       lndGatewayUrlBob = "lndb.radiclesociety.org:10012";
     }
   } else if (!switched) {
-    if (staging) {
+    if (!production) {
       btcGatewayUrl = "https://api-staging.brightblock.org";
       ethGatewayUrl = "https://api-staging.brightblock.org";
       staxGatewayUrl = "https://api-staging.brightblock.org";
