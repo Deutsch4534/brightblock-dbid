@@ -27,7 +27,9 @@ const conversionStore = {
   },
   mutations: {
     setCryptoRate(state, cryptoRate) {
-      state.cryptoRates[cryptoRate.pair] = Number(cryptoRate.rate);
+      if (cryptoRate && cryptoRate.pair) {
+        state.cryptoRates[cryptoRate.pair] = Number(cryptoRate.rate);
+      }
     },
     setFiatRates(state, fiatRates) {
       state.fiatRates = fiatRates;

@@ -13,7 +13,7 @@ import onlineAuctionsStore from "./onlineAuctionsStore";
 import myAuctionStore from "./myAuctionStore";
 import contentStore from "./contentStore";
 import xhrService from "@/services/xhrService";
-import { API_CONSTANTS } from "@/api-constants";
+import { API_CONSTANTS } from "brightblock-lib/src/services/api-constants";
 
 Vue.use(Vuex);
 

@@ -1,7 +1,7 @@
 import xhrService from "./xhrService";
 import Web3 from "web3";
 const abi = require("./abi/ArtMarket");
-import { API_CONSTANTS } from "@/api-constants";
+import { API_CONSTANTS } from "brightblock-lib/src/services/api-constants";
 
 const ethereumService = {
   getWeb3: function() {

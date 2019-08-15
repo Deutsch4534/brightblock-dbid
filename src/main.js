@@ -12,7 +12,7 @@ import PrismicVue from "prismic-vue";
 import linkResolver from "./prismic/linkResolver";
 
 import { CONSTANTS } from "@/storage/constants";
-import { API_CONSTANTS } from "@/api-constants";
+import { API_CONSTANTS } from "brightblock-lib/src/services/api-constants";
 import Datetime from "vue-datetime";
 // You need a specific loader for CSS files
 import "vue-datetime/dist/vue-datetime.css";

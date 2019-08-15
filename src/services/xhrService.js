@@ -1,5 +1,5 @@
 import axios from "axios";
-import { API_CONSTANTS } from "@/api-constants";
+import { API_CONSTANTS } from "brightblock-lib/src/services/api-constants";
 
 const xhrService = {
   makeDirectCall: function(url) {

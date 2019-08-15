@@ -1,6 +1,6 @@
 import SockJS from "sockjs-client";
 import Stomp from "@stomp/stompjs";
-import { API_CONSTANTS } from "@/api-constants";
+import { API_CONSTANTS } from "brightblock-lib/src/services/api-constants";
 
 const conversionService = {
   subscribeExchangeRateNews: function() {

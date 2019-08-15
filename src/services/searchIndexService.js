@@ -2,7 +2,7 @@ import axios from "axios";
 import _ from "lodash";
 import myAccountService from "./myAccountService";
 import { CONSTANTS } from "@/storage/constants";
-import { API_CONSTANTS } from "@/api-constants";
+import { API_CONSTANTS } from "brightblock-lib/src/services/api-constants";
 
 /**
  *  The service is a client to the brightblock sever side grpc client.
