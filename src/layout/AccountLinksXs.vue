@@ -13,7 +13,7 @@
 
 <script>
 import { mdbBadge, mdbNavbar, mdbNavItem, mdbNavbarNav, mdbNavbarToggler, mdbBtn, mdbContainer, mdbCollapse, mdbDropdown, mdbDropdownItem, mdbDropdownMenu, mdbDropdownToggle, mdbInput, mdbNavbarBrand, mdbIcon, mdbRow } from 'mdbvue';
-import myAccountService from "@/services/myAccountService";
+import myAccountService from "brightblock-lib/src/services/myAccountService";
 
 export default {
   name: 'AccountLinksXs',

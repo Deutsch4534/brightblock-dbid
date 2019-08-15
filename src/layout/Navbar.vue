@@ -41,7 +41,7 @@ import AccountLinks from "@/layout/AccountLinks";
 import AccountLinksXs from "@/layout/AccountLinksXs";
 import PortfolioLinks from "@/layout/PortfolioLinks";
 import UploadLinks from "@/layout/UploadLinks";
-import myAccountService from "@/services/myAccountService";
+import myAccountService from "brightblock-lib/src/services/myAccountService";
 import LoginTabModal from "@/pages/components/user-settings/LoginTabModal";
 import { mdbContainer, mdbNavbar, mdbNavbarBrand, mdbNavbarToggler, mdbNavbarNav, mdbNavItem, mdbDropdown, mdbDropdownMenu, mdbDropdownToggle, mdbInput, mdbDropdownItem } from 'mdbvue';
 

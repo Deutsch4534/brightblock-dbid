@@ -19,7 +19,7 @@ import AdminQueryIndex from "./pages/components/admin/AdminQueryIndex";
 import Navbar from "./layout/Navbar.vue";
 import Footer from "./layout/Footer.vue";
 
-import myAccountService from "@/services/myAccountService";
+import myAccountService from "brightblock-lib/src/services/myAccountService";
 
 const router = new Router({
   mode: 'history',

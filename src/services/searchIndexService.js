@@ -1,6 +1,6 @@
 import axios from "axios";
 import _ from "lodash";
-import myAccountService from "./myAccountService";
+import myAccountService from "brightblock-lib/src/services/myAccountService";
 import { CONSTANTS } from "@/storage/constants";
 import { API_CONSTANTS } from "brightblock-lib/src/services/api-constants";
 

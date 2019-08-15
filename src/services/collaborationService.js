@@ -2,7 +2,7 @@ import SockJS from "sockjs-client";
 import Stomp from "@stomp/stompjs";
 import { API_CONSTANTS } from "brightblock-lib/src/services/api-constants";
 import xhrService from "./xhrService";
-import myAccountService from "./myAccountService";
+import myAccountService from "brightblock-lib/src/services/myAccountService";
 
 const collaborationService = {
   sendMessage: function(data, success, failure) {

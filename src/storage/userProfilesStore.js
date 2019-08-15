@@ -1,6 +1,6 @@
 // myAccountStore.js
-import userProfilesService from "@/services/userProfilesService";
-import myAccountService from "@/services/myAccountService";
+import userProfilesService from "brightblock-lib/src/services/userProfilesService";
+import myAccountService from "brightblock-lib/src/services/myAccountService";
 import _ from "lodash";
 import store from "@/storage/store";
 import {

@@ -1,4 +1,4 @@
-import myAccountService from "@/services/myAccountService";
+import myAccountService from "brightblock-lib/src/services/myAccountService";
 import store from "@/storage/store";
 
 const myAccountStore = {

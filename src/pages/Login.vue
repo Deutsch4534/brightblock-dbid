@@ -23,7 +23,7 @@
 
 <script>
 import { mdbContainer, mdbBtn, mdbModal, mdbModalHeader, mdbModalBody, mdbModalTitle, mdbModalFooter } from 'mdbvue';
-import myAccountService from "@/services/myAccountService";
+import myAccountService from "brightblock-lib/src/services/myAccountService";
 import LoginTabModal from "@/pages/components/user-settings/LoginTabModal";
 
 export default {
