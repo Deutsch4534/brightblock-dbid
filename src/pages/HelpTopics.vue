@@ -87,7 +87,7 @@
             let topicIds = this.getTopicIds(document);
             let $self = this;
             this.$prismic.client.getByIDs(topicIds).then(function(response) {
-              $self.setAnswers($self, response, topicIds);
+              $self.setAnswers($self, response, topicIds, slug);
               $self.setAnswer(slug);
             });
           });
@@ -118,12 +118,12 @@
           this.loading = false;
         }
       },
-      setAnswers ($self, response, topicIds) {
+      setAnswers ($self, response, topicIds, slug) {
         let topics = [];
         _.forEach(response.results, function(res) {
           _.forEach(topicIds, function(topicId) {
             if (topicId === res.id) {
-              if (res.slugs[0] === $self.topicSlug) {
+              if (res.slugs[0] === slug) {
                 $self.answer = res;
               }
             }

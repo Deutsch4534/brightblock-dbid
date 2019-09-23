@@ -25,7 +25,9 @@ export default {
     let content = this.$store.state.contentStore.content["main-content"];
     if (!content) {
       this.$prismic.client.getSingle("main-content").then(document => {
-        this.$store.commit("contentStore/mainContent", document.data);
+        if (document) {
+          this.$store.commit("contentStore/mainContent", document.data);
+        }
       });
     }
     this.loaded = true;
